@@ -7,6 +7,8 @@ pub enum TileType {
     Wall, Floor
 }
 
+/// This is our xy index. Multiply y position by map width (80) and adds x, guaranteeing one tile per
+/// location, and mapping it to memory for left-to-right reading.
 pub fn xy_idx(x: i32, y: i32) -> usize {
     (y as usize * 80) + x as usize
 }
@@ -16,9 +18,12 @@ pub fn xy_idx(x: i32, y: i32) -> usize {
 pub fn new_map_test() -> Vec<TileType> {
     let mut map = vec![TileType::Floor; 80*50];
 
-    // Make the boundaries walls
+// Make the boundaries walls
+// Calls xy_idx to get vector index for x,0. index the vector, 
+// set the vector entry at that position to be a wall. Then does it again
+// for x, 49. Then the same thing happens, but looping y from 0..49 to get the vertical walls
     for x in 0..80 {
-        map[xy_idx(x, 0)] = TileType::Wall;
+        map[xy_idx(x, 0)] = TileType::Wall; 
         map[xy_idx(x, 49)] = TileType::Wall;
     }
     for y in 0..50 {
