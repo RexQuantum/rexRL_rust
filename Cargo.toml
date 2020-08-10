@@ -1,5 +1,5 @@
 [package]
-name = "hellorust"
+name = "rex_rl_rust"
 version = "0.1.0"
 authors = ["Alexander Baker <alex.diogenes@outlook.com>"]
 edition = "2018"
