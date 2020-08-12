@@ -78,7 +78,7 @@ fn main() -> rltk::BError {
     
     // Spawner
     let mut rng = rltk::RandomNumberGenerator::new();
-    for (i,room) in map.rooms.iter().skip(1).enumerate() {
+    for (_i,room) in map.rooms.iter().skip(1).enumerate() {
         let (x,y) = room.center();
 
         let glyph : rltk::FontCharType;
