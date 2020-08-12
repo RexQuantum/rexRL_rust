@@ -52,7 +52,7 @@ impl Map {
 }
 
 /// Makes a new map using the algorithm from the RLTK (now called bracket-lib) tutorial
-/// This gives a handful of random rooms and corridors joining them together.
+/// This gives a handful of random square rooms and corridors joining them together.
 pub fn new_map_rooms_and_corridors() -> Map {
     let mut map = Map{
         tiles : vec![TileType::Wall; 80*50],
