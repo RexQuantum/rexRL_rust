@@ -58,7 +58,7 @@ pub fn new_map_rooms_and_corridors() -> Map {
         tiles : vec![TileType::Wall; 80*50],
         rooms : Vec::new(),
         width : 80,
-        height: 50
+        height: 50,
         revealed_tiles : vec![false; 80*50],
         visible_tiles : vec![false; 80*50]
     };
@@ -137,7 +137,7 @@ pub fn draw_map(ecs: &World, ctx : &mut Rltk) {
                     fg = RGB::from_f32(0., 1.0, 0.);
                 }
             }
-            if !map.visible_tiles[idx] {fg = fg.to_grayscale() }
+            if !map.visible_tiles[idx] { fg = fg.to_greyscale() }
             ctx.set(x, y, fg, RGB::from_f32(0., 0., 0.), glyph);
         }    
 
