@@ -52,7 +52,8 @@ fn main() -> rltk::BError {
     let mut gs = State {
         ecs: World::new()
     };
-    gs.ecs.register::<Position>(); // THE REGISTER - Tell the ECS about the components we've created, right after we create the world
+    // THE REGISTER - Tell the ECS about the components we've created, right after we create the world
+    gs.ecs.register::<Position>(); 
     gs.ecs.register::<Renderable>();
     gs.ecs.register::<Player>();
     gs.ecs.register::<Viewshed>();
