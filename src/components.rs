@@ -4,7 +4,7 @@ use rltk::{RGB};
 
 
 // STRUCTURES! Building blocks! Like classes, and can store data or attach functions to.
-// These "derive" macros tag components to save us lots of typing
+// These "derive" macros tag components to save us lots of typing.
 #[derive(Component)]
 pub struct Position {
     pub x: i32,
