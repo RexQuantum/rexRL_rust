@@ -8,6 +8,8 @@ mod player;
 use player::*;
 mod rect;
 pub use rect::Rect;
+mod visibility_system;
+use visibility_system::VisibilitySystem;
 
 pub struct State {
     pub ecs: World
@@ -15,6 +17,8 @@ pub struct State {
 
 impl State {
     fn run_systems(&mut self) {
+        let mut vis = VisibilitySystem{};
+        vis.run_now(&self.ecs);
         self.ecs.maintain();
     }
 }
@@ -26,14 +30,14 @@ impl GameState for State {
         player_input(self, ctx);
         self.run_systems();
 
-        draw_map(self.ecs, ctx);
+        draw_map(&self.ecs, ctx);
 
         let positions = self.ecs.read_storage::<Position>();
         let renderables = self.ecs.read_storage::<Renderable>();
 
         for (pos, render) in (&positions, &renderables).join() {
             ctx.set(pos.x, pos.y, render.fg, render.bg, render.glyph);
-        } 
+        }
     }
 }
 

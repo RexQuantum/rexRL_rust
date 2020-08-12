@@ -1,17 +1,21 @@
-use rltk::{ RGB, Rltk, RandomNumberGenerator };
+use rltk::{ RGB, Rltk, RandomNumberGenerator, BaseMap, Algorithm2D, Point };
 use super::{Rect};
 use std::cmp::{max, min};
+use specs::prelude::*;
 
 #[derive(PartialEq, Copy, Clone)]
 pub enum TileType {
     Wall, Floor
 }
 
+#[derive(Default)]
 pub struct Map {
     pub tiles : Vec<TileType>,
     pub rooms : Vec<Rect>,
     pub width : i32,
     pub height : i32,
+    pub revealed_tiles : Vec<bool>,
+    pub visible_tiles : Vec<bool>
 }
 
 impl Map {
@@ -55,6 +59,8 @@ pub fn new_map_rooms_and_corridors() -> Map {
         rooms : Vec::new(),
         width : 80,
         height: 50
+        revealed_tiles : vec![false; 80*50],
+        visible_tiles : vec![false; 80*50]
     };
 
     const MAX_ROOMS : i32 = 30;
@@ -63,7 +69,7 @@ pub fn new_map_rooms_and_corridors() -> Map {
 
     let mut rng = RandomNumberGenerator::new();
 
-    for i in 0..MAX_ROOMS {
+    for _i in 0..MAX_ROOMS {
         let w = rng.range(MIN_SIZE, MAX_SIZE);
         let h = rng.range(MIN_SIZE, MAX_SIZE);
         let x = rng.roll_dice(1, map.width - w - 1) - 1;
@@ -80,33 +86,61 @@ pub fn new_map_rooms_and_corridors() -> Map {
                 let (new_x, new_y) = new_room.center();
                 let (prev_x, prev_y) = map.rooms[map.rooms.len()-1].center();
                 if rng.range(0,2) == 1 {
-                    map.apply_horizontal_tunnel(prev_x, new_x, prev_y);
-                    map.apply_vertical_tunnel(prev_y, new_y, new_x);
-                } else {
-                    map.apply_vertical_tunnel(prev_y, new_y, prev_x);
-                    map.apply_horizontal_tunnel(prev_x, new_x, new_y);
+                        map.apply_horizontal_tunnel(prev_x, new_x, prev_y);
+                        map.apply_vertical_tunnel(prev_y, new_y, new_x);
+                    } else {
+                        map.apply_vertical_tunnel(prev_y, new_y, prev_x);
+                        map.apply_horizontal_tunnel(prev_x, new_x, new_y);
+                    }
                 }
-            }
 
-            map.rooms.push(new_room);
-        }
+                map.rooms.push(new_room);
+            }
+        }    
+        
+        map
+    }     
+
+    
+
+
+impl BaseMap for Map {
+    fn is_opaque(&self, idx:usize) -> bool {
+        self.tiles[idx] == TileType::Wall
     }
-    map
 }
 
-pub fn draw_map(map: &[TileType], ctx : &mut Rltk) {
+impl Algorithm2D for Map {
+    fn dimensions(&self) -> Point {
+        Point::new(self.width, self.height)
+    }
+}
+
+pub fn draw_map(ecs: &World, ctx : &mut Rltk) {
+    let map = ecs.fetch::<Map>();
+    
     let mut y = 0;
     let mut x = 0;
-    for tile in map.iter() {
+    for (idx, tile) in map.tiles.iter().enumerate() {
         // Render a tile depending on the tile type
-        match tile {
-            TileType::Floor => {
-                ctx.set(x, y, RGB::from_f32(0.5, 0.5, 0.5), RGB::from_f32(0., 0., 0.), rltk::to_cp437('.'));
+        
+        if map.revealed_tiles[idx] {
+            let glyph;
+            let mut fg;
+            match tile {
+                TileType::Floor => {
+                    glyph = rltk::to_cp437('.');
+                    fg = RGB::from_f32(0.0, 0.5, 0.5);
+                }
+                TileType::Wall => {
+                    glyph = rltk::to_cp437('#');
+                    fg = RGB::from_f32(0., 1.0, 0.);
+                }
             }
-            TileType::Wall => {
-                ctx.set(x, y, RGB::from_f32(0.0, 1.0, 0.0), RGB::from_f32(0., 0., 0.), rltk::to_cp437('#'));
-            }
-        }
+            if !map.visible_tiles[idx] {fg = fg.to_grayscale() }
+            ctx.set(x, y, fg, RGB::from_f32(0., 0., 0.), glyph);
+        }    
+
         // Move the coordinates
         x += 1;
         if x > 79 {
