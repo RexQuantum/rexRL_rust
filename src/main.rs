@@ -1,4 +1,4 @@
-use rltk::{GameState, Rltk, RGB};
+use rltk::{GameState, Rltk, RGB, Point};
 use specs::prelude::*;
 mod components;
 pub use components::*;
@@ -62,20 +62,7 @@ fn main() -> rltk::BError {
     
     let map : Map = new_map_rooms_and_corridors();
     let (player_x, player_y) = map.rooms[0].center();
-    for room in map.rooms.iter().skip(1) {
-        let (x,y) = room.center();
-        gs.ecs.create_entity() 
-            .with(Position{ x, y})
-            .with(Renderable{
-                glyph: rltk::to_cp437('m'),
-                fg: RGB::named(rltk::RED),
-                bg: RGB::named(rltk::BLACK),
-            })
-            .with(Viewshed{ visible_tiles : Vec::new(), range: 8, dirty: true })
-            .build();
-    }
-    gs.ecs.insert(map);
-    
+        
     gs.ecs
         .create_entity()
         .with(Position { x: player_x, y: player_y })
@@ -86,7 +73,35 @@ fn main() -> rltk::BError {
         })
         .with(Player{})
         .with(Viewshed{ visible_tiles : Vec::new(), range : 8, dirty: true })
+        //.with(Name{name: "Player".to_string() })
         .build();
-        
+    
+    // Spawner
+    let mut rng = rltk::RandomNumberGenerator::new();
+    for (i,room) in map.rooms.iter().skip(1).enumerate() {
+        let (x,y) = room.center();
+
+        let glyph : rltk::FontCharType;
+        let name : String;
+        let roll = rng.roll_dice(1, 2);
+        match roll {
+            1 => { glyph = rltk::to_cp437('M'); name = "MopBot".to_string(); }
+            _ => { glyph = rltk::to_cp437('S'); name = "Stompulon".to_string(); }
+        }
+
+        gs.ecs.create_entity()
+            .with(Position{ x, y })
+            .with(Renderable{
+                glyph,
+                fg: RGB::named(rltk::RED),
+                bg: RGB::named(rltk::BLACK),
+            })
+            .with(Viewshed{ visible_tiles : Vec::new(), range: 8, dirty: true })
+            .build();
+    }
+
+    gs.ecs.insert(map);
+    gs.ecs.insert(Point::new(player_x, player_y));
+
     rltk::main_loop(context, gs)
 }
