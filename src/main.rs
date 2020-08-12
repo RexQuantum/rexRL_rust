@@ -78,7 +78,8 @@ fn main() -> rltk::BError {
     
     // Spawner
     let mut rng = rltk::RandomNumberGenerator::new();
-    for (_i,room) in map.rooms.iter().skip(1).enumerate() {
+
+    for (i,room) in map.rooms.iter().skip(1).enumerate() {
         let (x,y) = room.center();
 
         let glyph : rltk::FontCharType;
@@ -98,6 +99,7 @@ fn main() -> rltk::BError {
             })
             .with(Viewshed{ visible_tiles : Vec::new(), range: 8, dirty: true })
             .with(NPC{})
+            //.with(Name{ name: format!("{} #{}", &name, i) })
             .build();
     }
 
