@@ -34,9 +34,11 @@ impl GameState for State {
 
         let positions = self.ecs.read_storage::<Position>();
         let renderables = self.ecs.read_storage::<Renderable>();
+        let map = self.ecs.fetch::<Map>();
 
         for (pos, render) in (&positions, &renderables).join() {
-            ctx.set(pos.x, pos.y, render.fg, render.bg, render.glyph);
+            let idx = map.xy_idx(pos.x, pos.y);
+            if map.visible_tiles[idx] { ctx.set(pos.x, pos.y, render.fg, render.bg, render.glyph) }
         }
     }
 }
@@ -58,7 +60,7 @@ fn main() -> rltk::BError {
 
     
     let map : Map = new_map_rooms_and_corridors();
-        let (player_x, player_y) = map.rooms[0].center();
+    let (player_x, player_y) = map.rooms[0].center();
     for room in map.rooms.iter().skip(1) {
         let (x,y) = room.center();
         gs.ecs.create_entity() 
