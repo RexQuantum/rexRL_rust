@@ -1,8 +1,7 @@
-use rltk::{VirtualKeyCode, Rltk};
+use rltk::{VirtualKeyCode, Rltk, Point};
 use specs::prelude::*;
 use std::cmp::{max, min};
-use super::{Position, Player, Viewshed, TileType, State, Map};
-
+use super::{Position, Player, Viewshed, TileType, State, Map, RunState};
 
 pub fn try_move_player(delta_x: i32, delta_y: i32, ecs: &mut World) {
     let mut positions = ecs.write_storage::<Position>();
@@ -21,10 +20,10 @@ pub fn try_move_player(delta_x: i32, delta_y: i32, ecs: &mut World) {
     }
 }
 
-pub fn player_input(gs: &mut State, ctx: &mut Rltk) {
+pub fn player_input(gs: &mut State, ctx: &mut Rltk) -> RunState {
     // Player movement
     match ctx.key {
-        None => {} // Nothing happened
+        None => { return RunState::Paused } // Nothing happened
         Some(key) => match key {
             VirtualKeyCode::Left |
             VirtualKeyCode::Numpad4 |
@@ -41,8 +40,21 @@ pub fn player_input(gs: &mut State, ctx: &mut Rltk) {
             VirtualKeyCode::Down |
             VirtualKeyCode::Numpad2 |
             VirtualKeyCode::J => try_move_player(0, 1, &mut gs.ecs),
+            
+            VirtualKeyCode::Numpad7 |
+            VirtualKeyCode::Y => try_move_player(-1, -1, &mut gs.ecs),
+            
+            VirtualKeyCode::Numpad9 |
+            VirtualKeyCode::U => try_move_player(1, -1, &mut gs.ecs),
+            
+            VirtualKeyCode::Numpad1 |
+            VirtualKeyCode::B => try_move_player(-1, 1, &mut gs.ecs),
+           
+            VirtualKeyCode::Numpad3 |
+            VirtualKeyCode::N => try_move_player(1, 1, &mut gs.ecs),
 
-            _ => {}
+            _ => { return RunState::Paused }
         },
     }
+    RunState::Running
 }

@@ -2,7 +2,6 @@ use specs::prelude::*;
 use specs_derive::*;
 use rltk::{RGB};
 
-
 // STRUCTURES! Building blocks! Like classes, and can store data or attach functions to.
 // These "derive" macros tag components to save us lots of typing.
 #[derive(Component)]
@@ -29,7 +28,7 @@ pub struct Viewshed {
 }
 
 #[derive(Component, Debug)]
-pub struct NPC {}
+pub struct Monster {}
 
 #[derive(Component, Debug)]
 pub struct Name {

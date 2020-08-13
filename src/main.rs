@@ -10,26 +10,38 @@ mod rect;
 pub use rect::Rect;
 mod visibility_system;
 use visibility_system::VisibilitySystem;
+mod monster_ai_system;
+use monster_ai_system::MonsterAI;
+
+#[derive(PartialEq, Copy, Clone)]
+pub enum RunState { Paused, Running }
 
 pub struct State {
-    pub ecs: World
+    pub ecs: World,
+    pub runstate : RunState
 }
 
 impl State {
     fn run_systems(&mut self) {
         let mut vis = VisibilitySystem{};
         vis.run_now(&self.ecs);
+        let mut mob = MonsterAI{};
+        mob.run_now(&self.ecs);
         self.ecs.maintain();
     }
 }
 
 impl GameState for State {      
     fn tick(&mut self, ctx : &mut Rltk) { 
-        ctx.cls();                         // Clear the terminal when at the beginning of the frame
+        ctx.cls();                         // Clear the terminal at the beginning of the frame
 
-        player_input(self, ctx);
-        self.run_systems();
-
+        if self.runstate == RunState::Running {
+            self.run_systems();
+            self.runstate = RunState::Paused;
+        } else {
+            self.runstate = player_input(self, ctx);
+        }
+                
         draw_map(&self.ecs, ctx);
 
         let positions = self.ecs.read_storage::<Position>();
@@ -43,23 +55,23 @@ impl GameState for State {
     }
 }
 
-
 fn main() -> rltk::BError {
     use rltk::RltkBuilder;
     let context = RltkBuilder::simple80x50()
         .with_title("Rex is making a game")
         .build()?;
     let mut gs = State {
-        ecs: World::new()
+        ecs: World::new(),
+        runstate : RunState::Running
     };
     // THE REGISTER - Tell the ECS about the components we've created, right after we create the world
     gs.ecs.register::<Position>(); 
     gs.ecs.register::<Renderable>();
     gs.ecs.register::<Player>();
     gs.ecs.register::<Viewshed>();
-    gs.ecs.register::<NPC>();
+    gs.ecs.register::<Monster>();
+    gs.ecs.register::<Name>();
 
-    
     let map : Map = new_map_rooms_and_corridors();
     let (player_x, player_y) = map.rooms[0].center();
         
@@ -73,7 +85,7 @@ fn main() -> rltk::BError {
         })
         .with(Player{})
         .with(Viewshed{ visible_tiles : Vec::new(), range : 8, dirty: true })
-        //.with(Name{name: "Player".to_string() })
+        .with(Name{name: "Player".to_string() })
         .build();
     
     // Spawner
@@ -87,7 +99,7 @@ fn main() -> rltk::BError {
         let roll = rng.roll_dice(1, 2);
         match roll {
             1 => { glyph = rltk::to_cp437('M'); name = "MopBot".to_string(); }
-            _ => { glyph = rltk::to_cp437('S'); name = "Stompulon".to_string(); }
+            _ => { glyph = rltk::to_cp437('S'); name = "Re-cyc-u-lon".to_string(); }
         }
 
         gs.ecs.create_entity()
@@ -98,8 +110,8 @@ fn main() -> rltk::BError {
                 bg: RGB::named(rltk::BLACK),
             })
             .with(Viewshed{ visible_tiles : Vec::new(), range: 8, dirty: true })
-            .with(NPC{})
-            //.with(Name{ name: format!("{} #{}", &name, i) })
+            .with(Monster{})
+            .with(Name{ name: format!("{} #{}", &name, i) })
             .build();
     }
 
