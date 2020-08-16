@@ -19,11 +19,13 @@ impl<'a> System<'a> for MonsterAI {
         let (mut map, player_pos, mut viewshed, monster, name, mut position) = data;
         for (mut viewshed, _monster, name, mut pos) in (&mut viewshed, &monster, &name, &mut position).join() {
             let distance = rltk::DistanceAlg::Pythagoras.distance2d(Point::new(pos.x, pos.y), *player_pos);
-            if distance < 1.5 {
-            // Attack goes here
-            console::log(&format!("The {} turns toward you and beeps angrily", name.name));
-            
-            return;
+                if distance < 1.5 {
+                // Attack goes here
+                    console::log(&format!("{} beeps insulting bmachine code", name.name));
+                    return;
+                }
+                else if viewshed.visible_tiles.contains(&*player_pos) {
+                    // Path to the player
             }
                     let path = rltk::a_star_search(
                         map.xy_idx(pos.x, pos.y) as i32,
@@ -31,11 +33,15 @@ impl<'a> System<'a> for MonsterAI {
                         &mut *map
                     );
                     if path.success && path.steps.len()>1 {
+                        let mut idx = map.xy_idx(pos.x, pos.y);
+                        map.blocked[idx] = false;
                         pos.x = path.steps[1] as i32 % map.width;
                         pos.y = path.steps[1] as i32 / map.width;
+                        idx = map.xy_idx(pos.x, pos.y);
+                        map.blocked[idx] = true;
                         viewshed.dirty = true;
                     }
-
+                
             }
         }
     }

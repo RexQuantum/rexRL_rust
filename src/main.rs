@@ -77,6 +77,7 @@ fn main() -> rltk::BError {
     gs.ecs.register::<Monster>();
     gs.ecs.register::<Name>();
     gs.ecs.register::<BlocksTile>();
+    gs.ecs.register::<CombatStats>();
     
     
     let map : Map = new_map_rooms_and_corridors();
@@ -91,6 +92,7 @@ fn main() -> rltk::BError {
             bg: RGB::named(rltk::BLACK),
         })
         .with(Player{})
+        .with(CombatStats{ max_hp: 30, hp: 30, defense: 2, power: 5})
         .with(Viewshed{ visible_tiles : Vec::new(), range : 8, dirty: true })
         .with(Name{name: "Player".to_string() })
         .with(BlocksTile{})
@@ -109,7 +111,7 @@ fn main() -> rltk::BError {
             1 => { glyph = rltk::to_cp437('M'); name = "MopBot".to_string(); }
             _ => { glyph = rltk::to_cp437('S'); name = "Re-cyc-u-lon".to_string(); }
         }
-
+        // MAKE A MONSTER! It's got the following components: Position, renderable, viewshed, Monster, Name, etc etc etc
         gs.ecs.create_entity()
             .with(Position{ x, y })
             .with(Renderable{
@@ -119,8 +121,9 @@ fn main() -> rltk::BError {
             })
             .with(Viewshed{ visible_tiles : Vec::new(), range: 8, dirty: true })
             .with(Monster{})
-            .with(Name{ name: format!("{} #{}", &name, i) })
+            .with(Name{ name: format!("{} #{}", &name, i) }) //
             .with(BlocksTile{})
+            .with(CombatStats{ max_hp: 16, hp: 16, defense: 1, power: 4 })
             .build();
     }
 

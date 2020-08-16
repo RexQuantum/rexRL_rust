@@ -16,7 +16,8 @@ pub struct Map {
     pub height : i32,
     pub revealed_tiles : Vec<bool>,
     pub visible_tiles : Vec<bool>,
-    pub blocked : Vec<bool>
+    pub blocked : Vec<bool>,
+    pub tile_content : Vec<Vec<Entity>>
 }
 
 impl Map {
@@ -51,14 +52,6 @@ impl Map {
         }
     }
 
-    // This takes an index, and calculates if it can be entered.
-    fn is_exit_valid(&self, x:i32, y:i32) -> bool {
-        if x < 1 || x > self.width-1 || y < 1 || y > self.height-1 { return false; }
-        let idx = self.xy_idx(x, y);
-        !self.blocked[idx]
-    }
-    
-
     /// Important but simple. This function sets "blocked" for a tile if it's a 
     /// wall, false otherwise.
     /// Todo: Expand this for more tile types.
@@ -67,11 +60,26 @@ impl Map {
             self.blocked[i] = *tile == TileType::Wall;
         }
     }
+
+    // This takes an index, and calculates if it can be entered.
+    fn is_exit_valid(&self, x:i32, y:i32) -> bool {
+        if x < 1 || x > self.width-1 || y < 1 || y > self.height-1 { return false; }
+        let idx = self.xy_idx(x, y);
+        !self.blocked[idx]
+    }
     
+    pub fn clear_content_index(&mut self) {
+        for content in self.tile_content.iter_mut(){
+            content.clear();
+        }
+    }
 }
+
 
 /// Makes a new map using the algorithm from the RLTK (now called bracket-lib) tutorial
 /// This gives a handful of random square rooms and corridors joining them together.
+/// Note to Rex: Do a big big big thank-you to this guy. I don't know if he understands 
+/// how helpful he's been. 
 pub fn new_map_rooms_and_corridors() -> Map {
     let mut map = Map{
         tiles : vec![TileType::Wall; 80*50],
@@ -80,7 +88,8 @@ pub fn new_map_rooms_and_corridors() -> Map {
         height: 50,
         revealed_tiles : vec![false; 80*50],
         visible_tiles : vec![false; 80*50],
-        blocked : vec![false; 80*50]
+        blocked : vec![false; 80*50],
+        tile_content : vec![Vec::new(); 80*50]
     };
 
     const MAX_ROOMS : i32 = 30;
@@ -230,3 +239,4 @@ pub fn draw_map(ecs: &World, ctx : &mut Rltk) {
         }
     }
 }
+
