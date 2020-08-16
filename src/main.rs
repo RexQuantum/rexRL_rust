@@ -14,6 +14,7 @@ mod monster_ai_system;
 use monster_ai_system::MonsterAI;
 mod map_indexing_system;
 use map_indexing_system::MapIndexingSystem;
+mod damage_system;
 
 
 #[derive(PartialEq, Copy, Clone)]
@@ -46,9 +47,9 @@ impl GameState for State {
         } else {
             self.runstate = player_input(self, ctx); //return player state so that the game knows whether or not to pause
         }
-                
+        
         draw_map(&self.ecs, ctx);
-
+        damage_system::delete_the_dead(&mut self.ecs);
         let positions = self.ecs.read_storage::<Position>();
         let renderables = self.ecs.read_storage::<Renderable>();
         let map = self.ecs.fetch::<Map>();
@@ -78,6 +79,8 @@ fn main() -> rltk::BError {
     gs.ecs.register::<Name>();
     gs.ecs.register::<BlocksTile>();
     gs.ecs.register::<CombatStats>();
+    gs.ecs.register::<SufferDamage>();
+    gs.ecs.register::<WantsToMelee>();
     
     
     let map : Map = new_map_rooms_and_corridors();
