@@ -25,7 +25,6 @@ mod gamelog;
 #[derive(PartialEq, Copy, Clone)]
 pub enum RunState { AwaitingInput, PreRun, PlayerTurn, MonsterTurn }
 
-
 pub struct State {
     pub ecs: World,
 }
@@ -96,9 +95,10 @@ impl GameState for State {
 
 fn main() -> rltk::BError {
     use rltk::RltkBuilder;
-    let context = RltkBuilder::simple80x50()
+    let mut context = RltkBuilder::simple80x50()
         .with_title("Rex is making a game")
         .build()?;
+    context.with_post_scanlines(true);
     let mut gs = State {
         ecs: World::new(),
     };
@@ -111,9 +111,9 @@ fn main() -> rltk::BError {
     gs.ecs.register::<Name>();
     gs.ecs.register::<BlocksTile>();
     gs.ecs.register::<CombatStats>();
-    gs.ecs.register::<SufferDamage>();
     gs.ecs.register::<WantsToMelee>();
-    
+    gs.ecs.register::<SufferDamage>();
+        
     
     let map : Map = new_map_rooms_and_corridors();
     let (player_x, player_y) = map.rooms[0].center();
@@ -134,7 +134,6 @@ fn main() -> rltk::BError {
     
     // Spawner
     let mut rng = rltk::RandomNumberGenerator::new();
-
     for (i,room) in map.rooms.iter().skip(1).enumerate() {
         let (x,y) = room.center();
 
@@ -143,7 +142,7 @@ fn main() -> rltk::BError {
         let roll = rng.roll_dice(1, 2);
         match roll {
             1 => { glyph = rltk::to_cp437('M'); name = "MopBot".to_string(); }
-            _ => { glyph = rltk::to_cp437('S'); name = "Re-cyc-u-lon".to_string(); }
+            _ => { glyph = rltk::to_cp437('S'); name = "Recyculon".to_string(); }
         }
         // MAKE A MONSTER! It's got the following components: Position, renderable, viewshed, Monster, Name, etc etc etc
         gs.ecs.create_entity()
@@ -166,5 +165,6 @@ fn main() -> rltk::BError {
     gs.ecs.insert(player_entity); //this is the player
     gs.ecs.insert(RunState::PreRun);
     gs.ecs.insert(gamelog::GameLog{ entries : vec!["You awaken in an unfamiliar place".to_string() ]});
+    
     rltk::main_loop(context, gs)
 }

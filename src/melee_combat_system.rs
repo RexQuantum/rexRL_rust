@@ -4,6 +4,7 @@ use super::{CombatStats, WantsToMelee, Name, SufferDamage, gamelog::GameLog};
 pub struct MeleeCombatSystem {}
 
 impl<'a> System<'a> for MeleeCombatSystem {
+    #[allow(clippy::type_complexity)]
     type SystemData = ( Entities<'a>,
                         WriteExpect<'a, GameLog>,
                         WriteStorage<'a, WantsToMelee>,
