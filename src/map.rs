@@ -88,8 +88,8 @@ pub fn new_map_rooms_and_corridors() -> Map {
     let mut map = Map{
         tiles : vec![TileType::Wall; MAPCOUNT],
         rooms : Vec::new(),
-        width : 80,
-        height: 50,
+        width : MAPWIDTH as i32,
+        height: MAPHEIGHT as i32,
         revealed_tiles : vec![false; MAPCOUNT],
         visible_tiles : vec![false; MAPCOUNT],
         blocked : vec![false; MAPCOUNT],
@@ -203,7 +203,7 @@ pub fn draw_map(ecs: &World, ctx : &mut Rltk) {
 
         // Move the coordinates
         x += 1;
-        if x > 79 {
+        if x > MAPWIDTH as i32-1 {
             x = 0;
             y += 1;
         }
