@@ -34,3 +34,4 @@ pub struct Monster {}
 pub struct Name {
     pub name : String
 }
+

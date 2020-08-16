@@ -39,7 +39,7 @@ impl GameState for State {
             self.run_systems();
             self.runstate = RunState::Paused;
         } else {
-            self.runstate = player_input(self, ctx);
+            self.runstate = player_input(self, ctx); //return player state so that the game knows whether or not to pause
         }
                 
         draw_map(&self.ecs, ctx);
