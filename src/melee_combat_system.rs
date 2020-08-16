@@ -1,5 +1,6 @@
 use specs::prelude::*;
 use super::{CombatStats, WantsToMelee, Name, SufferDamage};
+use rltk::console;
 
 pub struct MeleeCombatSystem {}
 
@@ -8,8 +9,9 @@ impl<'a> System<'a> for MeleeCombatSystem {
                         WriteStorage<'a, WantsToMelee>,
                         ReadStorage<'a, Name>,
                         ReadStorage<'a, CombatStats>,
-                        WriteStorage<'a, SufferDamage>                        
+                        WriteStorage<'a, SufferDamage>,                        
                       );
+
     fn run(&mut self, data : Self::SystemData) {
         let (entities, mut wants_melee, names, combat_stats, mut inflict_damage) = data;
 
@@ -17,7 +19,7 @@ impl<'a> System<'a> for MeleeCombatSystem {
             if stats.hp > 0 {
                 let target_stats = combat_stats.get(wants_melee.target).unwrap();
                 if target_stats.hp > 0 {
-                    let target_stats = names.get(wants_melee.target).unwrap();
+                    let target_name = names.get(wants_melee.target).unwrap();
 
                     let damage = i32::max(0, stats.power - target_stats.defense);
 
@@ -27,13 +29,11 @@ impl<'a> System<'a> for MeleeCombatSystem {
                         console::log(&format!("{} suffers {} damage from {}'s attack.", &target_name.name, damage, &name.name));
                         SufferDamage::new_damage(&mut inflict_damage, wants_melee.target, damage);
                     }
-
+                }
                 
             }
         }
 
         wants_melee.clear();
     }
-
-}
-
+}    

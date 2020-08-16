@@ -15,14 +15,17 @@ use monster_ai_system::MonsterAI;
 mod map_indexing_system;
 use map_indexing_system::MapIndexingSystem;
 mod damage_system;
+use damage_system::DamageSystem;
+mod melee_combat_system;
+use melee_combat_system::MeleeCombatSystem;
 
 
 #[derive(PartialEq, Copy, Clone)]
-pub enum RunState { Paused, Running }
+pub enum RunState { AwaitingInput, PreRun, PlayerTurn, MonsterTurn }
+
 
 pub struct State {
     pub ecs: World,
-    pub runstate : RunState
 }
 
 impl State {
@@ -33,23 +36,49 @@ impl State {
         mob.run_now(&self.ecs);
         let mut mapindex = MapIndexingSystem{};
         mapindex.run_now(&self.ecs);
+        let mut melee = MeleeCombatSystem{};
+        melee.run_now(&self.ecs);
+        let mut damage = DamageSystem{};
+        damage.run_now(&self.ecs);
         self.ecs.maintain();
     }
 }
 
 impl GameState for State {      
-    fn tick(&mut self, ctx : &mut Rltk) { 
-        ctx.cls();                         // Clear the terminal at the beginning of the frame
-
-        if self.runstate == RunState::Running {
-            self.run_systems();
-            self.runstate = RunState::Paused;
-        } else {
-            self.runstate = player_input(self, ctx); //return player state so that the game knows whether or not to pause
+    fn tick(&mut self, ctx : &mut Rltk) {
+        ctx.cls();
+        let mut newrunstate;
+        {
+            let runstate = self.ecs.fetch::<RunState>();
+            newrunstate = *runstate;
         }
-        
-        draw_map(&self.ecs, ctx);
+
+        match newrunstate {
+            RunState::PreRun => {
+                self.run_systems();
+                newrunstate = RunState::AwaitingInput;
+            }
+            RunState::AwaitingInput => {
+                newrunstate = player_input(self, ctx);
+            }
+            RunState::PlayerTurn => {
+                self.run_systems();
+                newrunstate = RunState::MonsterTurn;
+            }
+            RunState::MonsterTurn => {
+                self.run_systems();
+                newrunstate = RunState::AwaitingInput;
+            }
+        }
+
+        {
+            let mut runwriter = self.ecs.write_resource::<RunState>();
+            *runwriter = newrunstate;
+        }
         damage_system::delete_the_dead(&mut self.ecs);
+
+        draw_map(&self.ecs, ctx);
+
         let positions = self.ecs.read_storage::<Position>();
         let renderables = self.ecs.read_storage::<Renderable>();
         let map = self.ecs.fetch::<Map>();
@@ -68,7 +97,6 @@ fn main() -> rltk::BError {
         .build()?;
     let mut gs = State {
         ecs: World::new(),
-        runstate : RunState::Running
     };
     // THE REGISTER - Tell the ECS about the components we've created, right after we create the world
     gs.ecs.register::<Position>(); 
@@ -86,7 +114,7 @@ fn main() -> rltk::BError {
     let map : Map = new_map_rooms_and_corridors();
     let (player_x, player_y) = map.rooms[0].center();
         
-    gs.ecs
+    let player_entity = gs.ecs
         .create_entity()
         .with(Position { x: player_x, y: player_y })
         .with(Renderable {
@@ -95,10 +123,9 @@ fn main() -> rltk::BError {
             bg: RGB::named(rltk::BLACK),
         })
         .with(Player{})
-        .with(CombatStats{ max_hp: 30, hp: 30, defense: 2, power: 5})
         .with(Viewshed{ visible_tiles : Vec::new(), range : 8, dirty: true })
         .with(Name{name: "Player".to_string() })
-        .with(BlocksTile{})
+        .with(CombatStats{ max_hp: 30, hp: 30, defense: 2, power: 5})
         .build();
     
     // Spawner
@@ -131,7 +158,8 @@ fn main() -> rltk::BError {
     }
 
     gs.ecs.insert(map);
-    gs.ecs.insert(Point::new(player_x, player_y)); //this is the player
-
+    gs.ecs.insert(Point::new(player_x, player_y));
+    gs.ecs.insert(player_entity); //this is the player
+    gs.ecs.insert(RunState::PreRun);
     rltk::main_loop(context, gs)
 }
