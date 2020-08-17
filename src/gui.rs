@@ -80,14 +80,14 @@ fn draw_tooltips(ecs: &World, ctx : &mut Rltk) {
 }
 
 
-
 #[derive(PartialEq, Copy, Clone)]
-pub enum ItemMenuResult { Cancel, NoResponse }
+pub enum ItemMenuResult { Cancel, NoResponse, Selected }
 
-pub fn show_inventory(gs : &mut State, ctx : &mut Rltk) -> ItemMenuResult {
+pub fn show_inventory(gs : &mut State, ctx : &mut Rltk) -> (ItemMenuResult, Option<Entity>) {
     let player_entity = gs.ecs.fetch::<Entity>();
     let names = gs.ecs.read_storage::<Name>();
     let backpack = gs.ecs.read_storage::<InBackpack>();
+    let entities = gs.ecs.entities();
 
     let inventory = (&backpack, &names).join().filter(|item| item.0.owner == *player_entity );
     let count = inventory.count();
@@ -97,6 +97,7 @@ pub fn show_inventory(gs : &mut State, ctx : &mut Rltk) -> ItemMenuResult {
     ctx.print_color(18, y-2, RGB::named(rltk::YELLOW), RGB::named(rltk::BLACK), "Inventory");
     ctx.print_color(18, y+count as i32+1, RGB::named(rltk::YELLOW), RGB::named(rltk::BLACK), "ESCAPE to cancel");
 
+    let mut equippable : Vec<Entity> = Vec::new();
     let mut j = 0;
     for (_pack, name) in (&backpack, &names).join().filter(|item| item.0.owner == *player_entity ) {
         ctx.set(17, y, RGB::named(rltk::WHITE), RGB::named(rltk::BLACK), rltk::to_cp437('('));
@@ -109,11 +110,17 @@ pub fn show_inventory(gs : &mut State, ctx : &mut Rltk) -> ItemMenuResult {
     }
 
     match ctx.key {
-        None => ItemMenuResult::NoResponse,
+        None => (ItemMenuResult::NoResponse, None),
         Some(key) => {
             match key {
-                VirtualKeyCode::Escape => { ItemMenuResult::Cancel }
-                _ => ItemMenuResult::NoResponse
+                VirtualKeyCode::Escape => { (ItemMenuResult::Cancel, None) }
+                _ => { 
+                    let selection = rltk::letter_to_option(key);
+                    if selection > -1 && selection < count as i32 {
+                        return (ItemMenuResult::Selected, Some(equippable[selection as usize]));
+                    }  
+                    (ItemMenuResult::NoResponse, None)
+                }
             }
         }
     }
