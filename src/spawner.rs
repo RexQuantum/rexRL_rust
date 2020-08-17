@@ -1,6 +1,6 @@
 use rltk::{ RGB, RandomNumberGenerator };
 use specs::prelude::*;
-use super::{CombatStats, Player, Renderable, Name, Position, Viewshed, Monster, BlocksTile, Rect, map::MAPWIDTH, Item, Potion};
+use super::{CombatStats, Player, Renderable, Name, Position, Consumable, Viewshed, Monster, BlocksTile, Rect, map::MAPWIDTH, Item, ProvidesHealing, Ranged, AreaOfEffect, InflictsDamage };
 
 const MAX_MONSTERS : i32 = 4;
 const MAX_ITEMS : i32 = 2;
@@ -18,10 +18,23 @@ pub fn player(ecs : &mut World, player_x : i32, player_y : i32) -> Entity {
         .with(Player{})
         .with(Viewshed{ visible_tiles : Vec::new(), range : 8, dirty: true })
         .with(Name{name: "Player".to_string() })
-        .with(CombatStats{ max_hp: 30, hp: 30, defense: 2, power: 5})
+        .with(CombatStats{ max_hp: 100, hp: 100, defense: 2, power: 5})
         .build()
 }        
 
+//this function rolls a random item
+fn random_item(ecs: &mut World, x: i32, y: i32) {
+    let roll :i32;
+    {
+        let mut rng = ecs.write_resource::<RandomNumberGenerator>();
+        roll = rng.roll_dice(1, 3);
+    }
+    match roll {
+        1 => { repair_pack(ecs, x, y) }
+        2 => { incendiary_grenade(ecs, x, y) }
+        _ => { beam_cell(ecs, x, y) }
+    }
+}
 
 /// Spawns a random monster at a given location
 pub fn random_monster(ecs: &mut World, x: i32, y: i32) {
@@ -36,7 +49,7 @@ pub fn random_monster(ecs: &mut World, x: i32, y: i32) {
     }
 }
 
-fn health_potion(ecs: &mut World, x: i32, y: i32) {
+fn repair_pack(ecs: &mut World, x: i32, y: i32) {
     ecs.create_entity()
         .with(Position{ x, y })
         .with(Renderable{
@@ -47,7 +60,42 @@ fn health_potion(ecs: &mut World, x: i32, y: i32) {
         })
         .with(Name{ name : "Bioreplicator repair pack".to_string() })
         .with(Item{})
-        .with(Potion{ heal_amount: 8 })
+        .with(Consumable{})
+        .with(ProvidesHealing{ heal_amount: 8 })
+        .build();
+}
+fn incendiary_grenade(ecs: &mut World, x: i32, y: i32) {
+    ecs.create_entity()
+        .with(Position{ x, y })
+        .with(Renderable{
+            glyph: rltk::to_cp437(')'),
+            fg: RGB::named(rltk::ORANGE),
+            bg: RGB::named(rltk::BLACK),
+            render_order: 2
+        })
+        .with(Name{ name : "Incendiary Grenade".to_string() })
+        .with(Item{})
+        .with(Consumable{})
+        .with(Ranged{ range: 6 })
+        .with(InflictsDamage{ damage: 20 })
+        .with(AreaOfEffect{ radius: 3 })
+        .build();
+}
+
+fn beam_cell(ecs: &mut World, x: i32, y: i32) {
+    ecs.create_entity()
+        .with(Position{ x, y })
+        .with(Renderable{
+            glyph: rltk::to_cp437(')'),
+            fg: RGB::named(rltk::CYAN),
+            bg: RGB::named(rltk::BLACK),
+            render_order: 2
+        })
+        .with(Name{ name : "Beam Cell Cube".to_string() })
+        .with(Item{})
+        .with(Consumable{})
+        .with(Ranged{ range: 6 })
+        .with(InflictsDamage{ damage: 8 })
         .build();
 }
 
@@ -71,6 +119,7 @@ fn monster<S : ToString>(ecs: &mut World, x: i32, y: i32, glyph : rltk::FontChar
         .with(CombatStats{ max_hp: 16, hp: 16, defense: 1, power: 4 })
         .build();
 }
+
 /// Fills a room with stuff!
 pub fn spawn_room(ecs: &mut World, room : &Rect) {
     let mut monster_spawn_points : Vec<usize> = Vec::new();
@@ -116,12 +165,12 @@ pub fn spawn_room(ecs: &mut World, room : &Rect) {
         let y = *idx / MAPWIDTH;
         random_monster(ecs, x as i32, y as i32);
     }
-
-    // Actually spawn the potions
+    
+    //Actually spawn the items
     for idx in item_spawn_points.iter() {
         let x = *idx % MAPWIDTH;
         let y = *idx / MAPWIDTH;
-        health_potion(ecs, x as i32, y as i32);
+        random_item(ecs, x as i32, y as i32);
     }
+   
 }
-
