@@ -43,7 +43,7 @@ fn health_potion(ecs: &mut World, x: i32, y: i32) {
             fg: RGB::named(rltk::MAGENTA),
             bg: RGB::named(rltk::BLACK),
         })
-        .with(Name{ name : "Health Potion".to_string() })
+        .with(Name{ name : "Bioreplicator repair pack".to_string() })
         .with(Item{})
         .with(Potion{ heal_amount: 8 })
         .build();
