@@ -82,7 +82,7 @@ fn draw_tooltips(ecs: &World, ctx : &mut Rltk) {
 
 
 #[derive(PartialEq, Copy, Clone)]
-pub enum ItemMenuResult { Cancel, NoResponse, Selected }
+pub enum ItemMenuResult { Cancel, NoResponse }
 
 pub fn show_inventory(gs : &mut State, ctx : &mut Rltk) -> ItemMenuResult {
     let player_entity = gs.ecs.fetch::<Entity>();
