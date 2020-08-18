@@ -25,7 +25,7 @@ mod spawner;
 mod inventory_system;
 use inventory_system::{ ItemCollectionSystem, ItemUseSystem, ItemDropSystem };
 
-
+const SHOW_FPS : bool = true;
 
 #[derive(PartialEq, Copy, Clone)]
 pub enum RunState { AwaitingInput, PreRun, PlayerTurn, MonsterTurn, ShowInventory, ShowDropItem, 
@@ -61,7 +61,6 @@ impl State {
 impl GameState for State {      
     fn tick(&mut self, ctx : &mut Rltk) {
         ctx.cls();
-        
         draw_map(&self.ecs, ctx);
 
         {
@@ -75,8 +74,11 @@ impl GameState for State {
                 let idx = map.xy_idx(pos.x, pos.y);
                 if map.visible_tiles[idx] { ctx.set(pos.x, pos.y, render.fg, render.bg, render.glyph) }
             }
-
+            
             gui::draw_ui(&self.ecs, ctx);        
+            if SHOW_FPS {
+                ctx.print(1, 59, &format!("FPS: {}", ctx.fps));
+            }
         }
 
         let mut newrunstate;
@@ -151,12 +153,16 @@ impl GameState for State {
         }
         
         {
-            let mut runwriter = self.ecs.write_resource::<RunState>();
+        let mut runwriter = self.ecs.write_resource::<RunState>();
             *runwriter = newrunstate;
         }
         damage_system::delete_the_dead(&mut self.ecs);
+
+        // rltk::render_draw_buffer(ctx);
+        
+        }
     }       
-}
+
         
 fn main() -> rltk::BError {
     use rltk::RltkBuilder;

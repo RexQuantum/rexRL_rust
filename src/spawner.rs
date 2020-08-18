@@ -18,7 +18,7 @@ pub fn player(ecs : &mut World, player_x : i32, player_y : i32) -> Entity {
         .with(Player{})
         .with(Viewshed{ visible_tiles : Vec::new(), range : 8, dirty: true })
         .with(Name{name: "Player".to_string() })
-        .with(CombatStats{ max_hp: 100, hp: 100, defense: 2, power: 5})
+        .with(CombatStats{ max_hp: 999, hp: 999, defense: 2, power: 7})
         .build()
 }        
 
@@ -91,7 +91,7 @@ fn beam_cell(ecs: &mut World, x: i32, y: i32) {
             bg: RGB::named(rltk::BLACK),
             render_order: 2
         })
-        .with(Name{ name : "Beam Cell Cube".to_string() })
+        .with(Name{ name : "Beam cell".to_string() })
         .with(Item{})
         .with(Consumable{})
         .with(Ranged{ range: 6 })
@@ -99,8 +99,8 @@ fn beam_cell(ecs: &mut World, x: i32, y: i32) {
         .build();
 }
 
-fn mopbot(ecs: &mut World, x: i32, y: i32) { monster(ecs, x, y, rltk::to_cp437('M'), "Mopbot"); }
-fn recyculon(ecs: &mut World, x:i32, y:i32) { monster(ecs, x, y, rltk::to_cp437('R'), "Recyculon"); }
+fn mopbot(ecs: &mut World, x: i32, y: i32) { monster(ecs, x, y, rltk::to_cp437('M'), "Mopulon"); }
+fn recyculon(ecs: &mut World, x: i32, y: i32) { monster(ecs, x, y, rltk::to_cp437('R'), "Recyclobot"); }
 
 /// BUILD A MONSTER! It's got the following components: Position, renderable, viewshed, Monster, Name, etc etc etc
 fn monster<S : ToString>(ecs: &mut World, x: i32, y: i32, glyph : rltk::FontCharType, name : S) {
