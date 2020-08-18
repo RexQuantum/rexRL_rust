@@ -210,7 +210,7 @@ fn main() -> rltk::BError {
     gs.ecs.insert(Point::new(player_x, player_y));
     gs.ecs.insert(player_entity); //this is the player
     gs.ecs.insert(RunState::PreRun);
-    gs.ecs.insert(gamelog::GameLog{ entries : vec!["You awaken in an unfamiliar place".to_string() ]});
+    gs.ecs.insert(gamelog::GameLog{ entries : vec!["You wake to unfamiliar surroundings".to_string() ]});
     
     rltk::main_loop(context, gs)
 }
