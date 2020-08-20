@@ -1,6 +1,6 @@
 use rltk::{ RGB, RandomNumberGenerator };
 use specs::prelude::*;
-use super::{CombatStats, Player, Renderable, Name, Position, Consumable, Viewshed, Monster, BlocksTile, Rect, map::MAPWIDTH, Item, ProvidesHealing, Ranged, AreaOfEffect, InflictsDamage };
+use super::{CombatStats, Player, Renderable, Name, Position, Consumable, Viewshed, Monster, BlocksTile, Confusion, Rect, map::MAPWIDTH, Item, ProvidesHealing, Ranged, AreaOfEffect, InflictsDamage, FlavorText };
 
 const MAX_MONSTERS : i32 = 4;
 const MAX_ITEMS : i32 = 2;
@@ -27,11 +27,12 @@ fn random_item(ecs: &mut World, x: i32, y: i32) {
     let roll :i32;
     {
         let mut rng = ecs.write_resource::<RandomNumberGenerator>();
-        roll = rng.roll_dice(1, 3);
+        roll = rng.roll_dice(1, 4);
     }
     match roll {
         1 => { repair_pack(ecs, x, y) }
         2 => { incendiary_grenade(ecs, x, y) }
+        3 => { confusion_grenade(ecs, x, y) }
         _ => { beam_cell(ecs, x, y) }
     }
 }
@@ -48,6 +49,8 @@ pub fn random_monster(ecs: &mut World, x: i32, y: i32) {
         _ => { recyculon(ecs, x, y) }
     }
 }
+
+
 
 fn repair_pack(ecs: &mut World, x: i32, y: i32) {
     ecs.create_entity()
@@ -96,6 +99,24 @@ fn beam_cell(ecs: &mut World, x: i32, y: i32) {
         .with(Consumable{})
         .with(Ranged{ range: 6 })
         .with(InflictsDamage{ damage: 8 })
+        .build();
+}
+
+fn confusion_grenade(ecs: &mut World, x: i32, y: i32) {
+    ecs.create_entity()
+        .with(Position{ x, y })
+        .with(Renderable{
+            glyph: rltk::to_cp437(')'),
+            fg: RGB::named(rltk::PINK),
+            bg: RGB::named(rltk::BLACK),
+            render_order: 2
+        })
+        .with(Name{ name : "Confusion Grenade".to_string() })
+        .with(Item{})
+        .with(Consumable{})
+        .with(Ranged{ range: 6 })
+        .with(Confusion{ turns: 4 })
+
         .build();
 }
 

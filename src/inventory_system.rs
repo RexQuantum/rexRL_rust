@@ -1,7 +1,7 @@
 use specs::prelude::*;
 use super::{WantsToPickupItem, Name, InBackpack, Position, gamelog::GameLog, WantsToUseItem,
     Consumable, ProvidesHealing, CombatStats, WantsToDropItem, InflictsDamage, Map, SufferDamage,
-    AreaOfEffect, Confusion };
+    AreaOfEffect, Confusion, FlavorText };
 
 pub struct ItemCollectionSystem {}
 
@@ -47,13 +47,14 @@ impl<'a> System<'a> for ItemUseSystem {
                         WriteStorage<'a, CombatStats>,
                         WriteStorage<'a, SufferDamage>,
                         ReadStorage<'a, AreaOfEffect>,
-                        WriteStorage<'a, Confusion>
+                        WriteStorage<'a, Confusion>,
+                        ReadStorage<'a, FlavorText>
                       );
 
         fn run(&mut self, data : Self::SystemData) {
             let (player_entity, mut gamelog, map, entities, mut wants_use, names,
                 consumables, healing, inflict_damage, mut combat_stats, mut suffer_damage,
-                aoe, mut confused) = data;
+                aoe, mut confused, mut flavor_text) = data;
                     
             for (entity, useitem) in (&entities, &wants_use).join() {
                 let mut used_item = true;
@@ -117,7 +118,7 @@ impl<'a> System<'a> for ItemUseSystem {
                         if entity == *player_entity {
                             let mob_name = names.get(*mob).unwrap();
                             let item_name = names.get(useitem.item).unwrap();
-                            gamelog.entries.push(format!("You use {} on {}, inflicting {} hp.", item_name.name, mob_name.name, damage.damage));
+                            gamelog.entries.push(format!("The {} flickers as it takes {} damage from your {}.", mob_name.name, damage.damage, item_name.name ));
                         }
 
                         used_item = true;
@@ -148,7 +149,7 @@ impl<'a> System<'a> for ItemUseSystem {
                 confused.insert(mob.0, Confusion{ turns: mob.1 }).expect("Unable to insert status");
             }
 
-            // If its a consumable, we delete it on use
+            // If its a consumable, we delete it on use. I don't know why this was so difficult for me to implement.
             if used_item {
                 let consumable = consumables.get(useitem.item);
                 match consumable {
