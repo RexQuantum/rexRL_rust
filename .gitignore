@@ -5,4 +5,4 @@
 # its dependencies, but let the downstream crate decide.
 Cargo.lock
 .VSCodeCounter/
-savegame.json
+
