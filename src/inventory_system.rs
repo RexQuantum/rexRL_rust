@@ -1,7 +1,7 @@
 use specs::prelude::*;
 use super::{WantsToPickupItem, Name, InBackpack, Position, gamelog::GameLog, WantsToUseItem,
     Consumable, ProvidesHealing, CombatStats, WantsToDropItem, InflictsDamage, Map, SufferDamage,
-    AreaOfEffect, Confusion, FlavorText };
+    AreaOfEffect, Confusion };
 
 pub struct ItemCollectionSystem {}
 
@@ -48,13 +48,12 @@ impl<'a> System<'a> for ItemUseSystem {
                         WriteStorage<'a, SufferDamage>,
                         ReadStorage<'a, AreaOfEffect>,
                         WriteStorage<'a, Confusion>,
-                        ReadStorage<'a, FlavorText>
                       );
 
         fn run(&mut self, data : Self::SystemData) {
             let (player_entity, mut gamelog, map, entities, mut wants_use, names,
                 consumables, healing, inflict_damage, mut combat_stats, mut suffer_damage,
-                aoe, mut confused, mut flavor_text) = data;
+                aoe, mut confused ) = data;
                     
             for (entity, useitem) in (&entities, &wants_use).join() {
                 let mut used_item = true;

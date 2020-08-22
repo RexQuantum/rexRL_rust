@@ -118,15 +118,3 @@ pub struct WantsToUseItem {
 pub struct WantsToDropItem {
     pub item : Entity
 }
-
-#[derive(Component, Debug)]
-pub struct FlavorText {
-    pub ft_describe : String,
-    pub ft_describe_corpse : String,
-    pub ft_confused : String,
-    pub ft_alerted : String,
-    pub ft_debuff : String,
-    pub ft_flee : String,
-    pub ft_suffer_damage : String,
-    pub ft_death : String
-}
