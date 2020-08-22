@@ -1,6 +1,7 @@
 extern crate serde;
 use rltk::{GameState, Rltk, Point};
 use specs::prelude::*;
+use specs::saveload::{SimpleMarker, SimpleMarkerAllocator};
 
 mod components;
 pub use components::*;
@@ -42,7 +43,7 @@ pub enum RunState { AwaitingInput,
 }
 
 pub struct State {
-    pub ecs: World,
+    pub ecs: World
 }
 
 impl State {
@@ -99,6 +100,7 @@ impl GameState for State {
                 }
             }
         }              
+
         match newrunstate {
             RunState::PreRun => {
                 self.run_systems();
@@ -175,22 +177,21 @@ impl GameState for State {
                                 saveload_system::delete_save();
                             }
                             gui::MainMenuSelection::Quit => { ::std::process::exit(0); }
-                        }                  
+                        }
                     }
-                } 
-                RunState::SaveGame => {
-                    let data = serde_json::to_string(&*self.ecs.fetch::<Map>()).unwrap();
-                    println!("{}", data);
-                
-                    newrunstate = RunState::MainMenu{ menu_selection : gui::MainMenuSelection::LoadGame };
-                }    
-            }   
-        }    
-            {
-                let mut runwriter = self.ecs.write_resource::<RunState>();
-                *runwriter = newrunstate;
+                }
             }
-            damage_system::delete_the_dead(&mut self.ecs);             
+            RunState::SaveGame => {
+                saveload_system::save_game(&mut self.ecs);
+                newrunstate = RunState::MainMenu{ menu_selection : gui::MainMenuSelection::Quit };
+            } 
+        }   
+
+        {
+            let mut runwriter = self.ecs.write_resource::<RunState>();
+            *runwriter = newrunstate;
+        }
+        damage_system::delete_the_dead(&mut self.ecs);             
     }
 }
      
@@ -226,7 +227,11 @@ fn main() -> rltk::BError {
     gs.ecs.register::<WantsToUseItem>();
     gs.ecs.register::<WantsToDropItem>();
     gs.ecs.register::<Confusion>();
+    gs.ecs.register::<SimpleMarker<SerializeMe>>();
+    gs.egs.register::<SerializationHelper>();
    
+    gs.ecs.insert(SimpleMarkerAllocator::<SerializeMe>::new());
+
     let map : Map = new_map_rooms_and_corridors();
     let (player_x, player_y) = map.rooms[0].center();
         
@@ -243,5 +248,6 @@ fn main() -> rltk::BError {
     gs.ecs.insert(RunState::PreRun);
     gs.ecs.insert(gamelog::GameLog{ entries : vec!["You wake to unfamiliar surroundings".to_string() ]});
     
+
     rltk::main_loop(context, gs)
 }
