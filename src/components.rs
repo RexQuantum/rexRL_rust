@@ -5,9 +5,6 @@ use serde::{Serialize, Deserialize};
 use specs::saveload::{Marker, ConvertSaveload};
 use specs::error::NoError;
 
-pub struct SerializeMe;
-
-
 #[derive(Component, ConvertSaveload, Clone)]
 pub struct Position {
     pub x: i32,
@@ -22,7 +19,7 @@ pub struct Renderable {
     pub render_order : i32
 }
 
-#[derive(Component, Serialize, Deserialize, ConvertSaveLoad, Debug)]
+#[derive(Component, Serialize, Deserialize, Clone)]
 pub struct Player {}
 
 #[derive(Component, ConvertSaveload, Clone)]
@@ -32,7 +29,7 @@ pub struct Viewshed {
     pub dirty : bool
 }
 
-#[derive(Component, Serialize, Deserialize, Debug)]
+#[derive(Component, Debug, Serialize, Deserialize, Clone)]
 pub struct Monster {}
 
 #[derive(Component, Debug, ConvertSaveload, Clone)]
@@ -51,12 +48,12 @@ pub struct CombatStats {
     pub power : i32
 }
 
-#[derive(Component, Debug, ConvertSaveLoad, Clone)]
+#[derive(Component, Debug, ConvertSaveload, Clone)]
 pub struct WantsToMelee {
     pub target : Entity
 }
 
-#[derive(Component, Debug)]
+#[derive(Component, Debug, ConvertSaveload, Clone)]
 pub struct SufferDamage {
     pub amount : Vec<i32>
 }
@@ -103,24 +100,24 @@ pub struct ProvidesHealing {
     pub heal_amount : i32
 }
 
-#[derive(Component, Debug, ConvertSaveload, Clone)]
+#[derive(Component, Debug, ConvertSaveload)]
 pub struct InBackpack {
     pub owner : Entity
 }
 
-#[derive(Component, Debug, ConvertSaveload, Clone)]
+#[derive(Component, Debug, ConvertSaveload)]
 pub struct WantsToPickupItem {
     pub collected_by : Entity,
     pub item : Entity
 }
 
-#[derive(Component, Debug, ConvertSaveload, Clone)]
+#[derive(Component, Debug, ConvertSaveload)]
 pub struct WantsToUseItem {
     pub item : Entity,
     pub target : Option<rltk::Point>
 }
 
-#[derive(Component, Debug, ConvertSaveload, Clone)]
+#[derive(Component, Debug, ConvertSaveload)]
 pub struct WantsToDropItem {
     pub item : Entity
 }

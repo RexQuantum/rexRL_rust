@@ -87,7 +87,7 @@ impl Map {
 }
 
 
-/// Makes a new map using the algorithm from the RLTK (now called bracket-lib) tutorial
+/// Makes a new map using the algorithm from the RLTK (now called bracket-lib) 
 /// This gives a handful of random square rooms and corridors joining them together.
 /// Note to Rex: Do a big big big thank-you to this guy. I don't know if he understands 
 /// how helpful he's been. 

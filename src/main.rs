@@ -228,7 +228,7 @@ fn main() -> rltk::BError {
     gs.ecs.register::<WantsToDropItem>();
     gs.ecs.register::<Confusion>();
     gs.ecs.register::<SimpleMarker<SerializeMe>>();
-    gs.egs.register::<SerializationHelper>();
+    gs.ecs.register::<SerializationHelper>();
    
     gs.ecs.insert(SimpleMarkerAllocator::<SerializeMe>::new());
 

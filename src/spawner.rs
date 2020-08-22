@@ -1,6 +1,9 @@
 use rltk::{ RGB, RandomNumberGenerator };
 use specs::prelude::*;
-use super::{CombatStats, Player, Renderable, Name, Position, Consumable, Viewshed, Monster, BlocksTile, Confusion, Rect, map::MAPWIDTH, Item, ProvidesHealing, Ranged, AreaOfEffect, InflictsDamage };
+use super::{CombatStats, Player, Renderable, Name, Position, Viewshed, Monster, BlocksTile, Rect, Item,
+    Consumable, Ranged, ProvidesHealing, map::MAPWIDTH, InflictsDamage, AreaOfEffect, Confusion, SerializeMe};
+use specs::saveload::{MarkedBuilder, SimpleMarker};
+
 
 const MAX_MONSTERS : i32 = 4;
 const MAX_ITEMS : i32 = 2;
