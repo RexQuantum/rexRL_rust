@@ -1,3 +1,4 @@
+#[derive(PartialEq, Copy, Clone, Serialize, Deserialize)]
 pub struct Rect {
     pub x1 : i32,
     pub x2 : i32,
