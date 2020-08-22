@@ -68,6 +68,8 @@ pub fn player_input(gs: &mut State, ctx: &mut Rltk) -> RunState {
     match ctx.key {
         None => { return RunState::AwaitingInput } // Nothing happened
         Some(key) => match key {
+            // Save and Quit
+            VirtualKeyCode::Escape => return RunState::SaveGame,
             VirtualKeyCode::Left |
             VirtualKeyCode::Numpad4 |
             VirtualKeyCode::H => try_move_player(-1, 0, &mut gs.ecs),
