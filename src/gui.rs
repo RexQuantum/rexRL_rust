@@ -1,8 +1,7 @@
-
 use rltk::{ RGB, Rltk, Point, VirtualKeyCode };
 use specs::prelude::*;
-use super::{CombatStats, Player, gamelog::GameLog, Map, Name, Position, State, InBackpack, Viewshed, RunState };
-
+use super::{CombatStats, Player, gamelog::GameLog, Map, Name, Position, State, InBackpack,
+    Viewshed, RunState, Equipped};
 
 pub fn draw_ui(ecs: &World, ctx : &mut Rltk) {
     ctx.draw_box(0, 43, 79, 6, RGB::named(rltk::WHITE), RGB::named(rltk::BLACK));
@@ -10,25 +9,29 @@ pub fn draw_ui(ecs: &World, ctx : &mut Rltk) {
     let combat_stats = ecs.read_storage::<CombatStats>();
     let players = ecs.read_storage::<Player>();
     for (_player, stats) in (&players, &combat_stats).join() {
-        let health = format!("HP: {} / {} ", stats.hp, stats.max_hp);
+        let health = format!(" HP: {} / {} ", stats.hp, stats.max_hp);
         ctx.print_color(12, 43, RGB::named(rltk::YELLOW), RGB::named(rltk::BLACK), &health);
 
         ctx.draw_bar_horizontal(28, 43, 51, stats.hp, stats.max_hp, RGB::named(rltk::RED), RGB::named(rltk::BLACK));
     }
 
+    let map = ecs.fetch::<Map>();
+    let depth = format!("Depth: {}", map.depth);
+    ctx.print_color(2, 43, RGB::named(rltk::YELLOW), RGB::named(rltk::BLACK), &depth);
+
+
     let log = ecs.fetch::<GameLog>();
     let mut y = 44;
     for s in log.entries.iter().rev() {
-            if y < 49 { ctx.print(2, y, s); }
-            y += 1;
-}
+        if y < 49 { ctx.print(2, y, s); }
+        y += 1;
+    }
+
     // Draw mouse cursor
     let mouse_pos = ctx.mouse_pos();
     ctx.set_bg(mouse_pos.0, mouse_pos.1, RGB::named(rltk::MAGENTA));
     draw_tooltips(ecs, ctx);
 }
-
-
 
 fn draw_tooltips(ecs: &World, ctx : &mut Rltk) {
     let map = ecs.fetch::<Map>();
@@ -82,7 +85,6 @@ fn draw_tooltips(ecs: &World, ctx : &mut Rltk) {
     }
 }
 
-
 #[derive(PartialEq, Copy, Clone)]
 pub enum ItemMenuResult { Cancel, NoResponse, Selected }
 
@@ -118,11 +120,11 @@ pub fn show_inventory(gs : &mut State, ctx : &mut Rltk) -> (ItemMenuResult, Opti
         Some(key) => {
             match key {
                 VirtualKeyCode::Escape => { (ItemMenuResult::Cancel, None) }
-                _ => { 
+                _ => {
                     let selection = rltk::letter_to_option(key);
                     if selection > -1 && selection < count as i32 {
                         return (ItemMenuResult::Selected, Some(equippable[selection as usize]));
-                    }  
+                    }
                     (ItemMenuResult::NoResponse, None)
                 }
             }
@@ -161,11 +163,11 @@ pub fn drop_item_menu(gs : &mut State, ctx : &mut Rltk) -> (ItemMenuResult, Opti
         Some(key) => {
             match key {
                 VirtualKeyCode::Escape => { (ItemMenuResult::Cancel, None) }
-                _ => { 
+                _ => {
                     let selection = rltk::letter_to_option(key);
                     if selection > -1 && selection < count as i32 {
                         return (ItemMenuResult::Selected, Some(equippable[selection as usize]));
-                    }  
+                    }
                     (ItemMenuResult::NoResponse, None)
                 }
             }
@@ -286,4 +288,18 @@ pub fn main_menu(gs : &mut State, ctx : &mut Rltk) -> MainMenuResult {
     }
 
     MainMenuResult::NoSelection { selected: MainMenuSelection::NewGame }
+}
+
+#[derive(PartialEq, Copy, Clone)]
+pub enum GameOverResult { NoSelection, QuitToMenu }
+
+pub fn game_over(ctx : &mut Rltk) -> GameOverResult {
+
+    ctx.print_color_centered(18, RGB::named(rltk::WHITE), RGB::named(rltk::BLACK), "Huh... that didn't seem to take long");
+    ctx.print_color_centered(20, RGB::named(rltk::MAGENTA), RGB::named(rltk::BLACK), "Press any key to return to the menu.");
+
+    match ctx.key {
+        None => GameOverResult::NoSelection,
+        Some(_) => GameOverResult::QuitToMenu
+    }
 }
