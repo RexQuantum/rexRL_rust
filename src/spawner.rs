@@ -32,7 +32,7 @@ fn room_table(map_depth: i32) -> RandomTable {
         .add("Confusion Grenade", 1 + map_depth)
         .add("Repair Pack", 7)
         .add("Incendiary Grenade", 4 + map_depth)
-        .add("Malfunctioning Knife Missile", 4 + map_depth)
+        .add("Beam Cell", 4 + map_depth)
         .add("Blade Effector", map_depth -1)
         
 }
@@ -76,11 +76,11 @@ pub fn spawn_room(ecs: &mut World, room : &Rect, map_depth: i32) {
             "Repair Pack" => repair_pack(ecs, x, y),
             "Incendiary Grenade" => incendiary_grenade(ecs, x, y),
             "Confusion Grenade" => confusion_grenade(ecs, x, y),
-            "Malfunctioning Knife Missile" => beam_cell(ecs, x, y),
-            "Broken Knife Missile" => dagger(ecs, x, y),
+            "Beam Cell" => beam_cell(ecs, x, y),
+            "Plasteel Shard" => dagger(ecs, x, y),
             "Malfunctioning Defensive Effectors" => shield(ecs, x, y),
             "Blade Effector" => longsword(ecs, x, y),
-            "Weak Defensive Effectors" => tower_shield(ecs, x, y),
+            "Weak Defensive Effectors" => shield_lv2(ecs, x, y),
             _ => {}
         }
     }
@@ -95,7 +95,7 @@ fn dagger(ecs: &mut World, x: i32, y: i32) {
             bg: RGB::named(rltk::BLACK),
             render_order: 2
         })
-        .with(Name{ name : "Broken Knife Missile".to_string() })
+        .with(Name{ name : "Plasteel Shard".to_string() })
         .with(Item{})
         .with(Equippable{ slot: EquipmentSlot::Melee })
         .with(MeleePowerBonus{ power: 2 })
@@ -137,7 +137,7 @@ fn longsword(ecs: &mut World, x: i32, y: i32) {
         .build();
 }
 
-fn tower_shield(ecs: &mut World, x: i32, y: i32) {
+fn shield_lv2(ecs: &mut World, x: i32, y: i32) {
     ecs.create_entity()
         .with(Position{ x, y })
         .with(Renderable{
