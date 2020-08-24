@@ -1,13 +1,12 @@
 use rltk::{ RGB, RandomNumberGenerator };
 use specs::prelude::*;
 use super::{CombatStats, Player, Renderable, Name, Position, Viewshed, Monster, BlocksTile, Rect, Item,
-    Consumable, Ranged, ProvidesHealing, map::MAPWIDTH, InflictsDamage, AreaOfEffect, Confusion, SerializeMe};
+    Consumable, Ranged, ProvidesHealing, map::MAPWIDTH, InflictsDamage, AreaOfEffect, Confusion, SerializeMe,
+    random_table::RandomTable, EquipmentSlot, Equippable, MeleePowerBonus, DefenseBonus };
 use specs::saveload::{MarkedBuilder, SimpleMarker};
+use std::collections::HashMap;
 
-
-const MAX_MONSTERS : i32 = 4;
-const MAX_ITEMS : i32 = 2;
-
+/// Spawns the player and returns his/her entity object.
 pub fn player(ecs : &mut World, player_x : i32, player_y : i32) -> Entity {
     ecs
         .create_entity()
@@ -24,8 +23,17 @@ pub fn player(ecs : &mut World, player_x : i32, player_y : i32) -> Entity {
         .with(CombatStats{ max_hp: 30, hp: 30, defense: 2, power: 5 })
         .marked::<SimpleMarker<SerializeMe>>()
         .build()
-}     
+}
 
+const MAX_MONSTERS : i32 = 4;
+
+fn room_table(map_depth: i32) -> RandomTable {
+    RandomTable::new()
+        .add("Recyculon", 10)
+        .add("Mopbot", 1 + map_depth)
+
+        
+}
 //this function rolls a random item
 fn random_item(ecs: &mut World, x: i32, y: i32) {
     let roll :i32;
