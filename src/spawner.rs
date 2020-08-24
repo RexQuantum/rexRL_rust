@@ -163,7 +163,7 @@ fn repair_pack(ecs: &mut World, x: i32, y: i32) {
             bg: RGB::named(rltk::BLACK),
             render_order: 2
         })
-        .with(Name{ name : "Bioreplicator repair pack".to_string() })
+        .with(Name{ name : "Repair pack".to_string() })
         .with(Item{})
         .with(Consumable{})
         .with(ProvidesHealing{ heal_amount: 8 })
