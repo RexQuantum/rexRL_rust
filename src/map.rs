@@ -89,7 +89,7 @@ impl Map {
 /// This gives a handful of random square rooms and corridors joining them together.
 /// Note to Rex: Do a big big big thank-you to this guy. I don't know if he understands 
 /// how helpful he's been. 
-    pub fn new_map_rooms_and_corridors() -> Map {
+    pub fn new_map_rooms_and_corridors(new_depth : i32) -> Map {
         let mut map = Map{
             tiles : vec![TileType::Wall; MAPCOUNT],
             rooms : Vec::new(),

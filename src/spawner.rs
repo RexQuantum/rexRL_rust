@@ -1,8 +1,6 @@
 use rltk::{ RGB, RandomNumberGenerator };
 use specs::prelude::*;
-use super::{CombatStats, Player, Renderable, Name, Position, Viewshed, Monster, BlocksTile, Rect, Item,
-    Consumable, Ranged, ProvidesHealing, map::MAPWIDTH, InflictsDamage, AreaOfEffect, Confusion, SerializeMe,
-    random_table::RandomTable, EquipmentSlot, Equippable, MeleePowerBonus, DefenseBonus };
+use super::{CombatStats, Player, Renderable, Name, Position, Viewshed, Monster, BlocksTile, Rect, Item, Consumable, Ranged, ProvidesHealing, map::MAPWIDTH, InflictsDamage, AreaOfEffect, Confusion, SerializeMe, random_table::RandomTable, EquipmentSlot, Equippable, MeleePowerBonus, DefenseBonus };
 use specs::saveload::{MarkedBuilder, SimpleMarker};
 use std::collections::HashMap;
 
@@ -30,39 +28,126 @@ const MAX_MONSTERS : i32 = 4;
 fn room_table(map_depth: i32) -> RandomTable {
     RandomTable::new()
         .add("Recyculon", 10)
-        .add("Mopbot", 1 + map_depth)
-
-        
+        .add("Mopbot", 1 + map_depth)  
+        .add("Confusion Grenade", 1 + map_depth)
 }
-//this function rolls a random item
-fn random_item(ecs: &mut World, x: i32, y: i32) {
-    let roll :i32;
+
+// Fills a room with stuff!
+#[allow(clippy::map_entry)]
+pub fn spawn_room(ecs: &mut World, room : &Rect, map_depth: i32) {
+    let spawn_table = room_table(map_depth);
+    let mut spawn_points : HashMap<usize, String> = HashMap::new();
+
+    // Scope to keep the borrow checker happy
     {
         let mut rng = ecs.write_resource::<RandomNumberGenerator>();
-        roll = rng.roll_dice(1, 4);
+        let num_spawns = rng.roll_dice(1, MAX_MONSTERS + 3) + (map_depth - 1) - 3;
+
+        for _i in 0 .. num_spawns {
+            let mut added = false;
+            let mut tries = 0;
+            while !added && tries < 20 {
+                let x = (room.x1 + rng.roll_dice(1, i32::abs(room.x2 - room.x1))) as usize;
+                let y = (room.y1 + rng.roll_dice(1, i32::abs(room.y2 - room.y1))) as usize;
+                let idx = (y * MAPWIDTH) + x;
+                if !spawn_points.contains_key(&idx) {
+                    spawn_points.insert(idx, spawn_table.roll(&mut rng));
+                    added = true;
+                } else {
+                    tries += 1;
+                }
+            }
+        }
     }
-    match roll {
-        1 => { repair_pack(ecs, x, y) }
-        2 => { incendiary_grenade(ecs, x, y) }
-        3 => { confusion_grenade(ecs, x, y) }
-        _ => { beam_cell(ecs, x, y) }
+
+    // Actually spawn the monsters
+    for spawn in spawn_points.iter() {
+        let x = (*spawn.0 % MAPWIDTH) as i32;
+        let y = (*spawn.0 / MAPWIDTH) as i32;
+
+        match spawn.1.as_ref() {
+            "Recyculon" => recyculon(ecs, x, y),
+            "Mopbot" => mopbot(ecs, x, y),
+            "Repair Pack" => repair_pack(ecs, x, y),
+            "Incendiary Grenade" => incendiary_grenade(ecs, x, y),
+            "Confusion Grenade" => confusion_grenade(ecs, x, y),
+            "Malfunctioning Knife Missile" => beam_cell(ecs, x, y),
+            "Broken Knife Missile" => dagger(ecs, x, y),
+            "Malfunctioning Defensive Effectors" => shield(ecs, x, y),
+            "Blade Effector" => longsword(ecs, x, y),
+            "Weak Defensive Effectors" => tower_shield(ecs, x, y),
+            _ => {}
+        }
     }
 }
 
-/// Spawns a random monster at a given location
-pub fn random_monster(ecs: &mut World, x: i32, y: i32) {
-    let roll :i32;
-    {
-        let mut rng = ecs.write_resource::<RandomNumberGenerator>();
-        roll = rng.roll_dice(1, 2);
-    }
-    match roll {
-        1 => { mopbot(ecs, x, y) }
-        _ => { recyculon(ecs, x, y) }
-    }
+fn dagger(ecs: &mut World, x: i32, y: i32) {
+    ecs.create_entity()
+        .with(Position{ x, y })
+        .with(Renderable{
+            glyph: rltk::to_cp437('/'),
+            fg: RGB::named(rltk::CYAN),
+            bg: RGB::named(rltk::BLACK),
+            render_order: 2
+        })
+        .with(Name{ name : "Broken Knife Missile".to_string() })
+        .with(Item{})
+        .with(Equippable{ slot: EquipmentSlot::Melee })
+        .with(MeleePowerBonus{ power: 2 })
+        .marked::<SimpleMarker<SerializeMe>>()
+        .build();
 }
 
+fn shield(ecs: &mut World, x: i32, y: i32) {
+    ecs.create_entity()
+        .with(Position{ x, y })
+        .with(Renderable{
+            glyph: rltk::to_cp437('('),
+            fg: RGB::named(rltk::CYAN),
+            bg: RGB::named(rltk::BLACK),
+            render_order: 2
+        })
+        .with(Name{ name : "Malfunctioning Defensive Effectors".to_string() })
+        .with(Item{})
+        .with(Equippable{ slot: EquipmentSlot::Shield })
+        .with(DefenseBonus{ defense: 1 })
+        .marked::<SimpleMarker<SerializeMe>>()
+        .build();
+}
 
+fn longsword(ecs: &mut World, x: i32, y: i32) {
+    ecs.create_entity()
+        .with(Position{ x, y })
+        .with(Renderable{
+            glyph: rltk::to_cp437('/'),
+            fg: RGB::named(rltk::YELLOW),
+            bg: RGB::named(rltk::BLACK),
+            render_order: 2
+        })
+        .with(Name{ name : "Blade Effector".to_string() })
+        .with(Item{})
+        .with(Equippable{ slot: EquipmentSlot::Melee })
+        .with(MeleePowerBonus{ power: 4 })
+        .marked::<SimpleMarker<SerializeMe>>()
+        .build();
+}
+
+fn tower_shield(ecs: &mut World, x: i32, y: i32) {
+    ecs.create_entity()
+        .with(Position{ x, y })
+        .with(Renderable{
+            glyph: rltk::to_cp437('('),
+            fg: RGB::named(rltk::YELLOW),
+            bg: RGB::named(rltk::BLACK),
+            render_order: 2
+        })
+        .with(Name{ name : "Weak Defensive Effectors".to_string() })
+        .with(Item{})
+        .with(Equippable{ slot: EquipmentSlot::Shield })
+        .with(DefenseBonus{ defense: 3 })
+        .marked::<SimpleMarker<SerializeMe>>()
+        .build();
+}
 
 fn repair_pack(ecs: &mut World, x: i32, y: i32) {
     ecs.create_entity()
@@ -157,57 +242,3 @@ fn monster<S : ToString>(ecs: &mut World, x: i32, y: i32, glyph : rltk::FontChar
         .build();
 }
 
-/// Fills a room with stuff!
-pub fn spawn_room(ecs: &mut World, room : &Rect) {
-    let mut monster_spawn_points : Vec<usize> = Vec::new();
-    let mut item_spawn_points : Vec<usize> = Vec::new();
-
-    // Scope to keep the borrow checker happy
-    {
-        let mut rng = ecs.write_resource::<RandomNumberGenerator>();
-        let num_monsters = rng.roll_dice(1, MAX_MONSTERS + 2) - 3;
-        let num_items = rng.roll_dice(1, MAX_ITEMS + 2) - 3;
-
-
-        for _i in 0 .. num_monsters {
-            let mut added = false;
-            while !added {
-                let x = (room.x1 + rng.roll_dice(1, i32::abs(room.x2 - room.x1))) as usize;
-                let y = (room.y1 + rng.roll_dice(1, i32::abs(room.y2 - room.y1))) as usize;
-                let idx = (y * MAPWIDTH) + x;
-                if !monster_spawn_points.contains(&idx) {
-                    monster_spawn_points.push(idx);
-                    added = true;
-                }
-            }
-        }
-
-        for _i in 0 .. num_items {
-            let mut added = false;
-            while !added {
-                let x = (room.x1 + rng.roll_dice(1, i32::abs(room.x2 - room.x1))) as usize;
-                let y = (room.y1 + rng.roll_dice(1, i32::abs(room.y2 - room.y1))) as usize;
-                let idx = (y * MAPWIDTH) + x;
-                if !item_spawn_points.contains(&idx) {
-                    item_spawn_points.push(idx);
-                    added = true;
-                }
-            }
-        }
-    }
-
-    // Actually spawn the monsters
-    for idx in monster_spawn_points.iter() {
-        let x = *idx % MAPWIDTH;
-        let y = *idx / MAPWIDTH;
-        random_monster(ecs, x as i32, y as i32);
-    }
-    
-    //Actually spawn the items
-    for idx in item_spawn_points.iter() {
-        let x = *idx % MAPWIDTH;
-        let y = *idx / MAPWIDTH;
-        random_item(ecs, x as i32, y as i32);
-    }
-   
-}
