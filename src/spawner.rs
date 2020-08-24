@@ -30,6 +30,11 @@ fn room_table(map_depth: i32) -> RandomTable {
         .add("Recyculon", 10)
         .add("Mopbot", 1 + map_depth)  
         .add("Confusion Grenade", 1 + map_depth)
+        .add("Repair Pack", 7)
+        .add("Incendiary Grenade", 4 + map_depth)
+        .add("Malfunctioning Knife Missile", 4 + map_depth)
+        .add("Blade Effector", map_depth -1)
+        
 }
 
 // Fills a room with stuff!
