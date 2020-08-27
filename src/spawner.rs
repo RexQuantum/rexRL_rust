@@ -34,7 +34,9 @@ fn room_table(map_depth: i32) -> RandomTable {
         .add("Incendiary Grenade", 4 + map_depth)
         .add("Beam Cell", 4 + map_depth)
         .add("Blade Effector", map_depth -1)
-        
+        .add("Plasteel Shard", map_depth)
+        .add("Weak Defensive Effectors", map_depth)
+        .add("Malfunctioning Defensive Effectors", map_depth - 1)
 }
 
 // Fills a room with stuff!
@@ -132,7 +134,7 @@ fn longsword(ecs: &mut World, x: i32, y: i32) {
         .with(Name{ name : "Blade Effector".to_string() })
         .with(Item{})
         .with(Equippable{ slot: EquipmentSlot::Melee })
-        .with(MeleePowerBonus{ power: 4 })
+        .with(MeleePowerBonus{ power: 8 })
         .marked::<SimpleMarker<SerializeMe>>()
         .build();
 }

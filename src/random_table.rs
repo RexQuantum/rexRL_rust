@@ -1,5 +1,7 @@
 use rltk::RandomNumberGenerator;
 
+// This is how we handle all our weighted random stuff for our spawner
+
 pub struct RandomEntry {
     name : String,
     weight : i32

@@ -218,7 +218,6 @@ pub fn remove_item_menu(gs : &mut State, ctx : &mut Rltk) -> (ItemMenuResult, Op
     }
 }
 
-
 pub fn ranged_target(gs : &mut State, ctx : &mut Rltk, range : i32) -> (ItemMenuResult, Option<Point>) {
     let player_entity = gs.ecs.fetch::<Entity>();
     let player_pos = gs.ecs.fetch::<Point>();
@@ -271,8 +270,8 @@ pub fn main_menu(gs : &mut State, ctx : &mut Rltk) -> MainMenuResult {
     let save_exists = super::saveload_system::does_save_exist();
     let runstate = gs.ecs.fetch::<RunState>();
 
-    ctx.print_color_centered(14, RGB::named(rltk::YELLOW), RGB::named(rltk::BLACK), "Outside Context Problem:");
-    ctx.print_color_centered(16, RGB::named(rltk::YELLOW), RGB::named(rltk::BLACK), "A game by Rex Diogenes");
+    ctx.print_color_centered(14, RGB::named(rltk::YELLOW), RGB::named(rltk::BLACK), "Untitled:");
+    ctx.print_color_centered(16, RGB::named(rltk::YELLOW), RGB::named(rltk::BLACK), "A game by Alexander Diogenes");
 
     if let RunState::MainMenu{ menu_selection : selection } = *runstate {
         if selection == MainMenuSelection::NewGame {

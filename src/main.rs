@@ -372,7 +372,7 @@ fn main() -> rltk::BError {
     let mut context = RltkBuilder::simple80x50()
         .with_title("Rex is making a game")
         .build()?;
-    context.with_post_scanlines(true);
+    context.with_post_scanlines(false);
     let mut gs = State {
         ecs: World::new()
     };
@@ -397,14 +397,14 @@ fn main() -> rltk::BError {
     gs.ecs.register::<WantsToPickupItem>();
     gs.ecs.register::<WantsToUseItem>();
     gs.ecs.register::<WantsToDropItem>();
+    gs.ecs.register::<WantsToRemoveItem>();
     gs.ecs.register::<Confusion>();
     gs.ecs.register::<SimpleMarker<SerializeMe>>();
     gs.ecs.register::<SerializationHelper>();
     gs.ecs.register::<Equippable>();
     gs.ecs.register::<Equipped>();
     gs.ecs.register::<MeleePowerBonus>();
-    gs.ecs.register::<DefenseBonus>();
-    gs.ecs.register::<WantsToRemoveItem>();
+    gs.ecs.register::<DefenseBonus>();    
 
     gs.ecs.insert(SimpleMarkerAllocator::<SerializeMe>::new());
 
