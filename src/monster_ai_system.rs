@@ -2,9 +2,9 @@ use specs::prelude::*;
 use super::{Viewshed, Monster, Map, Position, WantsToMelee, RunState, Confusion};
 use rltk::{Point};
 
-// "Monster," of course, is only a loosely-used term. It is debatable whether or not 
-// any entities, hostile or no, are or aren't monsters, in the ethical sense. -Rex, 8.15.2020
+
 pub struct MonsterAI {}
+
 
 impl<'a> System<'a> for MonsterAI {
     #[allow(clippy::type_complexity)]
@@ -19,22 +19,27 @@ impl<'a> System<'a> for MonsterAI {
                         WriteStorage<'a, WantsToMelee>,
                         WriteStorage<'a, Confusion>);
 
+
     fn run(&mut self, data : Self::SystemData) {
         let (mut map, player_pos, player_entity, runstate, entities, mut viewshed, monster, mut position, mut wants_to_melee, mut confused) = data;
 
+
         if *runstate != RunState::MonsterTurn { return; }
+
 
         for (entity, mut viewshed,_monster,mut pos) in (&entities, &mut viewshed, &monster, &mut position).join() {
             let mut can_act = true;
 
+
             let is_confused = confused.get_mut(entity);
             if let Some(i_am_confused) = is_confused {
-                i_am_confused.turns -= 1;
+                i_am_confused.turns -= 7;
                 if i_am_confused.turns < 1 {
                     confused.remove(entity);
                 }
                 can_act = false;
             }
+
 
             if can_act {
                 let distance = rltk::DistanceAlg::Pythagoras.distance2d(Point::new(pos.x, pos.y), *player_pos);
