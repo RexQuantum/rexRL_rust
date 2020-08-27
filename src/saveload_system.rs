@@ -20,7 +20,10 @@ macro_rules! serialize_individually {
     };
 }
 
-#[cfg(target_arch = "wasm32")]
+// the #cfg in the next line skips save/load if we compile it for web assmebly.
+// i wanna publish this for web assembly but saving and handling files is screwy and options are limited.
+// one thing at a time; I just don't want to wonder why it doesn't work for wasm when I implement it later.
+#[cfg(target_arch = "wasm32")] 
 pub fn save_game(_ecs : &mut World) {
 }
 
