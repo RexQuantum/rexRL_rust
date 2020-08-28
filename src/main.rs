@@ -28,6 +28,7 @@ mod inventory_system;
 use inventory_system::{ ItemCollectionSystem, ItemUseSystem, ItemDropSystem, ItemRemoveSystem };
 pub mod saveload_system;
 pub mod random_table;
+pub mod map_builders;
 
 
 

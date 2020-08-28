@@ -83,7 +83,25 @@ impl Map {
         }
     }
 
-
+    /// Generates an empty map, consisting entirely of solid walls
+    /// This way a Map knows how to return a new one as a constructor,
+    /// without having to encapsulate all the logic for map layout.
+    /// The idea is that any Map will work basically the same way, 
+    /// regardless of how we've decided to populate it.
+    pub fn new(new_depth : i32) -> Map {
+        Map{
+            tiles : vec![TileType::Wall; MAPCOUNT],
+            rooms : Vec::new(),
+            width : MAPWIDTH as i32,
+            height : MAPHEIGHT as i32,
+            revealed_tiles : vec![false; MAPCOUNT],
+            visible_tiles : vec![false; MAPCOUNT],
+            blocked : vec![false; MAPCOUNT],
+            tile_content : vec![Vec::new(); MAPCOUNT],
+            depth: new_depth,
+            //implement later// bloodstains: HashSet::new()
+        }
+    }
 
 /// Makes a new map using the algorithm from the RLTK (now called bracket-lib) 
 /// This gives a handful of random square rooms and corridors joining them together.
