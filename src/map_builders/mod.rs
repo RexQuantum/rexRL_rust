@@ -5,6 +5,9 @@ and how to interact with it.
 */
 
 use super::Map;
+mod simple_map;
+use simple_map::SimpleMapBuilder;
+ 
 
 trait MapBuilder {
     fn build(new_depth: i32) -> Map;
