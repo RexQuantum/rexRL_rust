@@ -1,3 +1,6 @@
+use serde::{Serialize, Deserialize};
+
+#[derive(PartialEq, Copy, Clone, Serialize, Deserialize)]
 pub struct Rect {
     pub x1 : i32,
     pub x2 : i32,
@@ -6,10 +9,9 @@ pub struct Rect {
 }
 
 impl Rect {
-    pub fn new(x:i32, y:i32, w:i32, h:i32) -> Rect {
+    pub fn new(x:i32, y: i32, w:i32, h:i32) -> Rect {
         Rect{x1:x, y1:y, x2:x+w, y2:y+h}
     }
-
 
     // Returns true if this overlaps with other
     pub fn intersect(&self, other:&Rect) -> bool {
