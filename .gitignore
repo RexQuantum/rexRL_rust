@@ -7,21 +7,3 @@ Cargo.lock
 .VSCodeCounter/
 
 savegame.json
-
-examples/chapter-14-gear/Cargo.toml
-examples/chapter-14-gear/src/components.rs
-examples/chapter-14-gear/src/damage_system.rs
-examples/chapter-14-gear/src/gamelog.rs
-examples/chapter-14-gear/src/gui.rs
-examples/chapter-14-gear/src/inventory_system.rs
-examples/chapter-14-gear/src/main.rs
-examples/chapter-14-gear/src/map_indexing_system.rs
-examples/chapter-14-gear/src/map.rs
-examples/chapter-14-gear/src/melee_combat_system.rs
-examples/chapter-14-gear/src/monster_ai_system.rs
-examples/chapter-14-gear/src/player.rs
-examples/chapter-14-gear/src/random_table.rs
-examples/chapter-14-gear/src/rect.rs
-examples/chapter-14-gear/src/saveload_system.rs
-examples/chapter-14-gear/src/spawner.rs
-examples/chapter-14-gear/src/visibility_system.rs
