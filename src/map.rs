@@ -3,6 +3,7 @@ use specs::prelude::*;
 use serde::{Serialize, Deserialize};
 use std::collections::HashSet;
 
+
 pub const MAPWIDTH : usize = 80;
 pub const MAPHEIGHT : usize = 43;
 pub const MAPCOUNT : usize = MAPHEIGHT * MAPWIDTH;
