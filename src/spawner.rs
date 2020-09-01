@@ -88,6 +88,28 @@ pub fn spawn_room(ecs: &mut World, room : &Rect, map_depth: i32) {
     }
 }
 
+fn mopbot(ecs: &mut World, x: i32, y: i32) { monster(ecs, x, y, rltk::to_cp437('M'), "Mopulon"); }
+fn recyculon(ecs: &mut World, x: i32, y: i32) { monster(ecs, x, y, rltk::to_cp437('R'), "Recyclobot"); }
+
+/// BUILD A MONSTER! It's got the following components: Position, renderable, viewshed, Monster, Name, etc etc etc
+fn monster<S : ToString>(ecs: &mut World, x: i32, y: i32, glyph : rltk::FontCharType, name : S) {
+    ecs.create_entity()
+        .with(Position{ x, y })
+        .with(Renderable{
+            glyph,
+            fg: RGB::named(rltk::RED),
+            bg: RGB::named(rltk::BLACK),
+            render_order: 1
+        })
+        .with(Viewshed{ visible_tiles : Vec::new(), range: 8, dirty: true })
+        .with(Monster{})
+        .with(Name{ name: name.to_string() }) //
+        .with(BlocksTile{})
+        .with(CombatStats{ max_hp: 16, hp: 16, defense: 1, power: 4 })
+        .marked::<SimpleMarker<SerializeMe>>()
+        .build();
+}
+
 fn dagger(ecs: &mut World, x: i32, y: i32) {
     ecs.create_entity()
         .with(Position{ x, y })
@@ -227,25 +249,5 @@ fn confusion_grenade(ecs: &mut World, x: i32, y: i32) {
         .build();
 }
 
-fn mopbot(ecs: &mut World, x: i32, y: i32) { monster(ecs, x, y, rltk::to_cp437('M'), "Mopulon"); }
-fn recyculon(ecs: &mut World, x: i32, y: i32) { monster(ecs, x, y, rltk::to_cp437('R'), "Recyclobot"); }
 
-/// BUILD A MONSTER! It's got the following components: Position, renderable, viewshed, Monster, Name, etc etc etc
-fn monster<S : ToString>(ecs: &mut World, x: i32, y: i32, glyph : rltk::FontCharType, name : S) {
-    ecs.create_entity()
-        .with(Position{ x, y })
-        .with(Renderable{
-            glyph,
-            fg: RGB::named(rltk::RED),
-            bg: RGB::named(rltk::BLACK),
-            render_order: 1
-        })
-        .with(Viewshed{ visible_tiles : Vec::new(), range: 8, dirty: true })
-        .with(Monster{})
-        .with(Name{ name: name.to_string() }) //
-        .with(BlocksTile{})
-        .with(CombatStats{ max_hp: 16, hp: 16, defense: 1, power: 4 })
-        .marked::<SimpleMarker<SerializeMe>>()
-        .build();
-}
 
