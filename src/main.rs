@@ -31,7 +31,7 @@ pub mod random_table;
 pub mod map_builders;
 pub mod particle_system;
 
-const SHOW_MAPGEN_VISUALIZER : bool = false;
+const SHOW_MAPGEN_VISUALIZER : bool = true;
 
 #[derive(PartialEq, Copy, Clone)]
 pub enum RunState { AwaitingInput,
@@ -127,7 +127,7 @@ impl GameState for State {
                     self.mapgen_timer = 0.0;
                     self.mapgen_index +=1;
                     if self.mapgen_index >= self.mapgen_history.len() {
-                    newrunstate = self.mapgen_next_state.unwrap();
+                        newrunstate = self.mapgen_next_state.unwrap();
                     }
                 }
             }
@@ -240,7 +240,8 @@ impl GameState for State {
             }
             RunState::NextLevel => {
                 self.goto_next_level();
-                newrunstate = RunState::PreRun;
+                self.mapgen_next_state = Some(RunState::PreRun);
+                newrunstate = RunState::MapGeneration;
             }
         }
 
