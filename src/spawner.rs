@@ -1,6 +1,6 @@
 use rltk::{ RGB, RandomNumberGenerator };
 use specs::prelude::*;
-use super::{CombatStats, Player, Renderable, Name, Position, Viewshed, Monster, BlocksTile, Rect, Item, Consumable, Ranged, ProvidesHealing, map::MAPWIDTH, InflictsDamage, AreaOfEffect, Confusion, SerializeMe, random_table::RandomTable, EquipmentSlot, Equippable, MeleePowerBonus, DefenseBonus };
+use super::{CombatStats, Player, Renderable, Name, Position, Viewshed, Monster, BlocksTile, Rect, Item, Consumable, Ranged, ProvidesHealing, map::MAPWIDTH, InflictsDamage, AreaOfEffect, Confusion, SerializeMe, random_table::RandomTable, EquipmentSlot, Equippable, MeleePowerBonus, DefenseBonus, HungerClock, HungerState };
 use specs::saveload::{MarkedBuilder, SimpleMarker};
 use std::collections::HashMap;
 
@@ -19,6 +19,7 @@ pub fn player(ecs : &mut World, player_x : i32, player_y : i32) -> Entity {
         .with(Viewshed{ visible_tiles : Vec::new(), range: 8, dirty: true })
         .with(Name{name: "Player".to_string() })
         .with(CombatStats{ max_hp: 30, hp: 30, defense: 2, power: 5 })
+        .with(HungerClock{ state: HungerState::WellFed, duration: 30 })
         .marked::<SimpleMarker<SerializeMe>>()
         .build()
 }
