@@ -30,10 +30,9 @@ impl<'a> System<'a> for MonsterAI {
         for (entity, mut viewshed,_monster,mut pos) in (&entities, &mut viewshed, &monster, &mut position).join() {
             let mut can_act = true;
 
-
             let is_confused = confused.get_mut(entity);
             if let Some(i_am_confused) = is_confused {
-                i_am_confused.turns -= 7;
+                i_am_confused.turns -= 1;
                 if i_am_confused.turns < 1 {
                     confused.remove(entity);
                 }

@@ -176,7 +176,6 @@ impl<'a> System<'a> for ItemUseSystem {
                                 let item_name = names.get(useitem.item).unwrap();
                                 gamelog.entries.push(format!("The {} blurs and freezes as the {} takes effect", mob_name.name, item_name.name));
                             }
-
                             used_item = true;
                         }
                     }
