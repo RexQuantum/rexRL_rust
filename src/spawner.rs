@@ -29,7 +29,7 @@ fn room_table(map_depth: i32) -> RandomTable {
     RandomTable::new()
         .add("Recyculon", 10)
         .add("Mopbot", 1 + map_depth)  
-        .add("Confusion Grenade", 1 + map_depth)
+        .add("Scrambler Cell", 1 + map_depth)
         .add("Repair Pack", 7)
         .add("Incendiary Grenade", 4 + map_depth)
         .add("Beam Cell", 4 + map_depth)
@@ -77,7 +77,7 @@ pub fn spawn_room(ecs: &mut World, room : &Rect, map_depth: i32) {
             "Mopbot" => mopbot(ecs, x, y),
             "Repair Pack" => repair_pack(ecs, x, y),
             "Incendiary Grenade" => incendiary_grenade(ecs, x, y),
-            "Confusion Grenade" => confusion_grenade(ecs, x, y),
+            "Scrambler Cell" => scrambler_cell(ecs, x, y),
             "Beam Cell" => beam_cell(ecs, x, y),
             "Plasteel Shard" => dagger(ecs, x, y),
             "Malfunctioning Defensive Effectors" => shield(ecs, x, y),
@@ -231,7 +231,7 @@ fn beam_cell(ecs: &mut World, x: i32, y: i32) {
         .build();
 }
 
-fn confusion_grenade(ecs: &mut World, x: i32, y: i32) {
+fn scrambler_cell(ecs: &mut World, x: i32, y: i32) {
     ecs.create_entity()
         .with(Position{ x, y })
         .with(Renderable{
@@ -240,7 +240,7 @@ fn confusion_grenade(ecs: &mut World, x: i32, y: i32) {
             bg: RGB::named(rltk::BLACK),
             render_order: 2
         })
-        .with(Name{ name : "Confusion Grenade".to_string() })
+        .with(Name{ name : "Scrambler Cell".to_string() })
         .with(Item{})
         .with(Consumable{})
         .with(Ranged{ range: 6 })
