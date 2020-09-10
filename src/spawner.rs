@@ -1,6 +1,6 @@
 use rltk::{ RGB, RandomNumberGenerator };
 use specs::prelude::*;
-use super::{CombatStats, Player, Renderable, Name, Position, Viewshed, Monster, BlocksTile, Rect, Item, Consumable, Ranged, ProvidesHealing, map::MAPWIDTH, InflictsDamage, AreaOfEffect, Confusion, SerializeMe, random_table::RandomTable, EquipmentSlot, Equippable, MeleePowerBonus, DefenseBonus, HungerClock, HungerState };
+use super::{CombatStats, Player, Renderable, Name, Position, Viewshed, Monster, BlocksTile, Rect, Item, Consumable, Ranged, ProvidesHealing, ProvidesFood, map::MAPWIDTH, InflictsDamage, AreaOfEffect, Confusion, SerializeMe, random_table::RandomTable, EquipmentSlot, Equippable, MeleePowerBonus, DefenseBonus, HungerClock, HungerState };
 use specs::saveload::{MarkedBuilder, SimpleMarker};
 use std::collections::HashMap;
 
@@ -38,6 +38,7 @@ fn room_table(map_depth: i32) -> RandomTable {
         .add("Plasteel Shard", map_depth)
         .add("Weak Defensive Effectors", map_depth)
         .add("Malfunctioning Defensive Effectors", map_depth - 1)
+        .add("Rations", 10)
 }
 
 // Fills a room with stuff!
@@ -84,6 +85,7 @@ pub fn spawn_room(ecs: &mut World, room : &Rect, map_depth: i32) {
             "Malfunctioning Defensive Effectors" => shield(ecs, x, y),
             "Blade Effector" => longsword(ecs, x, y),
             "Weak Defensive Effectors" => shield_lv2(ecs, x, y),
+            "Rations" => rations(ecs, x, y),
             _ => {}
         }
     }
@@ -111,6 +113,22 @@ fn monster<S : ToString>(ecs: &mut World, x: i32, y: i32, glyph : rltk::FontChar
         .build();
 }
 
+fn rations(ecs: &mut World, x: i32, y: i32) {
+    ecs.create_entity()
+        .with(Position{ x, y })
+        .with(Renderable{
+            glyph: rltk::to_cp437('&'),
+            fg: RGB::named(rltk::GREEN),
+            bg:RGB::named(rltk::BLACK),
+            render_order: 2
+        })
+        .with(Name{ name : "Rations".to_string() })
+        .with(Item{})
+        .with(ProvidesFood{})
+        .with(Consumable{})
+        .marked::<SimpleMarker<SerializeMe>>()
+        .build();
+}
 fn dagger(ecs: &mut World, x: i32, y: i32) {
     ecs.create_entity()
         .with(Position{ x, y })
