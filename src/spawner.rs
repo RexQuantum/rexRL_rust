@@ -1,6 +1,6 @@
 use rltk::{ RGB, RandomNumberGenerator };
 use specs::prelude::*;
-use super::{CombatStats, Player, Renderable, Name, Position, Viewshed, Monster, BlocksTile, Rect, Item, Consumable, Ranged, ProvidesHealing, ProvidesFood, map::MAPWIDTH, InflictsDamage, AreaOfEffect, Confusion, SerializeMe, random_table::RandomTable, EquipmentSlot, Equippable, MeleePowerBonus, DefenseBonus, HungerClock, HungerState };
+use super::{CombatStats, Player, Renderable, Name, Position, Viewshed, Monster, BlocksTile, Rect, Item, Consumable, Ranged, ProvidesHealing, ProvidesFood, map::MAPWIDTH, InflictsDamage, AreaOfEffect, Confusion, SerializeMe, random_table::RandomTable, EquipmentSlot, Equippable, MeleePowerBonus, DefenseBonus, HungerClock, HungerState, MagicMapper };
 use specs::saveload::{MarkedBuilder, SimpleMarker};
 use std::collections::HashMap;
 
@@ -39,6 +39,8 @@ fn room_table(map_depth: i32) -> RandomTable {
         .add("Weak Defensive Effectors", map_depth)
         .add("Malfunctioning Defensive Effectors", map_depth - 1)
         .add("Rations", 10)
+        .add("Data Disk - Map", 2)
+
 }
 
 // Fills a room with stuff!
@@ -86,6 +88,7 @@ pub fn spawn_room(ecs: &mut World, room : &Rect, map_depth: i32) {
             "Blade Effector" => longsword(ecs, x, y),
             "Weak Defensive Effectors" => shield_lv2(ecs, x, y),
             "Rations" => rations(ecs, x, y),
+            "Data Disk - Map" => magic_mapper(ecs, x, y),
             _ => {}
         }
     }
@@ -112,6 +115,23 @@ fn monster<S : ToString>(ecs: &mut World, x: i32, y: i32, glyph : rltk::FontChar
         .marked::<SimpleMarker<SerializeMe>>()
         .build();
 }
+fn magic_mapper(ecs: &mut World, x: i32, y: i32) {
+    ecs.create_entity()
+    .with(Position{ x, y, })
+    .with(Renderable{
+        glyph: rltk::to_cp437(')'),
+        fg: RGB::named(rltk::CYAN3),
+        bg: RGB::named(rltk::BLACK),
+        render_order: 2        
+    })
+    .with(Name{ name: "Data Disk - Map".to_string() })
+    .with(Item{})
+    .with(MagicMapper{})
+    .with(Consumable{})
+    .marked::<SimpleMarker<SerializeMe>>()
+    .build();
+}
+
 
 fn rations(ecs: &mut World, x: i32, y: i32) {
     ecs.create_entity()

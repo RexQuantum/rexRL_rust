@@ -1,7 +1,7 @@
 use specs::prelude::*;
 use super::{WantsToPickupItem, Name, InBackpack, Position, gamelog::GameLog, WantsToUseItem,
     Consumable, ProvidesHealing, CombatStats, WantsToDropItem, InflictsDamage, Map, SufferDamage,
-    AreaOfEffect, Confusion, Equippable, Equipped, ProvidesFood, HungerClock, HungerState, WantsToRemoveItem, particle_system::ParticleBuilder};
+    AreaOfEffect, Confusion, Equippable, Equipped, ProvidesFood, HungerClock, HungerState, WantsToRemoveItem, particle_system::ParticleBuilder, MagicMapper, RunState};
 
 pub struct ItemCollectionSystem {}
 
@@ -54,7 +54,10 @@ impl<'a> System<'a> for ItemUseSystem {
                         WriteExpect<'a, ParticleBuilder>,
                         ReadStorage<'a, Position>,
                         ReadStorage<'a, ProvidesFood>,
-                        WriteStorage<'a, HungerClock>
+                        WriteStorage<'a, HungerClock>,
+                        ReadStorage<'a, MagicMapper>,
+                        WriteExpect<'a, RunState>,
+                                           
                       );
 
     #[allow(clippy::cognitive_complexity)]
@@ -62,7 +65,7 @@ impl<'a> System<'a> for ItemUseSystem {
         let (player_entity, mut gamelog, map, entities, mut wants_use, names,
             consumables, healing, inflict_damage, mut combat_stats, mut suffer_damage,
             aoe, mut confused, equippable, mut equipped, mut backpack, mut particle_builder, positions, 
-            provides_food, mut hunger_clocks) = data;
+            provides_food, mut hunger_clocks, magic_mapper, mut runstate) = data;
 
         for (entity, useitem) in (&entities, &wants_use).join() {
             let mut used_item = true;
@@ -143,6 +146,18 @@ impl<'a> System<'a> for ItemUseSystem {
                     }
                 }
             }
+
+            // If its a magic mapper...
+            let is_mapper = magic_mapper.get(useitem.item);
+            match is_mapper {
+                None => {}
+                Some(_) => {
+                    used_item = true;
+                    gamelog.entries.push("The map is revealed to you!".to_string());
+                    *runstate = RunState::MagicMapReveal{ row : 0};
+                }
+            }
+
             // If it heals, apply the healing
             let item_heals = healing.get(useitem.item);
             match item_heals {
@@ -166,7 +181,6 @@ impl<'a> System<'a> for ItemUseSystem {
                     }
                 }
             }
-
             // If it inflicts damage, apply it to the target cell
             let item_damages = inflict_damage.get(useitem.item);
             match item_damages {
