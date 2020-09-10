@@ -7,3 +7,4 @@ Cargo.lock
 .VSCodeCounter/
 
 savegame.json
+.vscode/settings.json

@@ -97,7 +97,6 @@ impl GameState for State {
             let runstate = self.ecs.fetch::<RunState>();
             newrunstate = *runstate;
         }
-
         ctx.cls();
         particle_system::cull_dead_particles(&mut self.ecs, ctx);
 
@@ -120,23 +119,24 @@ impl GameState for State {
                 gui::draw_ui(&self.ecs, ctx);
             }
         }  
-            match newrunstate {
-                RunState::MapGeneration => {
-                    if !SHOW_MAPGEN_VISUALIZER {
+
+        match newrunstate {
+            RunState::MapGeneration => {
+                if !SHOW_MAPGEN_VISUALIZER {
+                newrunstate = self.mapgen_next_state.unwrap();
+            }
+            ctx.cls();
+            draw_map(&self.mapgen_history[self.mapgen_index], ctx);
+
+            self.mapgen_timer += ctx.frame_time_ms;
+            if self.mapgen_timer > 300.0 {
+                self.mapgen_timer = 0.0;
+                self.mapgen_index +=1;
+                if self.mapgen_index >= self.mapgen_history.len() {
                     newrunstate = self.mapgen_next_state.unwrap();
                 }
-                ctx.cls();
-                draw_map(&self.mapgen_history[self.mapgen_index], ctx);
-
-                self.mapgen_timer += ctx.frame_time_ms;
-                if self.mapgen_timer > 300.0 {
-                    self.mapgen_timer = 0.0;
-                    self.mapgen_index +=1;
-                    if self.mapgen_index >= self.mapgen_history.len() {
-                        newrunstate = self.mapgen_next_state.unwrap();
-                    }
-                }
             }
+        }
             RunState::MagicMapReveal{row} => {
                 let mut map = self.ecs.fetch_mut::<Map>();
                 for x in 0..MAPWIDTH {
@@ -407,7 +407,7 @@ fn main() -> rltk::BError {
     let mut context = RltkBuilder::simple80x50()
         .with_title("Rex is making a game")
         .build()?;
-    context.with_post_scanlines(false);
+    context.with_post_scanlines(true);
     let mut gs = State {
         ecs: World::new(),
         mapgen_next_state : Some(RunState::MainMenu{ menu_selection: gui::MainMenuSelection::NewGame}),
