@@ -1,6 +1,6 @@
 use rltk::{ RGB, RandomNumberGenerator };
 use specs::prelude::*;
-use super::{CombatStats, Player, Renderable, Name, Position, Viewshed, Monster, BlocksTile, Rect, Item, Consumable, Ranged, ProvidesHealing, map::MAPWIDTH, InflictsDamage, AreaOfEffect, Confusion, SerializeMe, random_table::RandomTable, EquipmentSlot, Equippable, MeleePowerBonus, DefenseBonus };
+use super::{CombatStats, Player, Renderable, Name, Position, Viewshed, Monster, BlocksTile, Rect, Item, Consumable, Ranged, ProvidesHealing, ProvidesFood, map::MAPWIDTH, InflictsDamage, AreaOfEffect, Confusion, SerializeMe, random_table::RandomTable, EquipmentSlot, Equippable, MeleePowerBonus, DefenseBonus, HungerClock, HungerState };
 use specs::saveload::{MarkedBuilder, SimpleMarker};
 use std::collections::HashMap;
 
@@ -19,6 +19,7 @@ pub fn player(ecs : &mut World, player_x : i32, player_y : i32) -> Entity {
         .with(Viewshed{ visible_tiles : Vec::new(), range: 8, dirty: true })
         .with(Name{name: "Player".to_string() })
         .with(CombatStats{ max_hp: 30, hp: 30, defense: 2, power: 5 })
+        .with(HungerClock{ state: HungerState::WellFed, duration: 30 })
         .marked::<SimpleMarker<SerializeMe>>()
         .build()
 }
@@ -29,7 +30,7 @@ fn room_table(map_depth: i32) -> RandomTable {
     RandomTable::new()
         .add("Recyculon", 10)
         .add("Mopbot", 1 + map_depth)  
-        .add("Confusion Grenade", 1 + map_depth)
+        .add("Scrambler Cell", 1 + map_depth)
         .add("Repair Pack", 7)
         .add("Incendiary Grenade", 4 + map_depth)
         .add("Beam Cell", 4 + map_depth)
@@ -37,6 +38,7 @@ fn room_table(map_depth: i32) -> RandomTable {
         .add("Plasteel Shard", map_depth)
         .add("Weak Defensive Effectors", map_depth)
         .add("Malfunctioning Defensive Effectors", map_depth - 1)
+        .add("Rations", 10)
 }
 
 // Fills a room with stuff!
@@ -77,12 +79,13 @@ pub fn spawn_room(ecs: &mut World, room : &Rect, map_depth: i32) {
             "Mopbot" => mopbot(ecs, x, y),
             "Repair Pack" => repair_pack(ecs, x, y),
             "Incendiary Grenade" => incendiary_grenade(ecs, x, y),
-            "Confusion Grenade" => confusion_grenade(ecs, x, y),
+            "Scrambler Cell" => scrambler_cell(ecs, x, y),
             "Beam Cell" => beam_cell(ecs, x, y),
             "Plasteel Shard" => dagger(ecs, x, y),
             "Malfunctioning Defensive Effectors" => shield(ecs, x, y),
             "Blade Effector" => longsword(ecs, x, y),
             "Weak Defensive Effectors" => shield_lv2(ecs, x, y),
+            "Rations" => rations(ecs, x, y),
             _ => {}
         }
     }
@@ -110,6 +113,22 @@ fn monster<S : ToString>(ecs: &mut World, x: i32, y: i32, glyph : rltk::FontChar
         .build();
 }
 
+fn rations(ecs: &mut World, x: i32, y: i32) {
+    ecs.create_entity()
+        .with(Position{ x, y })
+        .with(Renderable{
+            glyph: rltk::to_cp437('&'),
+            fg: RGB::named(rltk::GREEN),
+            bg:RGB::named(rltk::BLACK),
+            render_order: 2
+        })
+        .with(Name{ name : "Rations".to_string() })
+        .with(Item{})
+        .with(ProvidesFood{})
+        .with(Consumable{})
+        .marked::<SimpleMarker<SerializeMe>>()
+        .build();
+}
 fn dagger(ecs: &mut World, x: i32, y: i32) {
     ecs.create_entity()
         .with(Position{ x, y })
@@ -231,7 +250,7 @@ fn beam_cell(ecs: &mut World, x: i32, y: i32) {
         .build();
 }
 
-fn confusion_grenade(ecs: &mut World, x: i32, y: i32) {
+fn scrambler_cell(ecs: &mut World, x: i32, y: i32) {
     ecs.create_entity()
         .with(Position{ x, y })
         .with(Renderable{
@@ -240,7 +259,7 @@ fn confusion_grenade(ecs: &mut World, x: i32, y: i32) {
             bg: RGB::named(rltk::BLACK),
             render_order: 2
         })
-        .with(Name{ name : "Confusion Grenade".to_string() })
+        .with(Name{ name : "Scrambler Cell".to_string() })
         .with(Item{})
         .with(Consumable{})
         .with(Ranged{ range: 6 })

@@ -30,6 +30,8 @@ pub mod saveload_system;
 pub mod random_table;
 pub mod map_builders;
 pub mod particle_system;
+pub mod hunger_system;
+
 
 const SHOW_MAPGEN_VISUALIZER : bool = true;
 
@@ -51,7 +53,7 @@ pub enum RunState { AwaitingInput,
 
 pub struct State {
     pub ecs: World,
-    mapgen_next_state : Option<RunState>, //where the game should go next
+    mapgen_next_state : Option<RunState>, //where the map generator should go next
     mapgen_history : Vec<Map>,              //a copy of the map history frames to play.
     mapgen_index : usize,               //how far through history we are during playback (it's an index like everythign else lol)
     mapgen_timer : f32                      //used for frame timing during playback.
@@ -77,6 +79,8 @@ impl State {
         drop_items.run_now(&self.ecs);
         let mut item_remove = ItemRemoveSystem{};
         item_remove.run_now(&self.ecs);
+        let mut hunger = hunger_system::HungerSystem{};
+        hunger.run_now(&self.ecs);
         let mut particles = particle_system::ParticleSpawnSystem{};
         particles.run_now(&self.ecs);
 
@@ -103,7 +107,6 @@ impl GameState for State {
                 let positions = self.ecs.read_storage::<Position>();
                 let renderables = self.ecs.read_storage::<Renderable>();
                 let map = self.ecs.fetch::<Map>();
-
                 let mut data = (&positions, &renderables).join().collect::<Vec<_>>();
                 data.sort_by(|&a, &b| b.1.render_order.cmp(&a.1.render_order) );
                 for (pos, render) in data.iter() {
@@ -423,6 +426,8 @@ fn main() -> rltk::BError {
     gs.ecs.register::<MeleePowerBonus>();
     gs.ecs.register::<DefenseBonus>();  
     gs.ecs.register::<ParticleLifetime>();  
+    gs.ecs.register::<HungerClock>();
+    gs.ecs.register::<ProvidesFood>();
 
     gs.ecs.insert(SimpleMarkerAllocator::<SerializeMe>::new());
 

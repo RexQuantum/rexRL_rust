@@ -150,18 +150,29 @@ pub struct MeleePowerBonus {
 pub struct DefenseBonus {
     pub defense : i32
 }
+#[derive(Component, Serialize, Deserialize, Clone)]
+pub struct ParticleLifetime {
+    pub lifetime_ms : f32
+}
+
+#[derive(Serialize, Deserialize, Copy, Clone, PartialEq)]
+pub enum HungerState { WellFed, Sated, Hungry, Starving }
+
+#[derive(Component, Serialize, Deserialize, Clone)]
+pub struct HungerClock {
+    pub state : HungerState,
+    pub duration : i32
+}
+
+#[derive(Component, Debug, Serialize, Deserialize, Clone)]
+pub struct ProvidesFood {}
 
 // Serialization helper code. We need to implement ConvertSaveload for each type that contains an
 // Entity.
-
 pub struct SerializeMe;
 
 // Special component that exists to help serialize the game data
 #[derive(Component, Serialize, Deserialize, Clone)]
 pub struct SerializationHelper {
     pub map : super::map::Map
-}
-#[derive(Component, Serialize, Deserialize, Clone)]
-pub struct ParticleLifetime {
-    pub lifetime_ms : f32
 }

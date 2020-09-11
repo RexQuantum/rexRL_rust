@@ -1,5 +1,5 @@
 use specs::prelude::*;
-use super::{Viewshed, Monster, Map, Position, WantsToMelee, RunState, Confusion};
+use super::{Viewshed, Monster, Map, Position, WantsToMelee, RunState, Confusion, particle_system::ParticleBuilder};
 use rltk::{Point};
 
 
@@ -17,11 +17,12 @@ impl<'a> System<'a> for MonsterAI {
                         ReadStorage<'a, Monster>,
                         WriteStorage<'a, Position>,
                         WriteStorage<'a, WantsToMelee>,
-                        WriteStorage<'a, Confusion>);
+                        WriteStorage<'a, Confusion>,
+                        WriteExpect<'a, ParticleBuilder>);
 
 
     fn run(&mut self, data : Self::SystemData) {
-        let (mut map, player_pos, player_entity, runstate, entities, mut viewshed, monster, mut position, mut wants_to_melee, mut confused) = data;
+        let (mut map, player_pos, player_entity, runstate, entities, mut viewshed, monster, mut position, mut wants_to_melee, mut confused, mut particle_builder) = data;
 
 
         if *runstate != RunState::MonsterTurn { return; }
@@ -30,14 +31,16 @@ impl<'a> System<'a> for MonsterAI {
         for (entity, mut viewshed,_monster,mut pos) in (&entities, &mut viewshed, &monster, &mut position).join() {
             let mut can_act = true;
 
-
             let is_confused = confused.get_mut(entity);
             if let Some(i_am_confused) = is_confused {
-                i_am_confused.turns -= 7;
+                i_am_confused.turns -= 1;
                 if i_am_confused.turns < 1 {
                     confused.remove(entity);
                 }
                 can_act = false;
+
+                particle_builder.request(pos.x, pos.y, rltk::RGB::named(rltk::MAGENTA),
+                                    rltk::RGB::named(rltk::BLACK), rltk::to_cp437('?'), 200.0);
             }
 
 
