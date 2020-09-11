@@ -410,7 +410,7 @@ fn main() -> rltk::BError {
     context.with_post_scanlines(true);
     let mut gs = State {
         ecs: World::new(),
-        mapgen_next_state : Some(RunState::MainMenu{ menu_selection: gui::MainMenuSelection::NewGame}),
+        mapgen_next_state : Some(RunState::MainMenu{ menu_selection: gui::MainMenuSelection::NewGame }),
         mapgen_index : 0,
         mapgen_history : Vec::new(),
         mapgen_timer : 0.0
