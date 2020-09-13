@@ -1,7 +1,7 @@
 use rltk::{ RGB, RandomNumberGenerator };
 use specs::prelude::*;
-use super::{CombatStats, Player, Renderable, Name, Position, Viewshed, Monster, BlocksTile, Rect, Item, Consumable, Ranged, ProvidesHealing, ProvidesFood, map::MAPWIDTH, InflictsDamage, AreaOfEffect, Confusion, SerializeMe, random_table::RandomTable, EquipmentSlot, Equippable, MeleePowerBonus, DefenseBonus, HungerClock, HungerState, MagicMapper };
-use specs::saveload::{MarkedBuilder, SimpleMarker};
+use super::{CombatStats, Player, Renderable, Name, Position, Viewshed, Monster, BlocksTile, Rect, Item, Consumable, Ranged, ProvidesHealing, ProvidesFood, map::MAPWIDTH, InflictsDamage, AreaOfEffect, Confusion, SerializeMe, random_table::RandomTable, EquipmentSlot, Equippable, MeleePowerBonus, DefenseBonus, HungerClock, HungerState, MagicMapper, Hidden, EntryTrigger };
+use specs::saveload::{MarkedBuilder, SimpleMarker };
 use std::collections::HashMap;
 
 /// Spawns the player and returns his/her entity object.
@@ -40,7 +40,7 @@ fn room_table(map_depth: i32) -> RandomTable {
         .add("Malfunctioning Defensive Effectors", map_depth - 1)
         .add("Rations", 10)
         .add("Data Disk - Map", 2)
-
+        .add("Spike Trap", 2)
 }
 
 // Fills a room with stuff!
@@ -89,6 +89,7 @@ pub fn spawn_room(ecs: &mut World, room : &Rect, map_depth: i32) {
             "Weak Defensive Effectors" => shield_lv2(ecs, x, y),
             "Rations" => rations(ecs, x, y),
             "Data Disk - Map" => magic_mapper(ecs, x, y),
+            "Spike Trap" => spike_trap(ecs, x, y),
             _ => {}
         }
     }
@@ -288,5 +289,20 @@ fn scrambler_cell(ecs: &mut World, x: i32, y: i32) {
         .build();
 }
 
-
-
+fn spike_trap(ecs: &mut World, x: i32, y: i32) {
+    ecs.create_entity()
+        .with(Position{ x, y })
+        .with(Renderable{
+            glyph: rltk::to_cp437('^'),
+            fg: RGB::named(rltk::RED),
+            bg: RGB::named(rltk::BLACK),
+            render_order: 2
+        })
+        .with(Name{ name : "Spike Trap".to_string() })
+        .with(Hidden{})
+        .with(EntryTrigger{})
+        .with(InflictsDamage{ damage : 8 })
+        .marked::<SimpleMarker<SerializeMe>>()
+        .build();
+    }
+        

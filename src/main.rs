@@ -32,10 +32,9 @@ pub mod map_builders;
 pub mod particle_system;
 pub mod hunger_system;
 pub mod rex_assets;
+pub mod trigger_system;
 
-
-
-const SHOW_MAPGEN_VISUALIZER : bool = true;
+const SHOW_MAPGEN_VISUALIZER : bool = false;
 
 #[derive(PartialEq, Copy, Clone)]
 pub enum RunState { AwaitingInput,
@@ -70,6 +69,8 @@ impl State {
         mob.run_now(&self.ecs);
         let mut mapindex = MapIndexingSystem{};
         mapindex.run_now(&self.ecs);
+        let mut triggers = trigger_system::TriggerSystem{};
+        triggers.run_now(&self.ecs);
         let mut melee = MeleeCombatSystem{};
         melee.run_now(&self.ecs);
         let mut damage = DamageSystem{};
@@ -450,6 +451,8 @@ fn main() -> rltk::BError {
     gs.ecs.register::<ProvidesFood>();
     gs.ecs.register::<MagicMapper>();
     gs.ecs.register::<Hidden>();
+    gs.ecs.register::<EntityMoved>();
+    gs.ecs.register::<EntryTrigger>();
 
 
     gs.ecs.insert(SimpleMarkerAllocator::<SerializeMe>::new());
