@@ -31,6 +31,7 @@ pub mod random_table;
 pub mod map_builders;
 pub mod particle_system;
 pub mod hunger_system;
+pub mod rex_assets;
 
 
 
@@ -407,7 +408,7 @@ fn main() -> rltk::BError {
     let mut context = RltkBuilder::simple80x50()
         .with_title("Rex is making a game")
         .build()?;
-    context.with_post_scanlines(true);
+    context.with_post_scanlines(false);
     let mut gs = State {
         ecs: World::new(),
         mapgen_next_state : Some(RunState::MainMenu{ menu_selection: gui::MainMenuSelection::NewGame }),
@@ -461,6 +462,8 @@ fn main() -> rltk::BError {
     gs.ecs.insert(RunState::MapGeneration{} );
     gs.ecs.insert(gamelog::GameLog{ entries : vec!["You wake to unfamiliar surroundings. How long were you out?".to_string() ]});
     gs.ecs.insert(particle_system::ParticleBuilder::new());
+    gs.ecs.insert(rex_assets::RexAssets::new());
+
     
     gs.generate_world_map(1);
 

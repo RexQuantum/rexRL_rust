@@ -1,7 +1,7 @@
 use rltk::{ RGB, Rltk, Point, VirtualKeyCode };
 use specs::prelude::*;
 use super::{CombatStats, Player, gamelog::GameLog, Map, Name, Position, State, InBackpack,
-    Viewshed, RunState, Equipped, HungerState, HungerClock };
+    Viewshed, RunState, Equipped, HungerState, HungerClock, rex_assets::RexAssets };
 
 pub fn draw_ui(ecs: &World, ctx : &mut Rltk) {
     ctx.draw_box(0, 43, 79, 6, RGB::named(rltk::WHITE), RGB::named(rltk::BLACK));
@@ -278,6 +278,9 @@ pub enum MainMenuResult { NoSelection{ selected : MainMenuSelection }, Selected{
 pub fn main_menu(gs : &mut State, ctx : &mut Rltk) -> MainMenuResult {
     let save_exists = super::saveload_system::does_save_exist();
     let runstate = gs.ecs.fetch::<RunState>();
+    let assets = gs.ecs.fetch::<RexAssets>();
+    ctx.render_xp_sprite(&assets.menu, 0, 0);
+
 
     ctx.print_color_centered(14, RGB::named(rltk::YELLOW), RGB::named(rltk::BLACK), "Untitled:");
     ctx.print_color_centered(16, RGB::named(rltk::YELLOW), RGB::named(rltk::BLACK), "A game by Alexander Diogenes");
