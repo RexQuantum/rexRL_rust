@@ -1,6 +1,6 @@
 use rltk::{ RGB, RandomNumberGenerator };
 use specs::prelude::*;
-use super::{CombatStats, Player, Renderable, Name, Position, Viewshed, Monster, BlocksTile, Rect, Item, Consumable, Ranged, ProvidesHealing, ProvidesFood, map::MAPWIDTH, InflictsDamage, AreaOfEffect, Confusion, SerializeMe, random_table::RandomTable, EquipmentSlot, Equippable, MeleePowerBonus, DefenseBonus, HungerClock, HungerState, MagicMapper, Hidden, EntryTrigger };
+use super::{CombatStats, Player, Renderable, Name, Position, Viewshed, Monster, BlocksTile, Rect, Item, Consumable, Ranged, ProvidesHealing, ProvidesFood, map::MAPWIDTH, InflictsDamage, AreaOfEffect, Confusion, SerializeMe, random_table::RandomTable, EquipmentSlot, Equippable, MeleePowerBonus, DefenseBonus, HungerClock, HungerState, MagicMapper, Hidden, EntryTrigger, SingleActivation };
 use specs::saveload::{MarkedBuilder, SimpleMarker };
 use std::collections::HashMap;
 
@@ -301,6 +301,7 @@ fn spike_trap(ecs: &mut World, x: i32, y: i32) {
         .with(Name{ name : "Spike Trap".to_string() })
         .with(Hidden{})
         .with(EntryTrigger{})
+        .with(SingleActivation{})
         .with(InflictsDamage{ damage : 8 })
         .marked::<SimpleMarker<SerializeMe>>()
         .build();

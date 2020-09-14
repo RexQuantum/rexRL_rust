@@ -34,7 +34,7 @@ pub mod hunger_system;
 pub mod rex_assets;
 pub mod trigger_system;
 
-const SHOW_MAPGEN_VISUALIZER : bool = true;
+const SHOW_MAPGEN_VISUALIZER : bool = false;
 
 #[derive(PartialEq, Copy, Clone)]
 pub enum RunState { AwaitingInput,
@@ -122,24 +122,23 @@ impl GameState for State {
             }
         }  
 
-    match newrunstate {
-        RunState::MapGeneration => {
-            if !SHOW_MAPGEN_VISUALIZER {
-            newrunstate = self.mapgen_next_state.unwrap();
-        }
-        ctx.cls();
-        draw_map(&self.mapgen_history[self.mapgen_index], ctx);
-
-        self.mapgen_timer += ctx.frame_time_ms;
-        if self.mapgen_timer > 300.0 {
-            self.mapgen_timer = 0.0;
-            self.mapgen_index +=1;
-            if self.mapgen_index >= self.mapgen_history.len() {
+        match newrunstate {
+            RunState::MapGeneration => {
+                if !SHOW_MAPGEN_VISUALIZER {
                 newrunstate = self.mapgen_next_state.unwrap();
             }
+            ctx.cls();
+            draw_map(&self.mapgen_history[self.mapgen_index], ctx);
+
+            self.mapgen_timer += ctx.frame_time_ms;
+            if self.mapgen_timer > 16.7 {
+                self.mapgen_timer = 0.0;
+                self.mapgen_index +=1;
+                if self.mapgen_index >= self.mapgen_history.len() {
+                    newrunstate = self.mapgen_next_state.unwrap();
+                }
+            }
         }
-    }
-        
         RunState::PreRun => {
             self.run_systems();
             self.ecs.maintain();
@@ -246,34 +245,34 @@ impl GameState for State {
                 }
             }
         }
-            RunState::SaveGame => {
-                saveload_system::save_game(&mut self.ecs);
-                newrunstate = RunState::MainMenu{ menu_selection : gui::MainMenuSelection::LoadGame };
+        RunState::SaveGame => {
+            saveload_system::save_game(&mut self.ecs);
+            newrunstate = RunState::MainMenu{ menu_selection : gui::MainMenuSelection::LoadGame };
+        }
+        RunState::NextLevel => {
+            self.goto_next_level();
+            self.mapgen_next_state = Some(RunState::PreRun);
+            newrunstate = RunState::MapGeneration;
+        }
+        RunState::MagicMapReveal{row} => {
+            let mut map = self.ecs.fetch_mut::<Map>();
+            for x in 0..MAPWIDTH {
+                let idx = map.xy_idx(x as i32,row);
+                map.revealed_tiles[idx] = true;
             }
-            RunState::NextLevel => {
-                self.goto_next_level();
-                self.mapgen_next_state = Some(RunState::PreRun);
-                newrunstate = RunState::MapGeneration;
-            }
-            RunState::MagicMapReveal{row} => {
-                let mut map = self.ecs.fetch_mut::<Map>();
-                for x in 0..MAPWIDTH {
-                    let idx = map.xy_idx(x as i32,row);
-                    map.revealed_tiles[idx] = true;
-                }
-                if row as usize == MAPHEIGHT-1 {
-                    newrunstate = RunState::MonsterTurn;
-                } else {
-                    newrunstate = RunState::MagicMapReveal{ row: row+1 };
-                }
+            if row as usize == MAPHEIGHT-1 {
+                newrunstate = RunState::MonsterTurn;
+            } else {
+                newrunstate = RunState::MagicMapReveal{ row: row+1 };
             }
         }
+    }
     
-        {
-            let mut runwriter = self.ecs.write_resource::<RunState>();
-            *runwriter = newrunstate;
-        }
-        damage_system::delete_the_dead(&mut self.ecs);
+    {
+        let mut runwriter = self.ecs.write_resource::<RunState>();
+        *runwriter = newrunstate;
+    }
+    damage_system::delete_the_dead(&mut self.ecs);
     }
 }
 
