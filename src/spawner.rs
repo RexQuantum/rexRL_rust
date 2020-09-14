@@ -40,7 +40,7 @@ fn room_table(map_depth: i32) -> RandomTable {
         .add("Malfunctioning Defensive Effectors", map_depth - 1)
         .add("Rations", 10)
         .add("Data Disk - Map", 2)
-        .add("Spike Trap", 400)
+        .add("Spike Trap", 5)
 }
 
 // Fills a room with stuff!
