@@ -34,7 +34,7 @@ pub mod hunger_system;
 pub mod rex_assets;
 pub mod trigger_system;
 
-const SHOW_MAPGEN_VISUALIZER : bool = false;
+const SHOW_MAPGEN_VISUALIZER : bool = true;
 
 #[derive(PartialEq, Copy, Clone)]
 pub enum RunState { AwaitingInput,
