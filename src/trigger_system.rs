@@ -1,5 +1,6 @@
 use specs::prelude::*;
-use super::{ EntityMoved, Position, EntryTrigger, Hidden, Map, Name, gamelog::GameLog, InflictsDamage, particle_system::ParticleBuilder, SufferDamage, SingleActivation};
+use super::{ EntityMoved, Position, EntryTrigger, Hidden, Map, Name, gamelog::GameLog, 
+    InflictsDamage, particle_system::ParticleBuilder, SufferDamage, SingleActivation};
 
 pub struct TriggerSystem{}
 

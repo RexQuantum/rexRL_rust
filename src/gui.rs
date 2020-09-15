@@ -285,7 +285,7 @@ pub fn main_menu(gs : &mut State, ctx : &mut Rltk) -> MainMenuResult {
 
     ctx.print_color_centered(14, RGB::named(rltk::YELLOW), RGB::named(rltk::BLACK), "Untitled:");
     ctx.print_color_centered(16, RGB::named(rltk::YELLOW), RGB::named(rltk::BLACK), "A game by Alexander Diogenes");
-
+    
     if let RunState::MainMenu{ menu_selection : selection } = *runstate {
         if selection == MainMenuSelection::NewGame {
             ctx.print_color_centered(24, RGB::named(rltk::MAGENTA), RGB::named(rltk::BLACK), "Begin New Game");

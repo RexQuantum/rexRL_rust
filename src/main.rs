@@ -131,7 +131,7 @@ impl GameState for State {
             draw_map(&self.mapgen_history[self.mapgen_index], ctx);
 
             self.mapgen_timer += ctx.frame_time_ms;
-            if self.mapgen_timer > 16.7 {
+            if self.mapgen_timer > 150.0 {
                 self.mapgen_timer = 0.0;
                 self.mapgen_index +=1;
                 if self.mapgen_index >= self.mapgen_history.len() {
@@ -458,7 +458,7 @@ fn main() -> rltk::BError {
     gs.ecs.insert(SimpleMarkerAllocator::<SerializeMe>::new());
 
     gs.ecs.insert(Map::new(1));
-    gs.ecs.insert(Point::new(0,0));
+    gs.ecs.insert(Point::new(0, 0));
     gs.ecs.insert(rltk::RandomNumberGenerator::new());
     let player_entity = spawner::player(&mut gs.ecs, 0, 0);
     gs.ecs.insert(player_entity);
