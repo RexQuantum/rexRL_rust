@@ -1,6 +1,6 @@
 use rltk::{ RGB, RandomNumberGenerator };
 use specs::prelude::*;
-use super::{CombatStats, Player, Renderable, Name, Position, Viewshed, Monster, BlocksTile, Rect, Item, Consumable, Ranged, ProvidesHealing, ProvidesFood, map::MAPWIDTH, InflictsDamage, AreaOfEffect, Confusion, SerializeMe, random_table::RandomTable, EquipmentSlot, Equippable, MeleePowerBonus, DefenseBonus, HungerClock, HungerState, MagicMapper, Hidden, EntryTrigger, SingleActivation };
+use super::{CombatStats, Player, Renderable, Name, Position, Viewshed, Monster, BlocksTile, Rect, Item, Consumable, Ranged, ProvidesHealing, ProvidesFood, map::MAPWIDTH, InflictsDamage, AreaOfEffect, Confusion, SerializeMe, random_table::RandomTable, EquipmentSlot, Equippable, MeleePowerBonus, DefenseBonus, HungerClock, HungerState, MagicMapper, Hidden, EntryTrigger, SingleActivation, Map, TileType };
 use specs::saveload::{MarkedBuilder, SimpleMarker };
 use std::collections::HashMap;
 
@@ -16,7 +16,7 @@ pub fn player(ecs : &mut World, player_x : i32, player_y : i32) -> Entity {
             render_order: 0
         })
         .with(Player{})
-        .with(Viewshed{ visible_tiles : Vec::new(), range: 8, dirty: true })
+        .with(Viewshed{ visible_tiles : Vec::new(), range: 10, dirty: true })
         .with(Name{name: "Player".to_string() })
         .with(CombatStats{ max_hp: 30, hp: 30, defense: 2, power: 5 })
         .with(HungerClock{ state: HungerState::WellFed, duration: 30 })
@@ -28,12 +28,12 @@ const MAX_MONSTERS : i32 = 4;
 
 fn room_table(map_depth: i32) -> RandomTable {
     RandomTable::new()
-        .add("Recyculon", 10)
+        .add("Recyculon", 1)
         .add("Mopbot", 1 + map_depth)  
         .add("Scrambler Cell", 1 + map_depth)
-        .add("Repair Pack", 7)
-        .add("Incendiary Grenade", 4 + map_depth)
-        .add("Beam Cell", 4 + map_depth)
+        .add("Repair Pack", 4)
+        .add("Incendiary Grenade", 2 + map_depth)
+        .add("Beam Cell", 3 + map_depth)
         .add("Blade Effector", map_depth -1)
         .add("Plasteel Shard", map_depth)
         .add("Weak Defensive Effectors", map_depth)
@@ -43,57 +43,73 @@ fn room_table(map_depth: i32) -> RandomTable {
         .add("Spike Trap", 5)
 }
 
-// Fills a room with stuff!
-#[allow(clippy::map_entry)]
+/// Fills a room with stuff!
 pub fn spawn_room(ecs: &mut World, room : &Rect, map_depth: i32) {
-    let spawn_table = room_table(map_depth);
-    let mut spawn_points : HashMap<usize, String> = HashMap::new();
-
-    // Scope to keep the borrow checker happy
-    {
-        let mut rng = ecs.write_resource::<RandomNumberGenerator>();
-        let num_spawns = rng.roll_dice(1, MAX_MONSTERS + 3) + (map_depth - 1) - 3;
-
-        for _i in 0 .. num_spawns {
-            let mut added = false;
-            let mut tries = 0;
-            while !added && tries < 20 {
-                let x = (room.x1 + rng.roll_dice(1, i32::abs(room.x2 - room.x1))) as usize;
-                let y = (room.y1 + rng.roll_dice(1, i32::abs(room.y2 - room.y1))) as usize;
-                let idx = (y * MAPWIDTH) + x;
-                if !spawn_points.contains_key(&idx) {
-                    spawn_points.insert(idx, spawn_table.roll(&mut rng));
-                    added = true;
-                } else {
-                    tries += 1;
+    let mut possible_targets : Vec<usize> = Vec::new();
+    { // Borrow scope - to keep access to the map separated
+        let map = ecs.fetch::<Map>();
+        for y in room.y1 + 1 .. room.y2 {
+            for x in room.x1 + 1 .. room.x2 {
+                let idx = map.xy_idx(x, y);
+                if map.tiles[idx] == TileType::Floor {
+                    possible_targets.push(idx);
                 }
             }
         }
     }
 
-    // Actually spawn the monsters
-    for spawn in spawn_points.iter() {
-        let x = (*spawn.0 % MAPWIDTH) as i32;
-        let y = (*spawn.0 / MAPWIDTH) as i32;
+    spawn_region(ecs, &possible_targets, map_depth);
+}
+/// Fills a region with stuff!
+pub fn spawn_region(ecs: &mut World, area : &[usize], map_depth: i32) {
+    let spawn_table = room_table(map_depth);
+    let mut spawn_points : HashMap<usize, String> = HashMap::new();
+    let mut areas : Vec<usize> = Vec::from(area);
 
-        match spawn.1.as_ref() {
-            "Recyculon" => recyculon(ecs, x, y),
-            "Mopbot" => mopbot(ecs, x, y),
-            "Repair Pack" => repair_pack(ecs, x, y),
-            "Incendiary Grenade" => incendiary_grenade(ecs, x, y),
-            "Scrambler Cell" => scrambler_cell(ecs, x, y),
-            "Beam Cell" => beam_cell(ecs, x, y),
-            "Plasteel Shard" => dagger(ecs, x, y),
-            "Malfunctioning Defensive Effectors" => shield(ecs, x, y),
-            "Blade Effector" => longsword(ecs, x, y),
-            "Weak Defensive Effectors" => shield_lv2(ecs, x, y),
-            "Rations" => rations(ecs, x, y),
-            "Data Disk - Map" => magic_mapper(ecs, x, y),
-            "Spike Trap" => spike_trap(ecs, x, y),
-            _ => {}
+    // Scope to keep the borrow checker happy
+    {
+        let mut rng = ecs.write_resource::<RandomNumberGenerator>();
+        let num_spawns = i32::min(areas.len() as i32, rng.roll_dice(1, MAX_MONSTERS + 3) + (map_depth - 1) - 3);
+        if num_spawns == 0 { return; }
+
+        for _i in 0 .. num_spawns {
+            let array_index = if areas.len() == 1 { 0usize } else { (rng.roll_dice(1, areas.len() as i32)-1) as usize };
+
+            let map_idx = areas[array_index];
+            spawn_points.insert(map_idx, spawn_table.roll(&mut rng));
+            areas.remove(array_index);
         }
     }
+
+    // Actually spawn the monsters
+    for spawn in spawn_points.iter() {
+        spawn_entity(ecs, &spawn);
+    }
 }
+    
+/// Spawns a named entity (name in tuple.1) at the location in (tuple.0)
+fn spawn_entity(ecs: &mut World, spawn : &(&usize, &String)) {
+    let x = (*spawn.0 % MAPWIDTH) as i32;
+    let y = (*spawn.0 / MAPWIDTH) as i32;
+
+    match spawn.1.as_ref() {
+        "Recyculon" => recyculon(ecs, x, y),
+        "Mopbot" => mopbot(ecs, x, y),
+        "Repair Pack" => repair_pack(ecs, x, y),
+        "Incendiary Grenade" => incendiary_grenade(ecs, x, y),
+        "Scrambler Cell" => scrambler_cell(ecs, x, y),
+        "Beam Cell" => beam_cell(ecs, x, y),
+        "Plasteel Shard" => dagger(ecs, x, y),
+        "Malfunctioning Defensive Effectors" => shield(ecs, x, y),
+        "Blade Effector" => longsword(ecs, x, y),
+        "Weak Defensive Effectors" => shield_lv2(ecs, x, y),
+        "Rations" => rations(ecs, x, y),
+        "Data Disk - Map" => magic_mapper(ecs, x, y),
+        "Spike Trap" => spike_trap(ecs, x, y),
+        _ => {}
+    }
+}
+
 
 fn mopbot(ecs: &mut World, x: i32, y: i32) { monster(ecs, x, y, rltk::to_cp437('M'), "Mopulon"); }
 fn recyculon(ecs: &mut World, x: i32, y: i32) { monster(ecs, x, y, rltk::to_cp437('R'), "Recyclobot"); }
@@ -108,7 +124,7 @@ fn monster<S : ToString>(ecs: &mut World, x: i32, y: i32, glyph : rltk::FontChar
             bg: RGB::named(rltk::BLACK),
             render_order: 1
         })
-        .with(Viewshed{ visible_tiles : Vec::new(), range: 8, dirty: true })
+        .with(Viewshed{ visible_tiles : Vec::new(), range: 9, dirty: true })
         .with(Monster{})
         .with(Name{ name: name.to_string() }) //
         .with(BlocksTile{})

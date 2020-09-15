@@ -31,7 +31,7 @@ impl MapBuilder for CellularAutomataBuilder {
 
     fn spawn_entities(&mut self, ecs : &mut World) {
         for area in self.noise_areas.iter() {
-            //spawner::spawn_room(ecs,1, self.depth);
+            spawner::spawn_region(ecs,area.1, self.depth);
         }
     }
 
@@ -111,36 +111,35 @@ impl CellularAutomataBuilder {
         }
         self.take_snapshot();
 
-        // Find all tiles we can reach from the starting point
-        let map_starts : Vec<usize> = vec![start_idx];
-        let dijkstra_map = rltk::DijkstraMap::new(self.map.width as usize, self.map.height as usize, &map_starts , &self.map, 200.0);
-        let mut exit_tile = (0, 0.0f32);
-        for (i, tile) in self.map.tiles.iter_mut().enumerate() {
-            if *tile == TileType::Floor {
-                let distance_to_start = dijkstra_map.map[i];
-                // We can't get to this tile - so we'll make it a wall
-                if distance_to_start == std::f32::MAX {
-                    *tile = TileType::Wall;
-                } else {
-                    // If it is further away than our current exit candidate, move the exit
-                    if distance_to_start > exit_tile.1 {
-                        exit_tile.0 = i;
-                        exit_tile.1 = distance_to_start;
-                    }
+    // Find all tiles we can reach from the starting point
+    let map_starts : Vec<usize> = vec![start_idx];
+    let dijkstra_map = rltk::DijkstraMap::new(self.map.width as usize, self.map.height as usize, &map_starts , &self.map, 200.0);
+    let mut exit_tile = (0, 0.0f32);
+    for (i, tile) in self.map.tiles.iter_mut().enumerate() {
+        if *tile == TileType::Floor {
+            let distance_to_start = dijkstra_map.map[i];
+            // We can't get to this tile - so we'll make it a wall
+            if distance_to_start == std::f32::MAX {
+                *tile = TileType::Wall;
+            } else {
+                // If it is further away than our current exit candidate, move the exit
+                if distance_to_start > exit_tile.1 {
+                    exit_tile.0 = i;
+                    exit_tile.1 = distance_to_start;
                 }
             }
         }
-        self.take_snapshot();
+    }
+    self.take_snapshot();
+    // Place the stairs
+    self.map.tiles[exit_tile.0] = TileType::DownStairs;
+    self.take_snapshot();
 
-        // Place the stairs
-        self.map.tiles[exit_tile.0] = TileType::DownStairs;
-        self.take_snapshot();
-
-        // Now we build a noise map for use in spawning entities later
-        let mut noise = rltk::FastNoise::seeded(rng.roll_dice(1, 65536) as u64);
-        noise.set_noise_type(rltk::NoiseType::Cellular);
-        noise.set_frequency(0.08);
-        noise.set_cellular_distance_function(rltk::CellularDistanceFunction::Manhattan);
+    // Now we build a noise map for use in spawning entities later
+    let mut noise = rltk::FastNoise::seeded(rng.roll_dice(1, 65536) as u64);
+    noise.set_noise_type(rltk::NoiseType::Cellular);
+    noise.set_frequency(0.08);
+    noise.set_cellular_distance_function(rltk::CellularDistanceFunction::Manhattan);
 
         for y in 1 .. self.map.height-1 {
             for x in 1 .. self.map.width-1 {
