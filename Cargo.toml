@@ -4,6 +4,8 @@ version = "0.1.0"
 authors = ["Alexander Baker <alex.diogenes@outlook.com>"]
 edition = "2018"
 
+# This program is based on the excellent tutorial by Herbert Wolverson (TheBracket) at 
+# https://bfnightly.bracketproductions.com/rustbook/chapter_0.html 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
