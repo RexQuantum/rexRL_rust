@@ -128,7 +128,8 @@ pub struct WantsToRemoveItem {
 }
 
 #[derive(PartialEq, Copy, Clone, Serialize, Deserialize)]
-pub enum EquipmentSlot { Melee, Shield }
+pub enum EquipmentSlot { Melee, 
+                         Shield }
 
 #[derive(Component, Serialize, Deserialize, Clone)]
 pub struct Equippable {

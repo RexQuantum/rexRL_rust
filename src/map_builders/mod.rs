@@ -1,4 +1,4 @@
-use super::{Map, Rect, TileType, Position, spawner, SHOW_MAPGEN_VISUALIZER };
+use super::{Map, Rect, TileType, Position, spawner, SHOW_MAPGEN_VISUALIZER};
 mod simple_map;
 use simple_map::SimpleMapBuilder;
 mod bsp_dungeon;
@@ -12,8 +12,6 @@ use drunkard::*;
 mod common;
 use common::*;
 use specs::prelude::*;
-
-
 
 pub trait MapBuilder {
     fn build_map(&mut self);

@@ -47,10 +47,10 @@ pub fn save_game(ecs : &mut World) {
             Name, BlocksTile, CombatStats, SufferDamage, WantsToMelee, Item, Consumable, Ranged, InflictsDamage,
             AreaOfEffect, Confusion, ProvidesHealing, InBackpack, WantsToPickupItem, WantsToUseItem,
             WantsToDropItem, SerializationHelper, Equippable, Equipped, MeleePowerBonus, DefenseBonus,
-            WantsToRemoveItem, ParticleLifetime, ProvidesFood, MagicMapper, SingleActivation, Hidden, EntryTrigger
+            WantsToRemoveItem, ParticleLifetime, HungerClock, ProvidesFood, MagicMapper, Hidden,
+            EntryTrigger, EntityMoved, SingleActivation
         );
     }
-
     // Clean up
     ecs.delete_entity(savehelper).expect("Crash on cleanup");
 }
