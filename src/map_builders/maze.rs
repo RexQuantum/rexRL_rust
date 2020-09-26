@@ -233,31 +233,31 @@ impl<'a> Grid<'a> {
                     |#######cell1######|
                      ^^^ lower_part ^^^
 
-                     */
-                     let (lower_part, higher_part) =
-                     self.cells.split_at_mut(std::cmp::max(self.current, next));
-                 let cell1 = &mut lower_part[std::cmp::min(self.current, next)];
-                 let cell2 = &mut higher_part[0];
-                 cell1.remove_walls(cell2);
-                 self.current = next;
-             }
-             None => {
-                 if !self.backtrace.is_empty() {
-                     self.current = self.backtrace[0];
-                     self.backtrace.remove(0);
-                 } else {
-                     break;
-                 }
-             }
-         }
+                    */
+                    let (lower_part, higher_part) =
+                        self.cells.split_at_mut(std::cmp::max(self.current, next));
+                    let cell1 = &mut lower_part[std::cmp::min(self.current, next)];
+                    let cell2 = &mut higher_part[0];
+                    cell1.remove_walls(cell2);
+                    self.current = next;
+                }
+                None => {
+                    if !self.backtrace.is_empty() {
+                        self.current = self.backtrace[0];
+                        self.backtrace.remove(0);
+                    } else {
+                        break;
+                    }
+                }
+            }
 
-         if i % 50 == 0 {
-             self.copy_to_map(&mut generator.map);
-             generator.take_snapshot();
-         }
-         i += 1;
-     }
- }
+            if i % 50 == 0 {
+                self.copy_to_map(&mut generator.map);
+                generator.take_snapshot();
+            }
+            i += 1;
+            }
+        }
 
     fn copy_to_map(&self, map : &mut Map) {
         // clear the map
