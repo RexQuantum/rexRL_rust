@@ -10,9 +10,9 @@ use cellular_automata::CellularAutomataBuilder;
 mod drunkard;
 use drunkard::*;
 mod maze;
-use maze::MazeBuilder;
+use maze::*;
 mod dla;
-use dla::DLABuilder;
+use dla::*;
 mod common;
 use common::*;
 use specs::prelude::*;
@@ -44,6 +44,7 @@ pub fn random_builder(new_depth: i32) -> Box<dyn MapBuilder> {
         11 => Box::new(DLABuilder::walk_outwards(new_depth)),
         12=> Box::new(DLABuilder::central_attractor(new_depth)),
         13 => Box::new(DLABuilder::insectoid(new_depth)),
-        _ => Box::new(SimpleMapBuilder::new(new_depth)),
+        14 => Box::new(DrunkardsWalkBuilder::fat_passages(new_depth)),
+        _ => Box::new(DrunkardsWalkBuilder::fearful_symmetry(new_depth))
     }
 }
