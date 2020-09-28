@@ -6,5 +6,5 @@
 Cargo.lock
 .VSCodeCounter/
 
-savegame.json
+/savegame.json
 .vscode/settings.json
