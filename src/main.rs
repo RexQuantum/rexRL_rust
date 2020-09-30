@@ -131,7 +131,11 @@ impl GameState for State {
             draw_map(&self.mapgen_history[self.mapgen_index], ctx);
 
             self.mapgen_timer += ctx.frame_time_ms;
+<<<<<<< HEAD
             if self.mapgen_timer > 16.7 {
+=======
+            if self.mapgen_timer > 1.0 {
+>>>>>>> 3b90275e36505e603a245b5fc1c193602b287b37
                 self.mapgen_timer = 0.0;
                 self.mapgen_index += 1;
                 if self.mapgen_index >= self.mapgen_history.len() {
