@@ -6,6 +6,6 @@
 Cargo.lock
 .VSCodeCounter/
 
-/savegame.json
+savegame.json
 .vscode/settings.json
 design_docs/00 - GeneralDesignDoc-dark.jpg:Zone.Identifier
