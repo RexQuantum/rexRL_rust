@@ -17,7 +17,7 @@ It's just a driving statement that can inform just about everything that you bui
 > A list of questions that I feel should be answered when thinking about The Tower as a character and its background — some should only be answered for the author, others are things that the player should discover through exploration and gameplay.
  
 * How do people live? 
-    *  Are there many societies? 
+    * Are there many societies? 
     * Are they stratified? 
     * do they trade?
 * What about constructs? Non humans? AIs? 
@@ -26,6 +26,6 @@ It's just a driving statement that can inform just about everything that you bui
 * Why did it crack? 
     * Why couldn't it repair itself? 
     * Why didn't the top section's consciousness remain the same distributed personality as the rest of The Tower after the separation? 
-    *  The nano machines that make up the tower's structure are work as a function of the _separate_ and the _whole_ of the AI so this theoretically *shouldn't* have happened. 
-    *   A computer a hundred kilometers tall, reconfigurable, ostensibly into a ship if it wanted to. If it could, really.
-    *   It's broken and stranded, itself. Is it by choice, by now?
+    * The nano machines that make up the tower's structure are work as a function of the _separate_ and the _whole_ of the AI so this theoretically *shouldn't* have happened. 
+    * A computer a hundred kilometers tall, reconfigurable, ostensibly into a ship if it wanted to. If it could, really.
+    * It's broken and stranded, itself. Is it by choice, at this point?
