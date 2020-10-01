@@ -24,7 +24,7 @@ It's just a driving statement that can inform just about everything that you bui
 * Is it post-scarcity? 
 * Does The Tower do whatever it can to care for these people?
 * Why did it crack? 
-    * Why couldn't it fix itself? 
+    * Why couldn't it repair itself? 
     * Why didn't the top section's consciousness remain the same distributed personality as the rest of The Tower after the separation? 
     *  The nano machines that make up the tower's structure are work as a function of the _separate_ and the _whole_ of the AI so this theoretically *shouldn't* have happened. 
     *   A computer a hundred kilometers tall, reconfigurable, ostensibly into a ship if it wanted to. If it could, really.
