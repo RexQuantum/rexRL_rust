@@ -1,6 +1,8 @@
 use rltk::{rex::XpFile};
 
 rltk::embedded_resource!(TITLE_MENU, "../resources/titlemenu.xp");
+rltk::embedded_resource!(WFC_DEMO_IMAGE1, "../resources/wfc-demo1.xp");
+rltk::embedded_resource!(WFC_DEMO_IMAGE2, "../resources/wfc-demo2.xp");
 
 pub struct RexAssets {
     pub menu : XpFile
