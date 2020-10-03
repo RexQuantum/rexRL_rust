@@ -12,6 +12,8 @@ impl RexAssets {
     #[allow(clippy::new_without_default)]
     pub fn new() -> RexAssets {
         rltk::link_resource!(TITLE_MENU, "../resources/titlemenu.xp");
+        rltk::link_resource!(WFC_DEMO_IMAGE1, "../resources/wfc-demo1.xp");
+        rltk::link_resource!(WFC_DEMO_IMAGE2, "../resources/wfc-demo2.xp");
 
         RexAssets{
             menu : XpFile::from_resource("../resources/titlemenu.xp").unwrap()
