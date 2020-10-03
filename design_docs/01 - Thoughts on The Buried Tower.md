@@ -1,3 +1,4 @@
+
 # **The Tower**
 
 I updated the Character heading in the center column to add The Tower as a character.
@@ -13,7 +14,7 @@ It's just a driving statement that can inform just about everything that you bui
 
 > There's no world ending threat; there's no explicit villain built-in.
 
-## **Questions That Should Be Answered**
+# **Questions That Should Be Answered**
 
 > A list of questions that I feel should be answered when thinking about The Tower as a character and its background — some should only be answered for the author, others are things that the player should discover through exploration and gameplay.
 
