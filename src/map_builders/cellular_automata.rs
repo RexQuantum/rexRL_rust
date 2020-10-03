@@ -48,6 +48,7 @@ impl MapBuilder for CellularAutomataBuilder {
 }
 
 impl CellularAutomataBuilder {
+    #[allow(dead_code)]
     pub fn new(new_depth : i32) -> CellularAutomataBuilder {
         CellularAutomataBuilder{
             map : Map::new(new_depth),

@@ -49,6 +49,7 @@ impl MapBuilder for BspInteriorBuilder {
 }
 
 impl BspInteriorBuilder {
+    #[allow(dead_code)]
     pub fn new(new_depth : i32) -> BspInteriorBuilder {
         BspInteriorBuilder{
             map : Map::new(new_depth),
