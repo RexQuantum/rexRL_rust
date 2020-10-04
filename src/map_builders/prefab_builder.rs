@@ -103,10 +103,6 @@ impl PrefabBuilder {
                                 self.map.tiles[idx] = TileType::Floor;
                                 self.spawns.push((idx, "Repair Pack".to_string()));
                             }
-                            '!' => {
-                                self.map.tiles[idx] = TileType::Floor;
-                                self.spawns.push((idx, "Repair Pack".to_string()));
-                            }
                             _ => {
                                 rltk::console::log(format!("Unknown glyph loading map: {}", (cell.ch as u8) as char));
                             }
