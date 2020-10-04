@@ -28,11 +28,11 @@ mod inventory_system;
 use inventory_system::{ ItemCollectionSystem, ItemUseSystem, ItemDropSystem, ItemRemoveSystem };
 pub mod saveload_system;
 pub mod random_table;
-pub mod map_builders;
 pub mod particle_system;
 pub mod hunger_system;
 pub mod rex_assets;
 pub mod trigger_system;
+pub mod map_builders;
 
 const SHOW_MAPGEN_VISUALIZER : bool = true;
 
@@ -363,7 +363,7 @@ impl State {
         }
     
         // Build a new map and place the player
-        self.generate_world_map(1);                                          
+        self.generate_world_map(1);
     }
 
     fn generate_world_map(&mut self, new_depth : i32) {
