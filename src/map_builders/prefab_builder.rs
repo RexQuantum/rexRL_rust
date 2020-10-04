@@ -60,7 +60,7 @@ impl PrefabBuilder {
             starting_position : Position{ x: 0, y : 0 },
             depth : new_depth,
             history : Vec::new(),
-            mode : PrefabMode::RexLevel{ template : "../../resources/wfc-populated.xp" },
+            mode : PrefabMode::RexLevel{ template : "../resources/wfc-populated.xp" },
             spawns: Vec::new()
         }
     }
@@ -98,6 +98,10 @@ impl PrefabBuilder {
                             '%' => {
                                 self.map.tiles[idx] = TileType::Floor;
                                 self.spawns.push((idx, "Rations".to_string()));
+                            }
+                            '!' => {
+                                self.map.tiles[idx] = TileType::Floor;
+                                self.spawns.push((idx, "Repair Pack".to_string()));
                             }
                             '!' => {
                                 self.map.tiles[idx] = TileType::Floor;
