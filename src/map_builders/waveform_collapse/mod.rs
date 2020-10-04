@@ -97,7 +97,7 @@ impl WaveformCollapseBuilder {
     
         let mut rng = RandomNumberGenerator::new();
     
-        const CHUNK_SIZE :i32 = 8;
+        const CHUNK_SIZE :i32 = 5;
     
         let prebuilder = &mut self.derive_from.as_mut().unwrap();
         prebuilder.build_map();

@@ -54,9 +54,9 @@ pub fn random_builder(new_depth: i32) -> Box<dyn MapBuilder> {
         _ => { result = Box::new(SimpleMapBuilder::new(new_depth)); }
     }
 
-    if rng.roll_dice(1, 3)==1 {
-        result = Box::new(WaveformCollapseBuilder::derived_map(new_depth, result));
+    //if rng.roll_dice(1, 3)==1 {
+    //result = 
+        Box::new(WaveformCollapseBuilder::derived_map(new_depth, result))
     }
 
-    result
-}
+    //result
