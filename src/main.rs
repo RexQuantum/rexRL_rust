@@ -34,6 +34,7 @@ pub mod rex_assets;
 pub mod trigger_system;
 pub mod map_builders;
 
+
 const SHOW_MAPGEN_VISUALIZER : bool = true;
 
 #[derive(PartialEq, Copy, Clone)]
@@ -50,7 +51,7 @@ pub enum RunState { AwaitingInput,
     ShowRemoveItem,
     GameOver,
     MagicMapReveal { row : i32 },
-    MapGeneration    
+    MapGeneration
 }
 
 pub struct State {
@@ -120,7 +121,7 @@ impl GameState for State {
                 }
                 gui::draw_ui(&self.ecs, ctx);
             }
-        }  
+        }
 
         match newrunstate {
             RunState::MapGeneration => {
@@ -131,7 +132,7 @@ impl GameState for State {
             draw_map(&self.mapgen_history[self.mapgen_index], ctx);
 
             self.mapgen_timer += ctx.frame_time_ms;
-            if self.mapgen_timer > 16.7 {
+            if self.mapgen_timer > 500.0 {
                 self.mapgen_timer = 0.0;
                 self.mapgen_index += 1;
                 if self.mapgen_index >= self.mapgen_history.len() {
