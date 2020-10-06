@@ -4,7 +4,7 @@ use simple_map::SimpleMapBuilder;
 mod bsp_dungeon;
 use bsp_dungeon::BspDungeonBuilder;
 mod bsp_interior;
-use bsp_interior::BspInteriorBuilder;
+use bsp_interior::*;
 mod cellular_automata;
 use cellular_automata::CellularAutomataBuilder;
 mod drunkard;
@@ -74,7 +74,7 @@ pub fn random_builder(new_depth: i32) -> Box<dyn MapBuilder> {
             new_depth,
             Some(
                 Box::new(
-                    CellularAutomataBuilder::new(new_depth)
+                    SimpleMapBuilder::new(new_depth)
                 )
             )
         )
