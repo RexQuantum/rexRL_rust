@@ -3,9 +3,11 @@ use super::{MapBuilder, Map,
     remove_unreachable_areas_returning_most_distant, generate_voronoi_spawn_regions,
     paint, Symmetry};
 use rltk::RandomNumberGenerator;
+use specs::prelude::*;
 use std::collections::HashMap;
 
 #[derive(PartialEq, Copy, Clone)]
+#[allow(dead_code)]
 pub enum DrunkSpawnMode { StartingPoint, Random }
 
 pub struct DrunkardSettings {
@@ -71,6 +73,7 @@ impl DrunkardsWalkBuilder {
         }
     }
 
+    #[allow(dead_code)]
     pub fn open_area(new_depth : i32) -> DrunkardsWalkBuilder {
         DrunkardsWalkBuilder{
             map : Map::new(new_depth),
@@ -89,6 +92,7 @@ impl DrunkardsWalkBuilder {
         }
     }
 
+    #[allow(dead_code)]
     pub fn open_halls(new_depth : i32) -> DrunkardsWalkBuilder {
         DrunkardsWalkBuilder{
             map : Map::new(new_depth),
@@ -106,7 +110,7 @@ impl DrunkardsWalkBuilder {
             spawn_list : Vec::new()
         }
     }
-
+    #[allow(dead_code)]
     pub fn winding_passages(new_depth : i32) -> DrunkardsWalkBuilder {
         DrunkardsWalkBuilder{
             map : Map::new(new_depth),
@@ -118,13 +122,14 @@ impl DrunkardsWalkBuilder {
                 spawn_mode: DrunkSpawnMode::Random,
                 drunken_lifetime: 100,
                 floor_percent: 0.4,
-                brush_size: 1,
+                brush_size: 2,
                 symmetry: Symmetry::None
             },
             spawn_list : Vec::new()
         }
     }
 
+    #[allow(dead_code)]
     pub fn fat_passages(new_depth : i32) -> DrunkardsWalkBuilder {
         DrunkardsWalkBuilder{
             map : Map::new(new_depth),
@@ -142,7 +147,8 @@ impl DrunkardsWalkBuilder {
             spawn_list : Vec::new()
         }
     }
-    
+
+    #[allow(dead_code)]
     pub fn fearful_symmetry(new_depth : i32) -> DrunkardsWalkBuilder {
         DrunkardsWalkBuilder{
             map : Map::new(new_depth),
@@ -202,6 +208,7 @@ impl DrunkardsWalkBuilder {
                 }
                 paint(&mut self.map, self.settings.symmetry, self.settings.brush_size, drunk_x, drunk_y);
                 self.map.tiles[drunk_idx] = TileType::DownStairs;
+                
                 let stagger_direction = rng.roll_dice(1, 4);
                 match stagger_direction {
                     1 => { if drunk_x > 2 { drunk_x -= 1; } }

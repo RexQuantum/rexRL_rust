@@ -39,9 +39,9 @@ pub const SILLY_SMILE : PrefabRoom = PrefabRoom{
 const SILLY_SMILE_MAP : &str = "
       
  ^  ^ 
-  #  
+  #   
       
- ### 
+ ###  
       
 ";
 
@@ -57,7 +57,7 @@ pub const CHECKERBOARD : PrefabRoom = PrefabRoom{
 #[allow(dead_code)]
 const CHECKERBOARD_MAP : &str = "
       
- ^#  
+ ^#   
  M#%# 
  #!#  
  ^# # 

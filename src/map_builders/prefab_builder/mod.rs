@@ -73,6 +73,45 @@ impl PrefabBuilder {
     }
 
     #[allow(dead_code)]
+    pub fn rex_level(new_depth : i32, template : &'static str) -> PrefabBuilder {
+        PrefabBuilder{
+            map : Map::new(new_depth),
+            starting_position : Position{ x: 0, y : 0 },
+            depth : new_depth,
+            history : Vec::new(),
+            mode : PrefabMode::RexLevel{ template },
+            previous_builder : None,
+            spawn_list : Vec::new()
+        }
+    }
+
+    #[allow(dead_code)]
+    pub fn constant(new_depth : i32, level : prefab_levels::PrefabLevel) -> PrefabBuilder {
+        PrefabBuilder{
+            map : Map::new(new_depth),
+            starting_position : Position{ x: 0, y : 0 },
+            depth : new_depth,
+            history : Vec::new(),
+            mode : PrefabMode::Constant{ level },
+            previous_builder : None,
+            spawn_list : Vec::new()
+        }
+    }
+
+    #[allow(dead_code)]
+    pub fn sectional(new_depth : i32, section : prefab_sections::PrefabSection, previous_builder : Box<dyn MapBuilder>) -> PrefabBuilder {
+        PrefabBuilder{
+            map : Map::new(new_depth),
+            starting_position : Position{ x: 0, y : 0 },
+            depth : new_depth,
+            history : Vec::new(),
+            mode : PrefabMode::Sectional{ section },
+            previous_builder : Some(previous_builder),
+            spawn_list : Vec::new()
+        }
+    }
+
+    #[allow(dead_code)]
     pub fn vaults(new_depth : i32, previous_builder : Box<dyn MapBuilder>) -> PrefabBuilder {
         PrefabBuilder{
             map : Map::new(new_depth),
@@ -163,18 +202,15 @@ impl PrefabBuilder {
     #[allow(dead_code)]
     fn load_rex_map(&mut self, path: &str) {
         let xp_file = rltk::rex::XpFile::from_resource(path).unwrap();
-    
+
         for layer in &xp_file.layers {
             for y in 0..layer.height {
                 for x in 0..layer.width {
                     let cell = layer.get(x, y).unwrap();
                     if x < self.map.width as usize && y < self.map.height as usize {
                         let idx = self.map.xy_idx(x as i32, y as i32);
-                        match (cell.ch as u8) as char {
-                            '.' => self.map.tiles[idx] = TileType::Floor, // space
-                            '#' => self.map.tiles[idx] = TileType::Wall, // #
-                            _ => {}
-                        }
+                        // We're doing some nasty casting to make it easier to type things like '#' in the match
+                        self.char_to_map(cell.ch as u8 as char, idx);
                     }
                 }
             }
@@ -323,10 +359,11 @@ impl PrefabBuilder {
                     vault_positions.push(Position{ x,y });
                     break;
                 }
+
             }
 
             idx += 1;
-            idx >= self.map.tiles.len()-1; { break; }
+            if idx >= self.map.tiles.len()-1 { break; }
         }
 
         if !vault_positions.is_empty() {

@@ -1,10 +1,10 @@
-use super::{Map, Rect, TileType, Position, spawner, SHOW_MAPGEN_VISUALIZER};
+use super::{Map, Rect, TileType, Position, spawner, SHOW_MAPGEN_VISUALIZER };
 mod simple_map;
 use simple_map::SimpleMapBuilder;
 mod bsp_dungeon;
 use bsp_dungeon::BspDungeonBuilder;
 mod bsp_interior;
-use bsp_interior::*;
+use bsp_interior::BspInteriorBuilder;
 mod cellular_automata;
 use cellular_automata::CellularAutomataBuilder;
 mod drunkard;
@@ -19,7 +19,6 @@ mod prefab_builder;
 use prefab_builder::*;
 mod waveform_collapse;
 use waveform_collapse::*;
-
 mod common;
 use common::*;
 use specs::prelude::*;
@@ -39,7 +38,6 @@ pub trait MapBuilder {
     }
 }
 pub fn random_builder(new_depth: i32) -> Box<dyn MapBuilder> {
-    /*
     let mut rng = rltk::RandomNumberGenerator::new();
     let builder = rng.roll_dice(1, 17);
     let mut result : Box<dyn MapBuilder>;
@@ -59,24 +57,19 @@ pub fn random_builder(new_depth: i32) -> Box<dyn MapBuilder> {
         13 => { result = Box::new(DLABuilder::insectoid(new_depth)); }
         14 => { result = Box::new(VoronoiCellBuilder::pythagoras(new_depth)); }
         15 => { result = Box::new(VoronoiCellBuilder::manhattan(new_depth)); }
+        16 => { result = Box::new(PrefabBuilder::constant(new_depth, prefab_builder::prefab_levels::WFC_POPULATED)) },
         _ => { result = Box::new(SimpleMapBuilder::new(new_depth)); }
     }
 
     if rng.roll_dice(1, 3)==1 {
-    result = 
-        Box::new(WaveformCollapseBuilder::derived_map(new_depth, result))
+        result = Box::new(WaveformCollapseBuilder::derived_map(new_depth, result));
     }
 
-    result */
-    
-    Box::new(
-        PrefabBuilder::new(
-            new_depth,
-            Some(
-                Box::new(
-                    SimpleMapBuilder::new(new_depth)
-                )
-            )
-        )
-    )
+    if rng.roll_dice(1, 20)==1 {
+        result = Box::new(PrefabBuilder::sectional(new_depth, prefab_builder::prefab_sections::UNDERGROUND_FORT ,result));
+    }
+
+    result = Box::new(PrefabBuilder::vaults(new_depth, result));
+
+    result
 }

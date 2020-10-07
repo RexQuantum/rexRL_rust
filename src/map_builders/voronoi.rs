@@ -67,6 +67,7 @@ impl VoronoiCellBuilder {
         }
     }
 
+    #[allow(dead_code)]
     pub fn pythagoras(new_depth : i32) -> VoronoiCellBuilder {
         VoronoiCellBuilder{
             map : Map::new(new_depth),
@@ -80,6 +81,7 @@ impl VoronoiCellBuilder {
         }
     }
 
+    #[allow(dead_code)]
     pub fn manhattan(new_depth : i32) -> VoronoiCellBuilder {
         VoronoiCellBuilder{
             map : Map::new(new_depth),

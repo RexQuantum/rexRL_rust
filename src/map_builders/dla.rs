@@ -70,7 +70,7 @@ impl DLABuilder {
             spawn_list : Vec::new()
         }
     }
-
+    #[allow(dead_code)]
     pub fn walk_inwards(new_depth : i32) -> DLABuilder {
         DLABuilder{
             map : Map::new(new_depth),
@@ -85,7 +85,7 @@ impl DLABuilder {
             spawn_list : Vec::new()
         }
     }
-
+    #[allow(dead_code)]
     pub fn walk_outwards(new_depth : i32) -> DLABuilder {
         DLABuilder{
             map : Map::new(new_depth),
@@ -100,7 +100,7 @@ impl DLABuilder {
             spawn_list : Vec::new()
         }
     }
-
+    #[allow(dead_code)]
     pub fn central_attractor(new_depth : i32) -> DLABuilder {
         DLABuilder{
             map : Map::new(new_depth),
@@ -115,7 +115,7 @@ impl DLABuilder {
             spawn_list : Vec::new()
         }
     }
-
+    #[allow(dead_code)]
     pub fn insectoid(new_depth : i32) -> DLABuilder {
         DLABuilder{
             map : Map::new(new_depth),
