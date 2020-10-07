@@ -1,109 +1,30 @@
-use super::{MapBuilder, Map,
-    TileType, Position, spawner, SHOW_MAPGEN_VISUALIZER,
-    remove_unreachable_areas_returning_most_distant, generate_voronoi_spawn_regions};
+use super::{Map,  InitialMapBuilder, BuilderMap, TileType};
 use rltk::RandomNumberGenerator;
-use std::collections::HashMap;
 
-pub struct MazeBuilder {
-    map : Map,
-    starting_position : Position,
-    depth: i32,
-    history: Vec<Map>,
-    noise_areas : HashMap<i32, Vec<usize>>,
-    spawn_list: Vec<(usize, String)>
+pub struct MazeBuilder {}
 
-}
-
-impl MapBuilder for MazeBuilder {
-    fn get_map(&self) -> Map {
-        self.map.clone()
-    }
-
-    fn get_starting_position(&self) -> Position {
-        self.starting_position.clone()
-    }
-
-    fn get_snapshot_history(&self) -> Vec<Map> {
-        self.history.clone()
-    }
-
-    fn build_map(&mut self)  {
-        self.build();
-    }
-
-    fn get_spawn_list(&self) -> &Vec<(usize, String)> {
-        &self.spawn_list
-    }
-
-    fn take_snapshot(&mut self) {
-        if SHOW_MAPGEN_VISUALIZER {
-            let mut snapshot = self.map.clone();
-            for v in snapshot.revealed_tiles.iter_mut() {
-                *v = true;
-            }
-            self.history.push(snapshot);
-        }
+impl InitialMapBuilder for MazeBuilder {
+    #[allow(dead_code)]
+    fn build_map(&mut self, rng: &mut rltk::RandomNumberGenerator, build_data : &mut BuilderMap) {
+        self.build(rng, build_data);
     }
 }
 
 impl MazeBuilder {
     #[allow(dead_code)]
-    pub fn new(new_depth : i32) -> MazeBuilder {
-        MazeBuilder{
-            map : Map::new(new_depth),
-            starting_position : Position{ x: 0, y : 0 },
-            depth : new_depth,
-            history: Vec::new(),
-            noise_areas : HashMap::new(),
-            spawn_list : Vec::new()
-        }
+    pub fn new() -> Box<MazeBuilder> {
+        Box::new(MazeBuilder{})
     }
 
-    /* Maze code taken under MIT from https://github.com/cyucelen/mazeGenerator/ Good stuff,
-    there, even if it is a mess of c++ pointers */
-
     #[allow(clippy::map_entry)]
-    fn build(&mut self) {
-        let mut rng = RandomNumberGenerator::new();
-
-       // Maze gen
-       let mut maze = Grid::new((self.map.width / 2)-2, (self.map.height / 2)-2, &mut rng);
-       maze.generate_maze(self);
-
-       // Find a starting point; start at the middle and walk left until we find an open tile
-       self.starting_position = Position{ x: 2, y : 2 };
-       let start_idx = self.map.xy_idx(self.starting_position.x, self.starting_position.y);
-       self.take_snapshot();
-
-       // Find all tiles we can reach from the starting point
-       let exit_tile = remove_unreachable_areas_returning_most_distant(&mut self.map, start_idx);
-       self.take_snapshot();
-
-       // Place the stairs
-       self.map.tiles[exit_tile] = TileType::DownStairs;
-       self.take_snapshot();
-
-       // Now we build a noise map for use in spawning entities later
-       self.noise_areas = generate_voronoi_spawn_regions(&self.map, &mut rng);
-
-       // Spawn the entities
-       for area in self.noise_areas.iter() {
-            spawner::spawn_region(&self.map, &mut rng, area.1, self.depth, &mut self.spawn_list);
-        }
+    fn build(&mut self, rng : &mut RandomNumberGenerator, build_data : &mut BuilderMap) {
+        // Maze gen
+        let mut maze = Grid::new((build_data.map.width / 2)-2, (build_data.map.height / 2)-2, rng);
+        maze.generate_maze(build_data);
     }
 }
 
-
-//Below We define four constants: TOP, RIGHT, BOTTOM and LEFT and assign them to the numbers 0..3.
-// We use these whenever the algorithm wants to refer to a direction. Looking at 
-// Cell, it is relatively simple: "row" and "column" define where the cell is on the map.
-//"walls" is an array, with a bool for each of the directions we've defined. 
-//Rust arrays (static, you can't resize them like a vector) are defined with 
-//the syntax [TYPE ; NUMBER_OF_ELEMENTS]. Most of the time we just use vectors
-//because we like the dynamic sizing; in this case, the number of elements is 
-//known ahead of time, so using the lower-overhead type makes sense.
-//"visited" - a bool indicating whether we've previously looked at the cell.
-
+/* Maze code taken under MIT from https://github.com/cyucelen/mazeGenerator/ */
 
 const TOP : usize = 0;
 const RIGHT : usize = 1;
@@ -138,15 +59,15 @@ impl Cell {
         }
         else if x == -1 {
             self.walls[RIGHT] = false;
-            next.walls[LEFT]= false;
+            next.walls[LEFT] = false;
         }
-        if y == 1 {
+        else if y == 1 {
             self.walls[TOP] = false;
             next.walls[BOTTOM] = false;
         }
         else if y == -1 {
             self.walls[BOTTOM] = false;
-            next.walls[TOP]= false;
+            next.walls[TOP] = false;
         }
     }
 }
@@ -161,12 +82,12 @@ struct Grid<'a> {
 }
 
 impl<'a> Grid<'a> {
-    fn new(width: i32, height: i32, rng: &mut RandomNumberGenerator) -> Grid {
+    fn new(width: i32, height:i32, rng: &mut RandomNumberGenerator) -> Grid {
         let mut grid = Grid{
             width,
             height,
             cells: Vec::new(),
-            backtrace: Vec::new(), 
+            backtrace: Vec::new(),
             current: 0,
             rng
         };
@@ -195,7 +116,7 @@ impl<'a> Grid<'a> {
         let current_column = self.cells[self.current].column;
 
         let neighbor_indices : [i32; 4] = [
-            self.calculate_index(current_row - 1, current_column),
+            self.calculate_index(current_row -1, current_column),
             self.calculate_index(current_row, current_column + 1),
             self.calculate_index(current_row + 1, current_column),
             self.calculate_index(current_row, current_column - 1)
@@ -222,7 +143,7 @@ impl<'a> Grid<'a> {
         None
     }
 
-    fn generate_maze(&mut self, generator : &mut MazeBuilder) {
+    fn generate_maze(&mut self, build_data : &mut BuilderMap) {
         let mut i = 0;
         loop {
             self.cells[self.current].visited = true;
@@ -232,14 +153,9 @@ impl<'a> Grid<'a> {
                 Some(next) => {
                     self.cells[next].visited = true;
                     self.backtrace.push(self.current);
-                    /*
-
-                    vvv higher_part vvv
-                    |#######cell2######|
-                    |#######cell1######|
-                     ^^^ lower_part ^^^
-
-                    */
+                    //   __lower_part__      __higher_part_
+                    //   /            \      /            \
+                    // --------cell1------ | cell2-----------
                     let (lower_part, higher_part) =
                         self.cells.split_at_mut(std::cmp::max(self.current, next));
                     let cell1 = &mut lower_part[std::cmp::min(self.current, next)];
@@ -258,20 +174,20 @@ impl<'a> Grid<'a> {
             }
 
             if i % 50 == 0 {
-                self.copy_to_map(&mut generator.map);
-                generator.take_snapshot();
+                self.copy_to_map(&mut build_data.map);
+                build_data.take_snapshot();
             }
             i += 1;
-            }
         }
+    }
 
     fn copy_to_map(&self, map : &mut Map) {
-        // clear the map
+        // Clear the map
         for i in map.tiles.iter_mut() { *i = TileType::Wall; }
 
         for cell in self.cells.iter() {
-            let x = cell.column +1;
-            let y = cell.row +1;
+            let x = cell.column + 1;
+            let y = cell.row + 1;
             let idx = map.xy_idx(x * 2, y * 2);
 
             map.tiles[idx] = TileType::Floor;

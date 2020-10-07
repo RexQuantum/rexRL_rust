@@ -133,7 +133,7 @@ impl GameState for State {
             draw_map(&self.mapgen_history[self.mapgen_index], ctx);
 
             self.mapgen_timer += ctx.frame_time_ms;
-            if self.mapgen_timer > 500.0 {
+            if self.mapgen_timer > 100.0 {
                 self.mapgen_timer = 0.0;
                 self.mapgen_index += 1;
                 if self.mapgen_index >= self.mapgen_history.len() {
@@ -372,14 +372,16 @@ impl State {
         self.mapgen_index = 0;
         self.mapgen_timer = 0.0;
         self.mapgen_history.clear();
-        let mut builder = map_builders::random_builder(new_depth);
-        builder.build_map();
-        self.mapgen_history = builder.get_snapshot_history();
+        let mut rng = self.ecs.write_resource::<rltk::RandomNumberGenerator>();
+        let mut builder = map_builders::random_builder(new_depth, &mut rng);
+        builder.build_map(&mut rng);
+        std::mem::drop(rng);
+        self.mapgen_history = builder.build_data.history.clone();
         let player_start;
         {
             let mut worldmap_resource = self.ecs.write_resource::<Map>();
-            *worldmap_resource = builder.get_map();
-            player_start = builder.get_starting_position();
+            *worldmap_resource = builder.build_data.map.clone();
+            player_start = builder.build_data.starting_position.as_mut().unwrap().clone();
         }
     
         // Spawn bad guys
