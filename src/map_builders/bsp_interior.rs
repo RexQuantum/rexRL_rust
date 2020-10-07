@@ -1,5 +1,5 @@
-use super::{MapBuilder, Map, Rect,
-    TileType, Position, spawner, SHOW_MAPGEN_VISUALIZER};
+use super::{MapBuilder, Map, Rect, TileType, Position, spawner, SHOW_MAPGEN_VISUALIZER,
+    draw_corridor};
 use rltk::RandomNumberGenerator;
 use specs::prelude::*;
 
@@ -11,7 +11,8 @@ pub struct BspInteriorBuilder {
     depth: i32,
     rooms: Vec<Rect>,
     history: Vec<Map>,
-    rects: Vec<Rect>
+    rects: Vec<Rect>,
+    spawn_list: Vec<(usize, String)>
 }
 
 impl MapBuilder for BspInteriorBuilder {
@@ -31,10 +32,8 @@ impl MapBuilder for BspInteriorBuilder {
         self.build();
     }
 
-    fn spawn_entities(&mut self, ecs : &mut World) {
-        for room in self.rooms.iter().skip(1) {
-            spawner::spawn_room(ecs, room, self.depth);
-        }
+    fn get_spawn_list(&self) -> &Vec<(usize, String)> {
+        &self.spawn_list
     }
 
     fn take_snapshot(&mut self) {
@@ -49,6 +48,7 @@ impl MapBuilder for BspInteriorBuilder {
 }
 
 impl BspInteriorBuilder {
+    #[allow(dead_code)]
     pub fn new(new_depth : i32) -> BspInteriorBuilder {
         BspInteriorBuilder{
             map : Map::new(new_depth),
@@ -56,7 +56,8 @@ impl BspInteriorBuilder {
             depth : new_depth,
             rooms: Vec::new(),
             history: Vec::new(),
-            rects: Vec::new()
+            rects: Vec::new(),
+            spawn_list: Vec::new()
         }
     }
 
@@ -93,7 +94,7 @@ impl BspInteriorBuilder {
             let start_y = room.y1 + (rng.roll_dice(1, i32::abs(room.y1 - room.y2))-1);
             let end_x = next_room.x1 + (rng.roll_dice(1, i32::abs(next_room.x1 - next_room.x2))-1);
             let end_y = next_room.y1 + (rng.roll_dice(1, i32::abs(next_room.y1 - next_room.y2))-1);
-            self.draw_corridor(start_x, start_y, end_x, end_y);
+            draw_corridor(&mut self.map, start_x, start_y, end_x, end_y);
             self.take_snapshot();
         }
 
@@ -106,6 +107,11 @@ impl BspInteriorBuilder {
         // Place the player
         let start = self.rooms[0].center();
         self.starting_position = Position{ x: start.0, y: start.1 };
+
+        // Spawn some entities
+        for room in self.rooms.iter().skip(1) {
+            spawner::spawn_room(&self.map, &mut rng, room, self.depth, &mut self.spawn_list);
+        }
     }
 
     fn add_subrects(&mut self, rect : Rect, rng : &mut RandomNumberGenerator) {
@@ -138,26 +144,6 @@ impl BspInteriorBuilder {
             let v2 = Rect::new( rect.x1, rect.y1 + half_height, width, half_height );
             self.rects.push(v2);
             if half_height > MIN_ROOM_SIZE { self.add_subrects(v2, rng); }
-        }
-    }
-
-    fn draw_corridor(&mut self, x1:i32, y1:i32, x2:i32, y2:i32) {
-        let mut x = x1;
-        let mut y = y1;
-
-        while x != x2 || y != y2 {
-            if x < x2 {
-                x += 1;
-            } else if x > x2 {
-                x -= 1;
-            } else if y < y2 {
-                y += 1;
-            } else if y > y2 {
-                y -= 1;
-            }
-
-            let idx = self.map.xy_idx(x, y);
-            self.map.tiles[idx] = TileType::Floor;
         }
     }
 }
