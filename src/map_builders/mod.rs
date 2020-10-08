@@ -33,7 +33,7 @@ use room_based_stairs::RoomBasedStairs;
 use area_starting_points::{AreaStartingPosition, XStart, YStart};
 use cull_unreachable::CullUnreachable;
 use voronoi_spawning::VoronoiSpawning;
-use maze::MazeBuilder;
+// use maze::MazeBuilder;
 use dla::DLABuilder;
 use common::*;
 
@@ -118,9 +118,9 @@ pub trait InitialMapBuilder {
 pub trait MetaMapBuilder {
     fn build_map(&mut self, rng: &mut rltk::RandomNumberGenerator, build_data : &mut BuilderMap);
 }
-
+#[allow(dead_code)]
 fn random_initial_builder(rng: &mut rltk::RandomNumberGenerator) -> (Box<dyn InitialMapBuilder>, bool) {
-    let builder = rng.roll_dice(1, 17);
+    let builder = rng.roll_dice(1, 16);
     let result : (Box<dyn InitialMapBuilder>, bool);
     match builder {
         1 => result = (BspDungeonBuilder::new(), true),
@@ -131,14 +131,14 @@ fn random_initial_builder(rng: &mut rltk::RandomNumberGenerator) -> (Box<dyn Ini
         6 => result = (DrunkardsWalkBuilder::winding_passages(), false),
         7 => result = (DrunkardsWalkBuilder::fat_passages(), false),
         8 => result = (DrunkardsWalkBuilder::fearful_symmetry(), false),
-        9 => result = (MazeBuilder::new(), false),
-        10 => result = (DLABuilder::walk_inwards(), false),
-        11 => result = (DLABuilder::walk_outwards(), false),
-        12 => result = (DLABuilder::central_attractor(), false),
-        13 => result = (DLABuilder::insectoid(), false),
-        14 => result = (VoronoiCellBuilder::pythagoras(), false),
-        15 => result = (VoronoiCellBuilder::manhattan(), false),
-        16 => result = (PrefabBuilder::constant(prefab_builder::prefab_levels::WFC_POPULATED), false),
+        //9 => result = (MazeBuilder::new(), false),
+        9 => result = (DLABuilder::walk_inwards(), false),
+        10 => result = (DLABuilder::walk_outwards(), false),
+        11 => result = (DLABuilder::central_attractor(), false),
+        12 => result = (DLABuilder::insectoid(), false),
+        13 => result = (VoronoiCellBuilder::pythagoras(), false),
+        14 => result = (VoronoiCellBuilder::manhattan(), false),
+        15 => result = (PrefabBuilder::constant(prefab_builder::prefab_levels::WFC_POPULATED), false),
         _ => result = (SimpleMapBuilder::new(), true)
     }
     result

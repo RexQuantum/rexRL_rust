@@ -3,7 +3,6 @@ use specs::prelude::*;
 use serde::{Serialize, Deserialize};
 use std::collections::HashSet;
 
-
 pub const MAPWIDTH : usize = 80;
 pub const MAPHEIGHT : usize = 43;
 pub const MAPCOUNT : usize = MAPHEIGHT * MAPWIDTH;
@@ -115,7 +114,7 @@ fn is_revealed_and_wall(map: &Map, x: i32, y: i32) -> bool {
 }
 
 fn wall_glyph(map : &Map, x: i32, y:i32) -> rltk::FontCharType {
-    if x < 1 || x > map.width-2 || y < 1 || y > map.height-2 as i32 { return 219; }
+    if x < 1 || x > map.width-2 || y < 1 || y > map.height-2 as i32 { return 35; }
     let mut mask : u8 = 0;
 
     if is_revealed_and_wall(map, x, y - 1) { mask +=1; }
@@ -140,7 +139,7 @@ fn wall_glyph(map : &Map, x: i32, y:i32) -> rltk::FontCharType {
         13 => { 202 } // Wall to the east, west, and south
         14 => { 203 } // Wall to the east, west, and north
         15 => { 206 }  // ╬ Wall on all sides
-        _ => { 219 } // We missed one?
+        _ => { 176 } // We missed one?
     }
 }
 

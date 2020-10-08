@@ -127,18 +127,19 @@ impl GameState for State {
         match newrunstate {
             RunState::MapGeneration => {
                 if !SHOW_MAPGEN_VISUALIZER {
-                newrunstate = self.mapgen_next_state.unwrap();
-            }
-            ctx.cls();
-            draw_map(&self.mapgen_history[self.mapgen_index], ctx);
+                    newrunstate = self.mapgen_next_state.unwrap()
+                } else {
+                ctx.cls();
+                draw_map(&self.mapgen_history[self.mapgen_index], ctx);
 
-            self.mapgen_timer += ctx.frame_time_ms;
-            if self.mapgen_timer > 100.0 {
-                self.mapgen_timer = 0.0;
-                self.mapgen_index += 1;
-                if self.mapgen_index >= self.mapgen_history.len() {
+                self.mapgen_timer += ctx.frame_time_ms;
+                if self.mapgen_timer > 10.0 {
+                    self.mapgen_timer = 0.0;
+                    self.mapgen_index += 1;
+                    if self.mapgen_index >= self.mapgen_history.len() {
                     //self.mapgen_index -= 1;
-                    newrunstate = self.mapgen_next_state.unwrap();
+                    newrunstate = self.mapgen_next_state.unwrap(); 
+                   }
                 }
             }
         }

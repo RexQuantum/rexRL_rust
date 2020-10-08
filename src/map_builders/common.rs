@@ -36,6 +36,7 @@ pub fn apply_vertical_tunnel(map : &mut Map, y1:i32, y2:i32, x:i32) {
 }
 
 /// Searches a map, removes unreachable areas and returns the most distant tile.
+#[allow(dead_code)]
 pub fn remove_unreachable_areas_returning_most_distant(map : &mut Map, start_idx : usize) -> usize {
     map.populate_blocked();
     let map_starts : Vec<usize> = vec![start_idx];
@@ -62,6 +63,7 @@ pub fn remove_unreachable_areas_returning_most_distant(map : &mut Map, start_idx
 
 /// Generates a Voronoi/cellular noise map of a region, and divides it into spawn regions.
 #[allow(clippy::map_entry)]
+#[allow(dead_code)]
 pub fn generate_voronoi_spawn_regions(map: &Map, rng : &mut rltk::RandomNumberGenerator) -> HashMap<i32, Vec<usize>> {
     let mut noise_areas : HashMap<i32, Vec<usize>> = HashMap::new();
     let mut noise = rltk::FastNoise::seeded(rng.roll_dice(1, 65536) as u64);
