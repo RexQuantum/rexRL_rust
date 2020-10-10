@@ -24,6 +24,9 @@ mod rooms_corridors_dogleg;
 mod room_sorter;
 mod rooms_corridors_bsp;
 mod room_draw;
+mod rooms_corridors_nearest;
+mod rooms_corridors_lines;
+mod room_corridor_spawner;
 use distant_exit::DistantExit;
 use simple_map::SimpleMapBuilder;
 use bsp_dungeon::BspDungeonBuilder;
@@ -48,12 +51,16 @@ use rooms_corridors_dogleg::DoglegCorridors;
 use room_sorter::{RoomSorter, RoomSort};
 use rooms_corridors_bsp::BspCorridors;
 use room_draw::*;
+use rooms_corridors_nearest::*;
+use rooms_corridors_lines::*;
+use room_corridor_spawner::*;
 
 pub struct BuilderMap {
     pub spawn_list : Vec<(usize, String)>,
     pub map : Map,
     pub starting_position : Option<Position>,
     pub rooms : Option<Vec<Rect>>,
+    pub corridors : Option<Vec<Vec<usize>>>,
     pub history : Vec<Map>
 }
 
@@ -85,6 +92,7 @@ impl BuilderChain {
                 map : Map::new(new_depth),
                 starting_position: None,
                 rooms : None,
+                corridors: None,
                 history : Vec::new()
             }
         }
@@ -284,6 +292,18 @@ fn random_initial_builder(rng: &mut rltk::RandomNumberGenerator) -> (Box<dyn Ini
 
 pub fn random_builder(new_depth: i32, rng: &mut rltk::RandomNumberGenerator) -> BuilderChain {
     let mut builder = BuilderChain::new(new_depth);
+    builder.start_with(SimpleMapBuilder::new());
+    builder.with(RoomDrawer::new());
+    builder.with(RoomSorter::new(RoomSort::LEFTMOST));
+    builder.with(StraightLineCorridors::new());
+    builder.with(RoomBasedSpawner::new());
+    builder.with(CorridorSpawner::new());
+    builder.with(RoomBasedStairs::new());
+    builder.with(RoomBasedStartingPosition::new());
+    builder
+}    
+
+    /*  let mut builder = BuilderChain::new(new_depth);
     let type_roll = rng.roll_dice(1, 2);
     match type_roll {
         1 => random_room_builder(rng, &mut builder),
@@ -302,5 +322,5 @@ pub fn random_builder(new_depth: i32, rng: &mut rltk::RandomNumberGenerator) -> 
 
     builder
 }
-
+*/
 

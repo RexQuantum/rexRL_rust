@@ -6,22 +6,54 @@ use std::collections::HashMap;
 #[allow(dead_code)]
 pub enum Symmetry { None, Horizontal, Vertical, Both }
 
-pub fn apply_horizontal_tunnel(map : &mut Map, x1:i32, x2:i32, y:i32) {
+pub fn apply_horizontal_tunnel(map : &mut Map, x1:i32, x2:i32, y:i32) -> Vec<usize> {
+    let mut corridor = Vec::new();
     for x in min(x1,x2) ..= max(x1,x2) {
         let idx = map.xy_idx(x, y);
-        if idx > 0 && idx < map.width as usize * map.height as usize {
+        if idx > 0 && idx < map.width as usize * map.height as usize && map.tiles[idx as usize] != TileType::Floor {
             map.tiles[idx as usize] = TileType::Floor;
+            corridor.push(idx as usize);
         }
     }
+    corridor
 }
 
-pub fn apply_vertical_tunnel(map : &mut Map, y1:i32, y2:i32, x:i32) {
+pub fn apply_vertical_tunnel(map : &mut Map, y1:i32, y2:i32, x:i32) -> Vec<usize> {
+    let mut corridor = Vec::new();
     for y in min(y1,y2) ..= max(y1,y2) {
         let idx = map.xy_idx(x, y);
-        if idx > 0 && idx < map.width as usize * map.height as usize {
+        if idx > 0 && idx < map.width as usize * map.height as usize && map.tiles[idx as usize] != TileType::Floor {
+            corridor.push(idx);
             map.tiles[idx as usize] = TileType::Floor;
         }
     }
+    corridor
+}
+
+pub fn draw_corridor(map: &mut Map, x1:i32, y1:i32, x2:i32, y2:i32) -> Vec<usize> {
+    let mut corridor = Vec::new();
+    let mut x = x1;
+    let mut y = y1;
+
+    while x != x2 || y != y2 {
+        if x < x2 {
+            x += 1;
+        } else if x > x2 {
+            x -= 1;
+        } else if y < y2 {
+            y += 1;
+        } else if y > y2 {
+            y -= 1;
+        }
+
+        let idx = map.xy_idx(x, y);
+        if map.tiles[idx] != TileType::Floor {
+            corridor.push(idx);
+            map.tiles[idx] = TileType::Floor;
+        }
+    }
+
+    corridor
 }
 
 /// Searches a map, removes unreachable areas and returns the most distant tile.
@@ -77,26 +109,6 @@ pub fn generate_voronoi_spawn_regions(map: &Map, rng : &mut rltk::RandomNumberGe
     }
 
     noise_areas
-}
-
-pub fn draw_corridor(map: &mut Map, x1:i32, y1:i32, x2:i32, y2:i32) {
-    let mut x = x1;
-    let mut y = y1;
-
-    while x != x2 || y != y2 {
-        if x < x2 {
-            x += 1;
-        } else if x > x2 {
-            x -= 1;
-        } else if y < y2 {
-            y += 1;
-        } else if y > y2 {
-            y -= 1;
-        }
-
-        let idx = map.xy_idx(x, y);
-        map.tiles[idx] = TileType::Floor;
-    }
 }
 
 pub fn paint(map: &mut Map, mode: Symmetry, brush_size: i32, x: i32, y:i32) {
