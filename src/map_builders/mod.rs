@@ -225,10 +225,17 @@ fn random_room_builder(rng: &mut rltk::RandomNumberGenerator, builder : &mut Bui
 
     builder.with(RoomDrawer::new());
 
-    let corridor_roll = rng.roll_dice(1, 2);
+    let corridor_roll = rng.roll_dice(1, 4);
     match corridor_roll {
         1 => builder.with(DoglegCorridors::new()),
+        2 => builder.with(NearestCorridors::new()),
+        3 => builder.with(StraightLineCorridors::new()),
         _ => builder.with(BspCorridors::new())
+    }
+
+    let cspawn_roll = rng.roll_dice(1, 2);
+    if cspawn_roll == 1 {
+        builder.with(CorridorSpawner::new());
     }
 }
 
@@ -292,18 +299,6 @@ fn random_initial_builder(rng: &mut rltk::RandomNumberGenerator) -> (Box<dyn Ini
 
 pub fn random_builder(new_depth: i32, rng: &mut rltk::RandomNumberGenerator) -> BuilderChain {
     let mut builder = BuilderChain::new(new_depth);
-    builder.start_with(SimpleMapBuilder::new());
-    builder.with(RoomDrawer::new());
-    builder.with(RoomSorter::new(RoomSort::LEFTMOST));
-    builder.with(StraightLineCorridors::new());
-    builder.with(RoomBasedSpawner::new());
-    builder.with(CorridorSpawner::new());
-    builder.with(RoomBasedStairs::new());
-    builder.with(RoomBasedStartingPosition::new());
-    builder
-}    
-
-    /*  let mut builder = BuilderChain::new(new_depth);
     let type_roll = rng.roll_dice(1, 2);
     match type_roll {
         1 => random_room_builder(rng, &mut builder),
@@ -322,5 +317,3 @@ pub fn random_builder(new_depth: i32, rng: &mut rltk::RandomNumberGenerator) -> 
 
     builder
 }
-*/
-
