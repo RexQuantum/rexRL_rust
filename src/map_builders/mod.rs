@@ -250,7 +250,6 @@ fn random_initial_builder(rng: &mut rltk::RandomNumberGenerator) -> (Box<dyn Ini
         6 => result = (DrunkardsWalkBuilder::winding_passages(), false),
         7 => result = (DrunkardsWalkBuilder::fat_passages(), false),
         8 => result = (DrunkardsWalkBuilder::fearful_symmetry(), false),
-        //9 => result = (MazeBuilder::new(), false),
         9 => result = (DLABuilder::walk_inwards(), false),
         10 => result = (DLABuilder::walk_outwards(), false),
         11 => result = (DLABuilder::central_attractor(), false),
@@ -283,34 +282,3 @@ pub fn random_builder(new_depth: i32, rng: &mut rltk::RandomNumberGenerator) -> 
 
     builder
 }
-
-
-/*
-pub fn random_builder(new_depth: i32, rng: &mut rltk::RandomNumberGenerator) -> BuilderChain {
-    let mut builder = BuilderChain::new(new_depth);
-    let (random_starter, has_rooms) = random_initial_builder(rng);
-    builder.start_with(random_starter);
-    if has_rooms {
-        builder.with(RoomBasedSpawner::new());
-        builder.with(RoomBasedStairs::new());
-        builder.with(RoomBasedStartingPosition::new());
-    } else {
-        builder.with(AreaStartingPosition::new(XStart::CENTER, YStart::CENTER));
-        builder.with(CullUnreachable::new());
-        builder.with(VoronoiSpawning::new());
-        builder.with(DistantExit::new());
-    }
-
-    if rng.roll_dice(1, 3)==1 {
-        builder.with(WaveformCollapseBuilder::new());
-    }
-
-    if rng.roll_dice(1, 20)==1 {
-        builder.with(PrefabBuilder::sectional(prefab_builder::prefab_sections::UNDERGROUND_FORT));
-    }
-
-    builder.with(PrefabBuilder::vaults());
-
-    builder
-}
-*/
