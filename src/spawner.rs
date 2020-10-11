@@ -324,4 +324,4 @@ fn spike_trap(ecs: &mut World, x: i32, y: i32) {
         .marked::<SimpleMarker<SerializeMe>>()
         .build();
     }
-        
+
