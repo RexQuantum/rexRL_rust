@@ -24,7 +24,7 @@ impl StraightLineCorridors {
         } else {
             panic!("Straight Line Corridors require a builder with room structures");
         }
-    
+
         let mut connected : HashSet<usize> = HashSet::new();
         let mut corridors : Vec<Vec<usize>> = Vec::new();
         for (i,room) in rooms.iter().enumerate() {
@@ -42,13 +42,13 @@ impl StraightLineCorridors {
                     room_distance.push((j, distance));
                 }
             }
-    
+
             if !room_distance.is_empty() {
                 room_distance.sort_by(|a,b| a.1.partial_cmp(&b.1).unwrap() );
                 let dest_center = rooms[room_distance[0].0].center();
                 let line = rltk::line2d(
-                    rltk::LineAlg::Bresenham, 
-                    room_center_pt, 
+                    rltk::LineAlg::Bresenham,
+                    room_center_pt,
                     rltk::Point::new(dest_center.0, dest_center.1)
                 );
                 let mut corridor = Vec::new();
