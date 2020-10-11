@@ -248,7 +248,7 @@ fn repair_pack(ecs: &mut World, x: i32, y: i32) {
         .with(Name{ name : "Repair pack".to_string() })
         .with(Item{})
         .with(Consumable{})
-        .with(ProvidesHealing{ heal_amount: 8 })
+        .with(ProvidesHealing{ heal_amount: 12 })
         .marked::<SimpleMarker<SerializeMe>>()
         .build();
 }
@@ -284,7 +284,8 @@ fn beam_cell(ecs: &mut World, x: i32, y: i32) {
         .with(Item{})
         .with(Consumable{})
         .with(Ranged{ range: 6 })
-        .with(InflictsDamage{ damage: 8 })
+        .with(InflictsDamage{ damage: 10 })
+        .with(AreaOfEffect{ radius: 2 })
         .marked::<SimpleMarker<SerializeMe>>()
         .build();
 }
@@ -303,6 +304,7 @@ fn scrambler_cell(ecs: &mut World, x: i32, y: i32) {
         .with(Consumable{})
         .with(Ranged{ range: 6 })
         .with(Confusion{ turns: 4 })
+        .with(AreaOfEffect{ radius: 4 })
         .marked::<SimpleMarker<SerializeMe>>()
         .build();
 }
@@ -320,7 +322,7 @@ fn spike_trap(ecs: &mut World, x: i32, y: i32) {
         .with(Hidden{})
         .with(EntryTrigger{})
         .with(SingleActivation{})
-        .with(InflictsDamage{ damage : 8 })
+        .with(InflictsDamage{ damage : 10 })
         .marked::<SimpleMarker<SerializeMe>>()
         .build();
     }
