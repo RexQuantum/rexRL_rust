@@ -263,7 +263,7 @@ pub fn random_builder(new_depth: i32, rng: &mut rltk::RandomNumberGenerator) -> 
         builder.with(DistantExit::new());
     }
 
-    if rng.roll_dice(1, 20)==1 {
+    if rng.roll_dice(1, 10)==1 {
         builder.with(PrefabBuilder::sectional(prefab_builder::prefab_sections::UNDERGROUND_FORT));
     }
 
