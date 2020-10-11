@@ -24,6 +24,9 @@ mod rooms_corridors_dogleg;
 mod rooms_corridors_bsp;
 mod room_sorter;
 mod room_draw;
+mod rooms_corridors_nearest;
+mod rooms_corridors_lines;
+mod room_corridor_spawner;
 use distant_exit::DistantExit;
 use simple_map::SimpleMapBuilder;
 use bsp_dungeon::BspDungeonBuilder;
@@ -48,13 +51,16 @@ use rooms_corridors_dogleg::DoglegCorridors;
 use rooms_corridors_bsp::BspCorridors;
 use room_sorter::{RoomSorter, RoomSort};
 use room_draw::RoomDrawer;
+use rooms_corridors_nearest::NearestCorridors;
+use rooms_corridors_lines::StraightLineCorridors;
+use room_corridor_spawner::CorridorSpawner;
 
 pub struct BuilderMap {
     pub spawn_list : Vec<(usize, String)>,
     pub map : Map,
     pub starting_position : Option<Position>,
     pub rooms: Option<Vec<Rect>>,
-    pub corridors : Option<Vec<Vec<usize>>>,
+    pub corridors: Option<Vec<Vec<usize>>>,
     pub history : Vec<Map>
 }
 
@@ -175,10 +181,17 @@ fn random_room_builder(rng: &mut rltk::RandomNumberGenerator, builder : &mut Bui
 
         builder.with(RoomDrawer::new());
 
-        let corridor_roll = rng.roll_dice(1, 2);
+        let corridor_roll = rng.roll_dice(1, 4);
         match corridor_roll {
             1 => builder.with(DoglegCorridors::new()),
+            2 => builder.with(NearestCorridors::new()),
+            3 => builder.with(StraightLineCorridors::new()),
             _ => builder.with(BspCorridors::new())
+        }
+
+        let cspawn_roll = rng.roll_dice(1, 2);
+        if cspawn_roll == 1 {
+            builder.with(CorridorSpawner::new());
         }
 
         let modifier_roll = rng.roll_dice(1, 6);
@@ -263,7 +276,7 @@ pub fn random_builder(new_depth: i32, rng: &mut rltk::RandomNumberGenerator) -> 
         builder.with(DistantExit::new());
     }
 
-    if rng.roll_dice(1, 10)==1 {
+    if rng.roll_dice(1, 20)==1 {
         builder.with(PrefabBuilder::sectional(prefab_builder::prefab_sections::UNDERGROUND_FORT));
     }
 
