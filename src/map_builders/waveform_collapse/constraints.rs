@@ -1,7 +1,6 @@
 use super::{TileType, Map, MapChunk, tile_idx_in_chunk};
 use std::collections::HashSet;
 
-
 pub fn build_patterns(map : &Map, chunk_size: i32, include_flipping: bool, dedupe: bool) -> Vec<Vec<TileType>> {
     let chunks_x = map.width / chunk_size;
     let chunks_y = map.height / chunk_size;
@@ -9,64 +8,64 @@ pub fn build_patterns(map : &Map, chunk_size: i32, include_flipping: bool, dedup
 
     for cy in 0..chunks_y {
         for cx in 0..chunks_x {
-        // Normal orientation
+            // Normal orientation
             let mut pattern : Vec<TileType> = Vec::new();
             let start_x = cx * chunk_size;
             let end_x = (cx+1) * chunk_size;
             let start_y = cy * chunk_size;
             let end_y = (cy+1) * chunk_size;
 
-        for y in start_y .. end_y {
-            for x in start_x .. end_x {
-                let idx = map.xy_idx(x, y);
-                pattern.push(map.tiles[idx]);
-            }
-        }
-        patterns.push(pattern);
-
-        if include_flipping {
-            // Flip horizontal
-            pattern = Vec::new();
             for y in start_y .. end_y {
                 for x in start_x .. end_x {
-                    let idx = map.xy_idx(end_x - (x+1), y);
+                    let idx = map.xy_idx(x, y);
                     pattern.push(map.tiles[idx]);
                 }
             }
             patterns.push(pattern);
 
-            // Flip vertical
-            pattern = Vec::new();
-            for y in start_y .. end_y {
-                for x in start_x .. end_x {
-                    let idx = map.xy_idx(x, end_y - (y+1));
-                    pattern.push(map.tiles[idx]);
+            if include_flipping {
+                // Flip horizontal
+                pattern = Vec::new();
+                for y in start_y .. end_y {
+                    for x in start_x .. end_x {
+                        let idx = map.xy_idx(end_x - (x+1), y);
+                        pattern.push(map.tiles[idx]);
+                    }
                 }
-            }
-            patterns.push(pattern);
+                patterns.push(pattern);
 
-            // Flip both
-            pattern = Vec::new();
-            for y in start_y .. end_y {
-                for x in start_x .. end_x {
-                    let idx = map.xy_idx(end_x - (x+1), end_y - (y+1));
-                    pattern.push(map.tiles[idx]);
+                // Flip vertical
+                pattern = Vec::new();
+                for y in start_y .. end_y {
+                    for x in start_x .. end_x {
+                        let idx = map.xy_idx(x, end_y - (y+1));
+                        pattern.push(map.tiles[idx]);
+                    }
                 }
+                patterns.push(pattern);
+
+                // Flip both
+                pattern = Vec::new();
+                for y in start_y .. end_y {
+                    for x in start_x .. end_x {
+                        let idx = map.xy_idx(end_x - (x+1), end_y - (y+1));
+                        pattern.push(map.tiles[idx]);
+                    }
+                }
+                patterns.push(pattern);
             }
-            patterns.push(pattern);
         }
     }
-}
 
-// Dedupe
-if dedupe {
-    rltk::console::log(format!("Pre de-duplication, there are {} patterns", patterns.len()));
-    let set: HashSet<Vec<TileType>> = patterns.drain(..).collect(); // dedup
-    patterns.extend(set.into_iter());
-    rltk::console::log(format!("There are {} patterns", patterns.len()));
-}
+    // Dedupe
+    if dedupe {
+        rltk::console::log(format!("Pre de-duplication, there are {} patterns", patterns.len()));
+        let set: HashSet<Vec<TileType>> = patterns.drain(..).collect(); // dedup
+        patterns.extend(set.into_iter());
+        rltk::console::log(format!("There are {} patterns", patterns.len()));
+    }
 
-patterns
+    patterns
 }
 
 pub fn render_pattern_to_map(map : &mut Map, chunk: &MapChunk, chunk_size: i32, start_x : i32, start_y: i32) {
@@ -98,7 +97,7 @@ pub fn render_pattern_to_map(map : &mut Map, chunk: &MapChunk, chunk_size: i32, 
             map.tiles[map_idx] = TileType::DownStairs;
         }
     }
-    for (x,eastbound) in chunk.exits[3].iter().enumerate() {
+    for (x,eastbound) in chunk.exits[2].iter().enumerate() {
         if *eastbound {
             let map_idx = map.xy_idx(start_x + chunk_size - 1, start_y + x as i32);
             map.tiles[map_idx] = TileType::DownStairs;
@@ -124,7 +123,7 @@ pub fn patterns_to_constraints(patterns: Vec<Vec<TileType>>, chunk_size : i32) -
 
         let mut n_exits = 0;
         for x in 0..chunk_size {
-            //check for northbound exits
+            // Check for north-bound exits
             let north_idx = tile_idx_in_chunk(chunk_size, x, 0);
             if new_chunk.pattern[north_idx] == TileType::Floor {
                 new_chunk.exits[0][x as usize] = true;
@@ -193,7 +192,7 @@ pub fn patterns_to_constraints(patterns: Vec<Vec<TileType>>, chunk_size : i32) -
                         c.compatible_with[direction].push(j);
                     }
                     if !has_any {
-                        // There's no exits on this side, let's match only if 
+                        // There's no exits on this side, let's match only if
                         // the other edge also has no exits
                         let matching_exit_count = potential.exits[opposite].iter().filter(|a| !**a).count();
                         if matching_exit_count == 0 {

@@ -1,6 +1,7 @@
 use super::{MetaMapBuilder, BuilderMap, Rect };
 use rltk::RandomNumberGenerator;
 
+#[allow(dead_code)]
 pub enum RoomSort { LEFTMOST, RIGHTMOST, TOPMOST, BOTTOMMOST, CENTRAL }
 
 pub struct RoomSorter {
@@ -13,6 +14,7 @@ impl MetaMapBuilder for RoomSorter {
         self.sorter(rng, build_data);
     }
 }
+
 impl RoomSorter {
     #[allow(dead_code)]
     pub fn new(sort_by : RoomSort) -> Box<RoomSorter> {

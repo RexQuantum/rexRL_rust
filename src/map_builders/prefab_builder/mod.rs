@@ -114,7 +114,6 @@ impl PrefabBuilder {
             }
         }
     }
-
     #[allow(dead_code)]
     fn load_rex_map(&mut self, path: &str, build_data : &mut BuilderMap) {
         let xp_file = rltk::rex::XpFile::from_resource(path).unwrap();

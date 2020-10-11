@@ -39,9 +39,9 @@ pub const SILLY_SMILE : PrefabRoom = PrefabRoom{
 const SILLY_SMILE_MAP : &str = "
       
  ^  ^ 
-  #   
       
- ###  
+      
+ ^^^  
       
 ";
 
