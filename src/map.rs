@@ -163,7 +163,8 @@ pub fn draw_map(map : &Map, ctx : &mut Rltk) {
                 }
                 TileType::Wall => {
                     glyph = wall_glyph(&*map, x, y);
-                    fg = RGB::from_f32(0., 1.0, 0.);
+                    //fg = RGB::from_f32(0., 1.0, 0.);
+                    fg = RGB::named(rltk::MEDIUM_PURPLE);
                 }
                 TileType::DownStairs => {
                     glyph = rltk::to_cp437('>');
