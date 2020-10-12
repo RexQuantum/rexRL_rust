@@ -3,7 +3,7 @@ use specs::prelude::*;
 use super::{CombatStats, Player, Renderable, Name, Position, Viewshed, Monster, BlocksTile, Rect, Item,
 random_table::RandomTable, EquipmentSlot, Equippable, MeleePowerBonus, DefenseBonus, HungerClock,
 Consumable, Ranged, ProvidesHealing, map::MAPWIDTH, InflictsDamage, AreaOfEffect, Confusion, SerializeMe,
-HungerState, ProvidesFood, MagicMapper, Hidden, EntryTrigger, SingleActivation, Map, TileType };
+HungerState, ProvidesFood, MagicMapper, Hidden, EntryTrigger, SingleActivation, Map, TileType, Door, BlocksVisibility };
 use specs::saveload::{MarkedBuilder, SimpleMarker};
 use std::collections::HashMap;
 
@@ -108,6 +108,7 @@ pub fn spawn_entity(ecs: &mut World, spawn : &(&usize, &String)) {
         "Rations" => rations(ecs, x, y),
         "Data Disk - Map" => magic_mapper(ecs, x, y),
         "Spike Trap" => spike_trap(ecs, x, y),
+        "Door" => door(ecs, x, y),
         _ => {}
     }
 }
@@ -325,3 +326,19 @@ fn spike_trap(ecs: &mut World, x: i32, y: i32) {
         .build();
     }
 
+fn door(ecs: &mut World, x: i32, y: i32) {
+    ecs.create_entity()
+    .with(Position{ x, y })
+    .with(Renderable{
+        glyph: rltk::to_cp437('+'),
+        fg: RGB::named(rltk::CHOCOLATE),
+        bg: RGB::named(rltk::BLACK),
+        render_order: 2
+    })
+    .with(Name{ name : "Door".to_string() })
+    .with(BlocksTile{})
+    .with(BlocksVisibility{})
+    .with(Door{open: false})
+    .marked::<SimpleMarker<SerializeMe>>()
+    .build();
+}

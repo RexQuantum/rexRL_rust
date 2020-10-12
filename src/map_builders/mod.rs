@@ -27,6 +27,7 @@ mod room_draw;
 mod rooms_corridors_nearest;
 mod rooms_corridors_lines;
 mod room_corridor_spawner;
+mod door_placement;
 use distant_exit::DistantExit;
 use simple_map::SimpleMapBuilder;
 use bsp_dungeon::BspDungeonBuilder;
@@ -54,7 +55,7 @@ use room_draw::RoomDrawer;
 use rooms_corridors_nearest::NearestCorridors;
 use rooms_corridors_lines::StraightLineCorridors;
 use room_corridor_spawner::CorridorSpawner;
-
+use door_placement::*;
 pub struct BuilderMap {
     pub spawn_list : Vec<(usize, String)>,
     pub map : Map,
@@ -280,7 +281,22 @@ pub fn random_builder(new_depth: i32, rng: &mut rltk::RandomNumberGenerator) -> 
         builder.with(PrefabBuilder::sectional(prefab_builder::prefab_sections::UNDERGROUND_FORT));
     }
 
+    builder.with(DoorPlacement::new());
     builder.with(PrefabBuilder::vaults());
 
     builder
 }
+    // test harness
+    /*
+    let mut builder = BuilderChain::new(new_depth);
+    builder.start_with(SimpleMapBuilder::new());
+    builder.with(RoomDrawer::new());
+    builder.with(RoomSorter::new(RoomSort::LEFTMOST));
+    builder.with(StraightLineCorridors::new());
+    builder.with(RoomBasedSpawner::new());
+    builder.with(CorridorSpawner::new());
+    builder.with(RoomBasedStairs::new());
+    builder.with(RoomBasedStartingPosition::new());
+    builder.with(DoorPlacement::new());
+    builder
+    */
