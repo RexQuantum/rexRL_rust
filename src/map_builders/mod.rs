@@ -56,13 +56,16 @@ use rooms_corridors_nearest::NearestCorridors;
 use rooms_corridors_lines::StraightLineCorridors;
 use room_corridor_spawner::CorridorSpawner;
 use door_placement::*;
+
 pub struct BuilderMap {
     pub spawn_list : Vec<(usize, String)>,
     pub map : Map,
     pub starting_position : Option<Position>,
     pub rooms: Option<Vec<Rect>>,
     pub corridors: Option<Vec<Vec<usize>>>,
-    pub history : Vec<Map>
+    pub history : Vec<Map>,
+    pub width: i32,
+    pub height: i32
 }
 
 impl BuilderMap {
@@ -84,17 +87,19 @@ pub struct BuilderChain {
 }
 
 impl BuilderChain {
-    pub fn new(new_depth : i32) -> BuilderChain {
+    pub fn new(new_depth : i32, width: i32, height: i32) -> BuilderChain {
         BuilderChain{
             starter: None,
             builders: Vec::new(),
             build_data : BuilderMap {
                 spawn_list: Vec::new(),
-                map: Map::new(new_depth),
+                map: Map::new(new_depth, width, height),
                 starting_position: None,
                 rooms: None,
                 corridors: None,
-                history : Vec::new()
+                history : Vec::new(),
+                width,
+                height
             }
         }
     }
@@ -257,8 +262,8 @@ fn random_shape_builder(rng: &mut rltk::RandomNumberGenerator, builder : &mut Bu
     builder.with(DistantExit::new());
 }
 
-pub fn random_builder(new_depth: i32, rng: &mut rltk::RandomNumberGenerator) -> BuilderChain {
-    let mut builder = BuilderChain::new(new_depth);
+pub fn random_builder(new_depth: i32, rng: &mut rltk::RandomNumberGenerator, width: i32, height: i32) -> BuilderChain {
+    let mut builder = BuilderChain::new(new_depth, width, height);
     let type_roll = rng.roll_dice(1, 2);
     match type_roll {
         1 => random_room_builder(rng, &mut builder),
