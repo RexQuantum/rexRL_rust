@@ -113,8 +113,6 @@ fn is_revealed_and_wall(map: &Map, x: i32, y: i32) -> bool {
     map.tiles[idx] == TileType::Wall && map.revealed_tiles[idx]
 }
 
-<<<<<<< HEAD
-=======
 pub fn get_screen_bounds(ecs: &World, ctx : &mut Rltk) -> (i32, i32, i32, i32) {
     let player_pos = ecs.fetch::<Point>();
     let (x_chars, y_chars) = ctx.get_char_size();
@@ -129,9 +127,6 @@ pub fn get_screen_bounds(ecs: &World, ctx : &mut Rltk) -> (i32, i32, i32, i32) {
 
     (min_x, max_x, min_y, max_y)
 }
-<<<<<<< HEAD
->>>>>>> maptesting
-=======
 
 pub fn render_debug_map(map : &Map, ctx : &mut Rltk) {
     let player_pos = Point::new(map.width / 2, map.height / 2);
@@ -166,4 +161,3 @@ pub fn render_debug_map(map : &Map, ctx : &mut Rltk) {
         y += 1;
     }
 }
->>>>>>> maptesting
