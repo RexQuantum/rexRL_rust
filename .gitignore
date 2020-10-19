@@ -11,8 +11,4 @@ savegame.json
 design_docs/00 - GeneralDesignDoc-dark.jpg:Zone.Identifier
 resources/REXPaint.cfg
 resources/run.log
-wasm/rex_rl_rust_bg.wasm
-wasm/rex_rl_rust.js
-wasm/rexrl.html
-wasm/index.html
-wasm/ubuntu@rexq
+

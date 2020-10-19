@@ -1,0 +1,37 @@
+<html>
+  <head>
+    <meta content="text/html;charset=utf-8" http-equiv="Content-Type" />
+  </head>
+  <body>
+    <canvas id="canvas" width="800" height="600"></canvas>
+    <script src="./rex_rl_rust.js"></script>
+    <script>
+      window.addEventListener("load", async () => {
+        await wasm_bindgen("./rex_rl_rust_bg.wasm");
+      });
+    </script>
+<p class="has-line-data" data-line-start="0" data-line-end="1">This is a project I’ve been working on as I slowly learn Rust.</p>
+<h2 class="code-line" data-line-start=2 data-line-end=3><a id="Controls_2"></a>Controls:</h2>
+<p class="has-line-data" data-line-start="3" data-line-end="6">Main Menu - use arrow keys to select, and enter to confirm.<br>
+Quit - doesn’t do anything in this browser-version except break the game<br>
+<em>Likewise,</em> new game only works the first time. I’ve got some runstate routing issue I need to fix. If you want a new game without dying first, then simply reload the page.</p>
+<p class="has-line-data" data-line-start="7" data-line-end="8"><strong>Movement</strong></p>
+<ul>
+<li class="has-line-data" data-line-start="8" data-line-end="10">Up/Down/Left/Right - J/K/H/L <em>or:</em><br>
+Numpad 8/2/4/6</li>
+<li class="has-line-data" data-line-start="10" data-line-end="12">’<strong>&gt;</strong>’ key to travel down stairs (also depicted in-game by the ‘&gt;’ symbol)</li>
+</ul>
+<p class="has-line-data" data-line-start="12" data-line-end="15"><strong>Interaction</strong><br>
+<em>Mouseover objects in the game world to see a small tooltip.</em><br>
+<em>Target enemies with ranged items using the mouse, and left-click to use</em></p>
+<ul>
+<li class="has-line-data" data-line-start="15" data-line-end="16">G - Pick up item under the player</li>
+<li class="has-line-data" data-line-start="16" data-line-end="17">I - Inventory</li>
+<li class="has-line-data" data-line-start="17" data-line-end="18">D - Drop item</li>
+<li class="has-line-data" data-line-start="18" data-line-end="20">Spacebar/Numpad5 - Wait a turn</li>
+</ul>
+<hr>
+<p class="has-line-data" data-line-start="22" data-line-end="24">Big thanks to Herbert Wolverson and his excellent Rust roguelike tutorial at <a href="https://bfnightly.bracketproductions.com/rustbook/">https://bfnightly.bracketproductions.com/rustbook/</a> (buy his upcoming book!).<br>
+In fact, this page is basically a runthrough of that very tutorial. I recommend it.</p>
+<p class="has-line-data" data-line-start="25" data-line-end="26">Other thanks go to Josh Ge/Kyzrati for his excellent tool REXPaint and work on the r/roguelikedev subreddit</p>
+</body></html>
