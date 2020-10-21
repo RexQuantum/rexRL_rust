@@ -1,0 +1,35 @@
+<p><canvas id="canvas" width="640" height="480"></canvas>
+<script src="./rex_rl_rust.js"></script>
+<script>
+      window.addEventListener("load", async () => {
+        await wasm_bindgen("./rex_rl_rust_bg.wasm");
+      });
+    </script>
+</p>
+<p class="has-line-data" data-line-start="0" data-line-end="1" style="text-align: left;">This is a project I&rsquo;ve been working on as I slowly learn Rust. There's no progression and all stats are fixed.</p>
+<h2 class="code-line" data-line-start="2" data-line-end="3" style="text-align: left;"><a id="Controls_2"></a>Controls:</h2>
+<p class="has-line-data" data-line-start="3" data-line-end="6" style="text-align: left;">Main Menu - use arrow keys to select, and enter to confirm.<br /> Quit - doesn&rsquo;t do anything in this browser-version except break the game<br /> <em>Likewise,</em> new game only works the first time. I&rsquo;ve got some runstate routing issue I need to fix. If you want a new game without dying first, then simply reload the page.</p>
+<p class="has-line-data" data-line-start="7" data-line-end="8" style="text-align: left;"><strong>Movement</strong></p>
+<ul>
+<li class="has-line-data" data-line-start="7" data-line-end="8" style="text-align: left;">Cardinal directions - Up/Down/Left/Right - J/K/H/L <em>or:</em>
+<ul>
+<li>Numpad 8/2/4/6</li>
+</ul>
+</li>
+<li class="has-line-data" data-line-start="8" data-line-end="10">Diagonal movement - Y/U/N/M&nbsp;<em>or:</em>
+<ul>
+<li class="has-line-data" data-line-start="8" data-line-end="10"><em>numpad 7/9/1/3</em></li>
+</ul>
+</li>
+<li class="has-line-data" data-line-start="10" data-line-end="12">&rsquo;<strong>&gt;</strong>&rsquo; key to travel down stairs (also depicted in-game by the &lsquo;&gt;&rsquo; symbol)</li>
+</ul>
+<p class="has-line-data" data-line-start="12" data-line-end="15" style="text-align: left;"><strong>Interaction</strong><br /> <em>Mouseover objects in the game world to see a small tooltip.</em><br /> <em>Target enemies with ranged items using the mouse, and left-click to use</em></p>
+<ul style="text-align: left;">
+<li class="has-line-data" data-line-start="15" data-line-end="16">G - Pick up item under the player</li>
+<li class="has-line-data" data-line-start="16" data-line-end="17">I - Inventory</li>
+<li class="has-line-data" data-line-start="17" data-line-end="18">D - Drop item</li>
+<li class="has-line-data" data-line-start="18" data-line-end="20">Spacebar/Numpad5 - Wait a turn</li>
+</ul>
+<hr />
+<p class="has-line-data" data-line-start="22" data-line-end="24" style="text-align: left;">Big thanks to Herbert Wolverson and his excellent Rust roguelike tutorial at <a href="https://bfnightly.bracketproductions.com/rustbook/">https://bfnightly.bracketproductions.com/rustbook/</a>.<br /> In fact, this page is basically a runthrough of that very tutorial. I recommend it.</p>
+<p class="has-line-data" data-line-start="25" data-line-end="26" style="text-align: left;">Other thanks go to Josh Ge/Kyzrati for his excellent tool REXPaint and work on the r/roguelikedev subreddit (not to mention the absolutely incredible Cogmind)</p>

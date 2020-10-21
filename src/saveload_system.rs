@@ -48,7 +48,7 @@ pub fn save_game(ecs : &mut World) {
             AreaOfEffect, Confusion, ProvidesHealing, InBackpack, WantsToPickupItem, WantsToUseItem,
             WantsToDropItem, SerializationHelper, Equippable, Equipped, MeleePowerBonus, DefenseBonus,
             WantsToRemoveItem, ParticleLifetime, HungerClock, ProvidesFood, MagicMapper, Hidden,
-            EntryTrigger, EntityMoved, SingleActivation
+            EntryTrigger, EntityMoved, SingleActivation, Door, BlocksVisibility
         );
     }
     // Clean up
@@ -97,7 +97,7 @@ pub fn load_game(ecs: &mut World) {
             AreaOfEffect, Confusion, ProvidesHealing, InBackpack, WantsToPickupItem, WantsToUseItem,
             WantsToDropItem, SerializationHelper, Equippable, Equipped, MeleePowerBonus, DefenseBonus, 
             WantsToRemoveItem, ParticleLifetime, HungerClock, ProvidesFood, MagicMapper, Hidden,
-            EntryTrigger, EntityMoved, SingleActivation
+            EntryTrigger, EntityMoved, SingleActivation, Door, BlocksVisibility
         );
     }
 
@@ -110,7 +110,7 @@ pub fn load_game(ecs: &mut World) {
         for (e,h) in (&entities, &helper).join() {
             let mut worldmap = ecs.write_resource::<super::map::Map>();
             *worldmap = h.map.clone();
-            worldmap.tile_content = vec![Vec::new(); super::map::MAPCOUNT];
+            worldmap.tile_content = vec![Vec::new(); (worldmap.width * worldmap.height) as usize];
             deleteme = Some(e);
         }
         for (e,_p,pos) in (&entities, &player, &position).join() {
