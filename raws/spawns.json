@@ -1,0 +1,33 @@
+{
+"items" : [
+    {
+        "name" : "Repair pack",
+        "renderable": {
+            "glyph" : "!",
+            "fg" : "#FF00FF",
+            "bg" : "#000000",
+            "order" : 2
+        },
+        "consumable" : {
+            "effects" : { "provides_healing" : "12" }
+        }
+    },
+
+    {
+        "name" : "Beam Cell",
+        "renderable": {
+            "glyph" : ")",
+            "fg" : "#00FFFF",
+            "bg" : "#000000",
+            "order" : 2
+        },
+        "consumable" : {
+            "effects" : { 
+                "ranged" : "8",
+                "damage" : "12",
+                "radius" : "1"
+            }
+        }
+    }
+]
+}
