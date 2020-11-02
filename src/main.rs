@@ -34,9 +34,10 @@ pub mod rex_assets;
 pub mod trigger_system;
 pub mod map_builders;
 pub mod camera;
+pub mod raws;
 
 
-const SHOW_MAPGEN_VISUALIZER : bool = true;
+const SHOW_MAPGEN_VISUALIZER : bool = false;
 
 #[derive(PartialEq, Copy, Clone)]
 pub enum RunState { AwaitingInput,
@@ -405,7 +406,7 @@ fn main() -> rltk::BError {
     let mut context = RltkBuilder::simple80x50()
         .with_title("Rex is making a game")
         .build()?;
-    context.with_post_scanlines(false);
+    context.with_post_scanlines(true);
     let mut gs = State {
         ecs: World::new(),
         mapgen_next_state : Some(RunState::MainMenu{ menu_selection: gui::MainMenuSelection::NewGame }),
@@ -456,7 +457,9 @@ fn main() -> rltk::BError {
 
     gs.ecs.insert(SimpleMarkerAllocator::<SerializeMe>::new());
 
-    gs.ecs.insert(Map::new(1, 80, 50));
+    raws::load_raws();
+
+    gs.ecs.insert(Map::new(1, 64, 64));
     gs.ecs.insert(Point::new(0, 0));
     gs.ecs.insert(rltk::RandomNumberGenerator::new());
     let player_entity = spawner::player(&mut gs.ecs, 0, 0);
