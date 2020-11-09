@@ -4,7 +4,7 @@ rltk::embedded_resource!(RAW_FILE, "../../raws/spawns.json");
 pub fn load_raws() {
     rltk::link_resource!(RAW_FILE, "../../raws/spawns.json");
 
-//retrieve the raw data as an array of u8
+//retrieve the raw data as an array of u8. Panic if it isn't able to find the resource or unable to parse it as a regular string
 let raw_data = rltk::embedding::EMBED
     .lock()
     .unwrap()

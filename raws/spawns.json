@@ -28,6 +28,21 @@
                 "radius" : "1"
             }
         }
+    },
+
+    {
+        "name" : "Nutrient Brick",
+        "renderable": { 
+            "glyph" : "&",
+            "fg" : "RGB::named(rltk::GREEN)",
+            "bg" : "RGB::named(rltk::BLACK)",
+            "order" : "2"
+        },
+        "consumable" : {
+            "effects" : { 
+                "food" : ""
+            }
+        }
     }
 ]
 }

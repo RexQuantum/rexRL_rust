@@ -37,12 +37,12 @@ fn room_table(map_depth: i32) -> RandomTable {
         .add("Repair Pack", 4)
         .add("Incendiary Grenade", 2 + map_depth)
         .add("Beam Cell", 3 + map_depth)
-        .add("Blade Effector", map_depth -1)
-        .add("Plasteel Shard", map_depth)
-        .add("Weak Defensive Effectors", map_depth)
-        .add("Malfunctioning Defensive Effectors", map_depth - 1)
-        .add("Rations", 10)
-        .add("Data Disk - Map", 2)
+        .add("Long Blade", map_depth -1)
+        .add("Rusted Knife", map_depth)
+        .add("Weak Defense Field", map_depth)
+        .add("Malfunctioning Defense Field", map_depth - 1)
+        .add("Nutrient Brick", 10)
+        .add("Seismic Probe", 2)
         .add("Spike Trap", 5)
 }
 
@@ -104,12 +104,12 @@ pub fn spawn_entity(ecs: &mut World, spawn : &(&usize, &String)) {
         "Incendiary Grenade" => incendiary_grenade(ecs, x, y),
         "Scrambler Cell" => scrambler_cell(ecs, x, y),
         "Beam Cell" => beam_cell(ecs, x, y),
-        "Plasteel Shard" => dagger(ecs, x, y),
-        "Malfunctioning Defensive Effectors" => shield(ecs, x, y),
-        "Blade Effector" => longsword(ecs, x, y),
-        "Weak Defensive Effectors" => shield_lv2(ecs, x, y),
-        "Rations" => rations(ecs, x, y),
-        "Data Disk - Map" => magic_mapper(ecs, x, y),
+        "Rusted Knife" => dagger(ecs, x, y),
+        "Malfunctioning Defense Field" => shield(ecs, x, y),
+        "Long Blade" => longsword(ecs, x, y),
+        "Weak Defense Field" => shield_lv2(ecs, x, y),
+        "Nutrient Brick" => rations(ecs, x, y),
+        "Seismic Probe" => magic_mapper(ecs, x, y),
         "Spike Trap" => spike_trap(ecs, x, y),
         "Door" => door(ecs, x, y),
         _ => {}
@@ -147,7 +147,7 @@ fn magic_mapper(ecs: &mut World, x: i32, y: i32) {
         bg: RGB::named(rltk::BLACK),
         render_order: 2        
     })
-    .with(Name{ name: "Data Disk - Map".to_string() })
+    .with(Name{ name: "Seismic Probe".to_string() })
     .with(Item{})
     .with(MagicMapper{})
     .with(Consumable{})
@@ -165,7 +165,7 @@ fn rations(ecs: &mut World, x: i32, y: i32) {
             bg:RGB::named(rltk::BLACK),
             render_order: 2
         })
-        .with(Name{ name : "Rations".to_string() })
+        .with(Name{ name : "Nutrient Brick".to_string() })
         .with(Item{})
         .with(ProvidesFood{})
         .with(Consumable{})
@@ -181,7 +181,7 @@ fn dagger(ecs: &mut World, x: i32, y: i32) {
             bg: RGB::named(rltk::BLACK),
             render_order: 2
         })
-        .with(Name{ name : "Plasteel Shard".to_string() })
+        .with(Name{ name : "Rusted Knife".to_string() })
         .with(Item{})
         .with(Equippable{ slot: EquipmentSlot::Melee })
         .with(MeleePowerBonus{ power: 2 })
@@ -198,7 +198,7 @@ fn shield(ecs: &mut World, x: i32, y: i32) {
             bg: RGB::named(rltk::BLACK),
             render_order: 2
         })
-        .with(Name{ name : "Malfunctioning Defensive Effectors".to_string() })
+        .with(Name{ name : "Malfunctioning Defense Field".to_string() })
         .with(Item{})
         .with(Equippable{ slot: EquipmentSlot::Shield })
         .with(DefenseBonus{ defense: 1 })
@@ -215,7 +215,7 @@ fn longsword(ecs: &mut World, x: i32, y: i32) {
             bg: RGB::named(rltk::BLACK),
             render_order: 2
         })
-        .with(Name{ name : "Blade Effector".to_string() })
+        .with(Name{ name : "Long Blade".to_string() })
         .with(Item{})
         .with(Equippable{ slot: EquipmentSlot::Melee })
         .with(MeleePowerBonus{ power: 8 })
@@ -232,7 +232,7 @@ fn shield_lv2(ecs: &mut World, x: i32, y: i32) {
             bg: RGB::named(rltk::BLACK),
             render_order: 2
         })
-        .with(Name{ name : "Weak Defensive Effectors".to_string() })
+        .with(Name{ name : "Weak Defense Field".to_string() })
         .with(Item{})
         .with(Equippable{ slot: EquipmentSlot::Shield })
         .with(DefenseBonus{ defense: 3 })
