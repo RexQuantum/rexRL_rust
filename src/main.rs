@@ -35,9 +35,11 @@ pub mod trigger_system;
 pub mod map_builders;
 pub mod camera;
 pub mod raws;
+#[macro_use]
+extern crate lazy_static;
 
 
-const SHOW_MAPGEN_VISUALIZER : bool = false;
+const SHOW_MAPGEN_VISUALIZER : bool = true;
 
 #[derive(PartialEq, Copy, Clone)]
 pub enum RunState { AwaitingInput,

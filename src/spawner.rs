@@ -3,7 +3,7 @@ use specs::prelude::*;
 use super::{CombatStats, Player, Renderable, Name, Position, Viewshed, Monster, BlocksTile, Rect, Item,
 random_table::RandomTable, EquipmentSlot, Equippable, MeleePowerBonus, DefenseBonus, HungerClock,
 Consumable, Ranged, ProvidesHealing, InflictsDamage, AreaOfEffect, Confusion, SerializeMe,
-HungerState, ProvidesFood, MagicMapper, Hidden, EntryTrigger, SingleActivation, Map, TileType, Door, BlocksVisibility };
+HungerState, ProvidesFood, MagicMapper, Hidden, EntryTrigger, SingleActivation, Map, TileType, Door, BlocksVisibility, raws::* };
 use specs::saveload::{MarkedBuilder, SimpleMarker};
 use std::collections::HashMap;
 
@@ -97,10 +97,14 @@ pub fn spawn_entity(ecs: &mut World, spawn : &(&usize, &String)) {
     let y = (*spawn.0 / width) as i32;
     std::mem::drop(map);
 
+    let item_result = spawn_named_item(&RAWS.lock().unwrap(), ecs.create_entity(), &spawn.1, SpawnType::AtPosition{ x, y});
+    if item_result.is_some() {
+        return;
+    }
+
     match spawn.1.as_ref() {
         "Recyculon" => recyculon(ecs, x, y),
         "Mopbot" => mopbot(ecs, x, y),
-        "Repair Pack" => repair_pack(ecs, x, y),
         "Incendiary Grenade" => incendiary_grenade(ecs, x, y),
         "Scrambler Cell" => scrambler_cell(ecs, x, y),
         "Beam Cell" => beam_cell(ecs, x, y),
