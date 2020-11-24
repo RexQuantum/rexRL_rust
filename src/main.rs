@@ -408,7 +408,7 @@ fn main() -> rltk::BError {
     let mut context = RltkBuilder::simple80x50()
         .with_title("Rex is making a game")
         .build()?;
-    context.with_post_scanlines(true);
+    context.with_post_scanlines(false);
     let mut gs = State {
         ecs: World::new(),
         mapgen_next_state : Some(RunState::MainMenu{ menu_selection: gui::MainMenuSelection::NewGame }),
