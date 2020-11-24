@@ -33,7 +33,7 @@ fn room_table(map_depth: i32) -> RandomTable {
     RandomTable::new()
         .add("Recyculon", 1)
         .add("Mopbot", 1 + map_depth)  
-        .add("Scrambler Cell", 1 + map_depth)
+        .add("Scrambler Grenade", 1 + map_depth)
         .add("Repair Pack", 4)
         .add("Incendiary Grenade", 2 + map_depth)
         .add("Beam Cell", 3 + map_depth)
@@ -42,7 +42,7 @@ fn room_table(map_depth: i32) -> RandomTable {
         .add("Weak Defense Field", map_depth)
         .add("Malfunctioning Defense Field", map_depth - 1)
         .add("Nutrient Brick", 10)
-        .add("Seismic Probe", 2)
+        .add("Seismic Mapper", 2)
         .add("Spike Trap", 5)
 }
 
@@ -105,15 +105,10 @@ pub fn spawn_entity(ecs: &mut World, spawn : &(&usize, &String)) {
     match spawn.1.as_ref() {
         "Recyculon" => recyculon(ecs, x, y),
         "Mopbot" => mopbot(ecs, x, y),
-        "Incendiary Grenade" => incendiary_grenade(ecs, x, y),
-        "Scrambler Cell" => scrambler_cell(ecs, x, y),
-        "Beam Cell" => beam_cell(ecs, x, y),
         "Rusted Knife" => dagger(ecs, x, y),
         "Malfunctioning Defense Field" => shield(ecs, x, y),
         "Long Blade" => longsword(ecs, x, y),
         "Weak Defense Field" => shield_lv2(ecs, x, y),
-        "Nutrient Brick" => rations(ecs, x, y),
-        "Seismic Probe" => magic_mapper(ecs, x, y),
         "Spike Trap" => spike_trap(ecs, x, y),
         "Door" => door(ecs, x, y),
         _ => {}
@@ -142,40 +137,7 @@ fn monster<S : ToString>(ecs: &mut World, x: i32, y: i32, glyph : rltk::FontChar
         .marked::<SimpleMarker<SerializeMe>>()
         .build();
 }
-fn magic_mapper(ecs: &mut World, x: i32, y: i32) {
-    ecs.create_entity()
-    .with(Position{ x, y, })
-    .with(Renderable{
-        glyph: rltk::to_cp437(')'),
-        fg: RGB::named(rltk::CYAN3),
-        bg: RGB::named(rltk::BLACK),
-        render_order: 2        
-    })
-    .with(Name{ name: "Seismic Probe".to_string() })
-    .with(Item{})
-    .with(MagicMapper{})
-    .with(Consumable{})
-    .marked::<SimpleMarker<SerializeMe>>()
-    .build();
-}
 
-
-fn rations(ecs: &mut World, x: i32, y: i32) {
-    ecs.create_entity()
-        .with(Position{ x, y })
-        .with(Renderable{
-            glyph: rltk::to_cp437('&'),
-            fg: RGB::named(rltk::GREEN),
-            bg:RGB::named(rltk::BLACK),
-            render_order: 2
-        })
-        .with(Name{ name : "Nutrient Brick".to_string() })
-        .with(Item{})
-        .with(ProvidesFood{})
-        .with(Consumable{})
-        .marked::<SimpleMarker<SerializeMe>>()
-        .build();
-}
 fn dagger(ecs: &mut World, x: i32, y: i32) {
     ecs.create_entity()
         .with(Position{ x, y })
@@ -240,79 +202,6 @@ fn shield_lv2(ecs: &mut World, x: i32, y: i32) {
         .with(Item{})
         .with(Equippable{ slot: EquipmentSlot::Shield })
         .with(DefenseBonus{ defense: 3 })
-        .marked::<SimpleMarker<SerializeMe>>()
-        .build();
-}
-
-fn repair_pack(ecs: &mut World, x: i32, y: i32) {
-    ecs.create_entity()
-        .with(Position{ x, y })
-        .with(Renderable{
-            glyph: rltk::to_cp437('¡'),
-            fg: RGB::named(rltk::MAGENTA),
-            bg: RGB::named(rltk::BLACK),
-            render_order: 2
-        })
-        .with(Name{ name : "Repair pack".to_string() })
-        .with(Item{})
-        .with(Consumable{})
-        .with(ProvidesHealing{ heal_amount: 12 })
-        .marked::<SimpleMarker<SerializeMe>>()
-        .build();
-}
-fn incendiary_grenade(ecs: &mut World, x: i32, y: i32) {
-    ecs.create_entity()
-        .with(Position{ x, y })
-        .with(Renderable{
-            glyph: rltk::to_cp437(')'),
-            fg: RGB::named(rltk::ORANGE),
-            bg: RGB::named(rltk::BLACK),
-            render_order: 2
-        })
-        .with(Name{ name : "Incendiary Grenade".to_string() })
-        .with(Item{})
-        .with(Consumable{})
-        .with(Ranged{ range: 6 })
-        .with(InflictsDamage{ damage: 20 })
-        .with(AreaOfEffect{ radius: 3 })
-        .marked::<SimpleMarker<SerializeMe>>()
-        .build();
-}
-
-fn beam_cell(ecs: &mut World, x: i32, y: i32) {
-    ecs.create_entity()
-        .with(Position{ x, y })
-        .with(Renderable{
-            glyph: rltk::to_cp437(')'),
-            fg: RGB::named(rltk::CYAN),
-            bg: RGB::named(rltk::BLACK),
-            render_order: 2
-        })
-        .with(Name{ name : "Beam cell".to_string() })
-        .with(Item{})
-        .with(Consumable{})
-        .with(Ranged{ range: 6 })
-        .with(InflictsDamage{ damage: 10 })
-        .with(AreaOfEffect{ radius: 1 })
-        .marked::<SimpleMarker<SerializeMe>>()
-        .build();
-}
-
-fn scrambler_cell(ecs: &mut World, x: i32, y: i32) {
-    ecs.create_entity()
-        .with(Position{ x, y })
-        .with(Renderable{
-            glyph: rltk::to_cp437(')'),
-            fg: RGB::named(rltk::PINK),
-            bg: RGB::named(rltk::BLACK),
-            render_order: 2
-        })
-        .with(Name{ name : "Scrambler Cell".to_string() })
-        .with(Item{})
-        .with(Consumable{})
-        .with(Ranged{ range: 6 })
-        .with(Confusion{ turns: 4 })
-        .with(AreaOfEffect{ radius: 4 })
         .marked::<SimpleMarker<SerializeMe>>()
         .build();
 }

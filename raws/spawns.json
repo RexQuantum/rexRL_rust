@@ -25,7 +25,7 @@
             "effects" : { 
                 "ranged" : "8",
                 "damage" : "12",
-                "radius" : "1"
+                "area_of_effect" : "1"
             }
         }
     },
@@ -33,14 +33,63 @@
     {
         "name" : "Nutrient Brick",
         "renderable": { 
-            "glyph" : "&",
-            "fg" : "RGB::named(rltk::GREEN)",
-            "bg" : "RGB::named(rltk::BLACK)",
-            "order" : "2"
+            "glyph" : "%",
+            "fg" : "#00FF00",
+            "bg" : "#000000",
+            "order" : 2
         },
         "consumable" : {
             "effects" : { 
                 "food" : ""
+            }
+        }
+    },
+
+    {
+        "name" : "Seismic Mapper",
+        "renderable": {
+            "glyph": ")",
+            "fg" : "#FFA5FF",
+            "bg" : "#000000",
+            "order": 2
+        },
+        "consumable" : {
+            "effects" : {
+                "magic_mapping" :""
+            }
+        }
+    },
+
+    {
+        "name" : "Incendiary Grenade",
+        "renderable": {
+            "glyph" : "0",
+            "fg"    : "#FFA500",
+            "bg"    : "#000000",
+            "order" : 2
+        },
+        "consumable" : {
+            "effects" : {
+                "ranged" : "6",
+                "damage" : "20",
+                "area_of_effect" : "3"
+            }
+        }
+    },
+
+    {
+        "name" : "Scrambler Grenade",
+        "renderable": {
+            "glyph" : "0",
+            "fg"    : "#FFAAAA",
+            "bg"    : "#000000",
+            "order" : 2
+        },
+        "consumable" : {
+            "effects" : {
+                "ranged"    : "8",
+                "confusion" : "4",
+                "area_of_effect" : "4"
             }
         }
     }

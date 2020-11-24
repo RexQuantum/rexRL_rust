@@ -135,7 +135,11 @@ pub struct WantsToRemoveItem {
 #[derive(PartialEq, Copy, Clone, Serialize, Deserialize)]
 pub enum EquipmentSlot { Melee, 
                          Shield,
-                         Ranged }
+                         Ranged,
+                         ChestArmor,
+                         HeadArmor,
+                         LegArmor,
+                         HandArmor }
 
 #[derive(Component, Serialize, Deserialize, Clone)]
 pub struct Equippable {

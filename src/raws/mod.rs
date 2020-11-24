@@ -9,6 +9,8 @@ pub use rawmaster::*;
 use serde::{Deserialize};
 use std::sync::Mutex;
 
+
+
 rltk::embedded_resource!(RAW_FILE, "../../raws/spawns.json");
 
 lazy_static! {
@@ -18,8 +20,8 @@ lazy_static! {
 #[derive(Deserialize, Debug)]
 pub struct Raws {
     pub items : Vec<Item>,
-    pub mobs : Vec<Mob>,
-    pub props : Vec<Prop>
+    //pub mobs : Vec<Mob>,
+    // pub props : Vec<Prop>
 }
 
 pub fn load_raws() {
@@ -35,3 +37,4 @@ pub fn load_raws() {
 
     RAWS.lock().unwrap().load(decoder);
 }
+

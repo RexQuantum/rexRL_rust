@@ -2,17 +2,17 @@ use serde::{Deserialize};
 use std::collections::HashMap;
 
 #[derive(Deserialize, Debug)]
-pub struct Raws {
-    pub items : Vec<Item>
-}
-
-#[derive(Deserialize, Debug)]
 pub struct Item {
     pub name : String,
     pub renderable : Option<Renderable>,
     pub consumable : Option<Consumable>,
     pub weapon : Option<Weapon>,
     pub shield : Option<Shield>
+    // pub ranged : Option<Ranged>,
+    // pub chestarmor : Option<ChestArmor>,
+    // pub headarmor : Option<HeadArmor>,
+    // pub legarmor : Option<LegArmor>,
+    // pub handarmor : Ootion<HandArmor>
 }
 
 #[derive(Deserialize, Debug)]

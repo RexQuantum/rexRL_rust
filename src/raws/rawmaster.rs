@@ -3,6 +3,10 @@ use specs::prelude::*;
 use crate::components::*;
 use super::{Raws};
 
+pub enum SpawnType {
+    AtPosition { x: i32, y: i32 }
+}
+
 pub struct RawMaster {
     raws : Raws,
     item_index : HashMap<String, usize>
@@ -25,6 +29,28 @@ impl RawMaster {
     }    
 }
 
+fn spawn_position(pos : SpawnType, new_entity : EntityBuilder) -> EntityBuilder {
+    let mut eb = new_entity;
+
+    // Spawn in the specified location
+    match pos {
+        SpawnType::AtPosition{x,y} => {
+            eb = eb.with(Position{ x, y });
+        }
+    }
+
+    eb
+}
+
+fn get_renderable_component(renderable : &super::item_structs::Renderable) -> crate::components::Renderable {
+    crate::components::Renderable{
+        glyph: rltk::to_cp437(renderable.glyph.chars().next().unwrap()),
+        fg : rltk::RGB::from_hex(&renderable.fg).expect("Invalid RGB"),
+        bg : rltk::RGB::from_hex(&renderable.bg).expect("Invalid RGB"),
+        render_order : renderable.order
+    }
+}
+
 pub fn spawn_named_item(raws: &RawMaster, new_entity : EntityBuilder, key : &str, pos : SpawnType) -> Option<Entity> {
     if raws.item_index.contains_key(key) {
         let item_template = &raws.raws.items[raws.item_index[key]];
@@ -32,20 +58,11 @@ pub fn spawn_named_item(raws: &RawMaster, new_entity : EntityBuilder, key : &str
         let mut eb = new_entity;
 
         // Spawn in the specified location
-        match pos {
-            SpawnType::AtPosition{x,y} => {
-                eb = eb.with(Position{ x, y });
-            }
-        }
+        eb = spawn_position(pos, eb);
 
         // Renderable
         if let Some(renderable) = &item_template.renderable {
-            eb = eb.with(crate::components::Renderable{  
-                glyph: rltk::to_cp437(renderable.glyph.chars().next().unwrap()),
-                fg : rltk::RGB::from_hex(&renderable.fg).expect("Invalid RGB"),
-                bg : rltk::RGB::from_hex(&renderable.bg).expect("Invalid RGB"),
-                render_order : renderable.order
-            });
+            eb = eb.with(get_renderable_component(renderable));
         }
 
         eb = eb.with(Name{ name : item_template.name.clone() });
@@ -61,7 +78,11 @@ pub fn spawn_named_item(raws: &RawMaster, new_entity : EntityBuilder, key : &str
                         eb = eb.with(ProvidesHealing{ heal_amount: effect.1.parse::<i32>().unwrap() }) 
                     }
                     "ranged" => { eb = eb.with(Ranged{ range: effect.1.parse::<i32>().unwrap() }) },
-                    "damage" => { eb = eb.with(InflictsDamage{ damage : effect.1.parse::<i32>().unwrap() }) }
+                    "damage" => { eb = eb.with(InflictsDamage{ damage : effect.1.parse::<i32>().unwrap() }) },
+                    "area_of_effect" => { eb = eb.with(AreaOfEffect{ radius: effect.1.parse::<i32>().unwrap() }) }
+                    "confusion" => { eb = eb.with(Confusion{ turns: effect.1.parse::<i32>().unwrap() }) }
+                    "magic_mapping" => { eb = eb.with(MagicMapper{}) }
+                    "food" => { eb = eb.with(ProvidesFood{}) }
                     _ => {
                         rltk::console::log(format!("Warning: consumable effect {} not implemented.", effect_name));
                     }
