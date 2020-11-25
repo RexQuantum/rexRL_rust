@@ -1,4 +1,4 @@
-use super::{InitialMapBuilder, BuilderMap, Rect, TileType, draw_corridor};
+use super::{ InitialMapBuilder, BuilderMap, Rect, TileType };
 use rltk::RandomNumberGenerator;
 
 const MIN_ROOM_SIZE : i32 = 8;
@@ -45,7 +45,7 @@ impl BspInteriorBuilder {
             }
             build_data.take_snapshot();
         }
-
+/*
         // Now we want corridors
         for i in 0..rooms.len()-1 {
             let room = rooms[i];
@@ -56,7 +56,7 @@ impl BspInteriorBuilder {
             let end_y = next_room.y1 + (rng.roll_dice(1, i32::abs(next_room.y1 - next_room.y2))-1);
             draw_corridor(&mut build_data.map, start_x, start_y, end_x, end_y);
             build_data.take_snapshot();
-        }
+        }*/
         build_data.rooms = Some(rooms);
     }
 

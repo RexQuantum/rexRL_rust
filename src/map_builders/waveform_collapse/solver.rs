@@ -197,7 +197,7 @@ impl Solver {
             }
 
             if possible_options.is_empty() {
-                rltk::console::log("Oh no! It's not possible!");
+                rltk::console::log("Waveform Collapse: No solvable options. Needs moar random");
                 self.possible = false;
                 return true;
             } else {

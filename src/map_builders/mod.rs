@@ -43,7 +43,7 @@ use room_based_stairs::RoomBasedStairs;
 use area_starting_points::{AreaStartingPosition, XStart, YStart};
 use cull_unreachable::CullUnreachable;
 use voronoi_spawning::VoronoiSpawning;
-use maze::MazeBuilder;
+// use maze::MazeBuilder;
 use dla::DLABuilder;
 use common::*;
 use room_exploder::RoomExploder;
@@ -92,14 +92,15 @@ impl BuilderChain {
             starter: None,
             builders: Vec::new(),
             build_data : BuilderMap {
+                width,
+                height,
                 spawn_list: Vec::new(),
                 map: Map::new(new_depth, width, height),
                 starting_position: None,
                 rooms: None,
                 corridors: None,
-                history : Vec::new(),
-                width,
-                height
+                history : Vec::new()
+
             }
         }
     }
@@ -187,24 +188,26 @@ fn random_room_builder(rng: &mut rltk::RandomNumberGenerator, builder : &mut Bui
 
         builder.with(RoomDrawer::new());
 
+        let modifier_roll = rng.roll_dice(1, 5);
+        match modifier_roll {
+            1 => builder.with(RoomExploder::new()),
+            2 => builder.with(RoomCornerRounder::new()),
+            _ => {}
+        }
+
         let corridor_roll = rng.roll_dice(1, 4);
         match corridor_roll {
             1 => builder.with(DoglegCorridors::new()),
             2 => builder.with(NearestCorridors::new()),
             3 => builder.with(StraightLineCorridors::new()),
             _ => builder.with(BspCorridors::new())
-        }
+        };
 
-        let cspawn_roll = rng.roll_dice(1, 2);
-        if cspawn_roll == 1 {
-            builder.with(CorridorSpawner::new());
-        }
-
-        let modifier_roll = rng.roll_dice(1, 6);
-        match modifier_roll {
-            1 => builder.with(RoomExploder::new()),
-            2 => builder.with(RoomCornerRounder::new()),
-            _ => {}
+        if build_roll !=3{
+            let cspawn_roll = rng.roll_dice(1, 2);
+            if cspawn_roll == 1 {
+                builder.with(CorridorSpawner::new());
+            }
         }
     }
 
@@ -239,14 +242,14 @@ fn random_shape_builder(rng: &mut rltk::RandomNumberGenerator, builder : &mut Bu
         4 => builder.start_with(DrunkardsWalkBuilder::winding_passages()),
         5 => builder.start_with(DrunkardsWalkBuilder::fat_passages()),
         6 => builder.start_with(DrunkardsWalkBuilder::fearful_symmetry()),
-        7 => builder.start_with(MazeBuilder::new()),
+        //7 => builder.start_with(MazeBuilder::new()),
         8 => builder.start_with(DLABuilder::walk_inwards()),
         9 => builder.start_with(DLABuilder::walk_outwards()),
         10 => builder.start_with(DLABuilder::central_attractor()),
         11 => builder.start_with(DLABuilder::insectoid()),
         12 => builder.start_with(VoronoiCellBuilder::pythagoras()),
-        13 => builder.start_with(VoronoiCellBuilder::manhattan()),
-        _ => builder.start_with(PrefabBuilder::constant(prefab_builder::prefab_levels::WFC_POPULATED)),
+        _ => builder.start_with(VoronoiCellBuilder::manhattan()),
+        //_ => builder.start_with(PrefabBuilder::constant(prefab_builder::prefab_levels::WFC_POPULATED)),
     }
 
     // Set the start to the center and cull
@@ -280,7 +283,7 @@ pub fn random_builder(new_depth: i32, rng: &mut rltk::RandomNumberGenerator, wid
         // Setup an exit and spawn mobs
         builder.with(VoronoiSpawning::new());
         builder.with(DistantExit::new());
-    }
+    
 
     if rng.roll_dice(1, 20)==1 {
         builder.with(PrefabBuilder::sectional(prefab_builder::prefab_sections::UNDERGROUND_FORT));
@@ -288,7 +291,8 @@ pub fn random_builder(new_depth: i32, rng: &mut rltk::RandomNumberGenerator, wid
 
     builder.with(DoorPlacement::new());
     builder.with(PrefabBuilder::vaults());
-
+    }
+    
     builder
 }
     // test harness

@@ -37,6 +37,11 @@ pub struct Name {
     pub name : String
 }
 
+#[derive(Component, Debug, ConvertSaveload, Clone)]
+pub struct FlavorText {
+    pub flavortext : String
+}
+
 #[derive(Component, Debug, Serialize, Deserialize, Clone)]
 pub struct BlocksTile {}
 
@@ -129,7 +134,12 @@ pub struct WantsToRemoveItem {
 
 #[derive(PartialEq, Copy, Clone, Serialize, Deserialize)]
 pub enum EquipmentSlot { Melee, 
-                         Shield }
+                         Shield,
+                         Ranged,
+                         ChestArmor,
+                         HeadArmor,
+                         LegArmor,
+                         HandArmor }
 
 #[derive(Component, Serialize, Deserialize, Clone)]
 pub struct Equippable {

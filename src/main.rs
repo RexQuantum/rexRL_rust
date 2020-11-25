@@ -34,6 +34,9 @@ pub mod rex_assets;
 pub mod trigger_system;
 pub mod map_builders;
 pub mod camera;
+pub mod raws;
+#[macro_use]
+extern crate lazy_static;
 
 
 const SHOW_MAPGEN_VISUALIZER : bool = true;
@@ -124,7 +127,7 @@ impl GameState for State {
                 if self.mapgen_index < self.mapgen_history.len() { camera::render_debug_map(&self.mapgen_history[self.mapgen_index], ctx); }
 
                 self.mapgen_timer += ctx.frame_time_ms;
-                if self.mapgen_timer > 100.0 {
+                if self.mapgen_timer > 33.7 {
                     self.mapgen_timer = 0.0;
                     self.mapgen_index += 1;
                     if self.mapgen_index >= self.mapgen_history.len() {
@@ -453,10 +456,11 @@ fn main() -> rltk::BError {
     gs.ecs.register::<BlocksVisibility>();
     gs.ecs.register::<Door>();
 
-
     gs.ecs.insert(SimpleMarkerAllocator::<SerializeMe>::new());
 
-    gs.ecs.insert(Map::new(1, 80, 50));
+    raws::load_raws();
+
+    gs.ecs.insert(Map::new(1, 64, 64));
     gs.ecs.insert(Point::new(0, 0));
     gs.ecs.insert(rltk::RandomNumberGenerator::new());
     let player_entity = spawner::player(&mut gs.ecs, 0, 0);
