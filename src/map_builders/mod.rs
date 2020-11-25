@@ -92,14 +92,15 @@ impl BuilderChain {
             starter: None,
             builders: Vec::new(),
             build_data : BuilderMap {
+                width,
+                height,
                 spawn_list: Vec::new(),
                 map: Map::new(new_depth, width, height),
                 starting_position: None,
                 rooms: None,
                 corridors: None,
-                history : Vec::new(),
-                width,
-                height
+                history : Vec::new()
+
             }
         }
     }
@@ -202,11 +203,11 @@ fn random_room_builder(rng: &mut rltk::RandomNumberGenerator, builder : &mut Bui
             _ => builder.with(BspCorridors::new())
         };
 
-    if build_roll !=3{
-        let cspawn_roll = rng.roll_dice(1, 2);
-        if cspawn_roll == 1 {
-            builder.with(CorridorSpawner::new());
-        }
+        if build_roll !=3{
+            let cspawn_roll = rng.roll_dice(1, 2);
+            if cspawn_roll == 1 {
+                builder.with(CorridorSpawner::new());
+            }
         }
     }
 

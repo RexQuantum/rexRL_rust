@@ -1,4 +1,4 @@
-use super::{InitialMapBuilder, BuilderMap, Rect, TileType};
+use super::{InitialMapBuilder, BuilderMap, Rect, TileType, draw_corridor};
 use rltk::RandomNumberGenerator;
 
 pub struct BspDungeonBuilder {
