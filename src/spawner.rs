@@ -19,7 +19,7 @@ pub fn player(ecs : &mut World, player_x : i32, player_y : i32) -> Entity {
             render_order: 0
         })
         .with(Player{})
-        .with(Viewshed{ visible_tiles : Vec::new(), range: 10, dirty: true })
+        .with(Viewshed{ visible_tiles : Vec::new(), range: 20, dirty: true })
         .with(Name{name: "Player".to_string() })
         .with(CombatStats{ max_hp: 30, hp: 30, defense: 2, power: 5 })
         .with(HungerClock{ state: HungerState::WellFed, duration: 30 })
@@ -97,18 +97,13 @@ pub fn spawn_entity(ecs: &mut World, spawn : &(&usize, &String)) {
     let y = (*spawn.0 / width) as i32;
     std::mem::drop(map);
 
-    let item_result = spawn_named_item(&RAWS.lock().unwrap(), ecs.create_entity(), &spawn.1, SpawnType::AtPosition{ x, y});
-    if item_result.is_some() {
+    let spawn_result = spawn_named_entity(&RAWS.lock().unwrap(), ecs.create_entity(), &spawn.1, SpawnType::AtPosition{ x, y});
+    if spawn_result.is_some() {
         return;
-    }
+}
 
     match spawn.1.as_ref() {
-        "Recyculon" => recyculon(ecs, x, y),
-        "Mopbot" => mopbot(ecs, x, y),
-        "Rusted Knife" => dagger(ecs, x, y),
-        "Malfunctioning Defense Field" => shield(ecs, x, y),
-        "Long Blade" => longsword(ecs, x, y),
-        "Weak Defense Field" => shield_lv2(ecs, x, y),
+
         "Spike Trap" => spike_trap(ecs, x, y),
         "Door" => door(ecs, x, y),
         _ => {}
@@ -116,8 +111,8 @@ pub fn spawn_entity(ecs: &mut World, spawn : &(&usize, &String)) {
 }
 
 
-fn mopbot(ecs: &mut World, x: i32, y: i32) { monster(ecs, x, y, rltk::to_cp437('M'), "Mopulon"); }
-fn recyculon(ecs: &mut World, x: i32, y: i32) { monster(ecs, x, y, rltk::to_cp437('R'), "Recyclobot"); }
+//fn mopbot(ecs: &mut World, x: i32, y: i32) { monster(ecs, x, y, rltk::to_cp437('M'), "Mopulon"); }
+//fn recyculon(ecs: &mut World, x: i32, y: i32) { monster(ecs, x, y, rltk::to_cp437('R'), "Recyclobot"); }
 
 /// BUILD A MONSTER! It's got the following components: Position, renderable, viewshed, Monster, Name, etc etc etc
 fn monster<S : ToString>(ecs: &mut World, x: i32, y: i32, glyph : rltk::FontCharType, name : S) {
@@ -138,22 +133,6 @@ fn monster<S : ToString>(ecs: &mut World, x: i32, y: i32, glyph : rltk::FontChar
         .build();
 }
 
-fn dagger(ecs: &mut World, x: i32, y: i32) {
-    ecs.create_entity()
-        .with(Position{ x, y })
-        .with(Renderable{
-            glyph: rltk::to_cp437('/'),
-            fg: RGB::named(rltk::CYAN),
-            bg: RGB::named(rltk::BLACK),
-            render_order: 2
-        })
-        .with(Name{ name : "Rusted Knife".to_string() })
-        .with(Item{})
-        .with(Equippable{ slot: EquipmentSlot::Melee })
-        .with(MeleePowerBonus{ power: 2 })
-        .marked::<SimpleMarker<SerializeMe>>()
-        .build();
-}
 
 fn shield(ecs: &mut World, x: i32, y: i32) {
     ecs.create_entity()
@@ -172,7 +151,7 @@ fn shield(ecs: &mut World, x: i32, y: i32) {
         .build();
 }
 
-fn longsword(ecs: &mut World, x: i32, y: i32) {
+fn long_blade(ecs: &mut World, x: i32, y: i32) {
     ecs.create_entity()
         .with(Position{ x, y })
         .with(Renderable{

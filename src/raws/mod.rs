@@ -20,8 +20,8 @@ lazy_static! {
 #[derive(Deserialize, Debug)]
 pub struct Raws {
     pub items : Vec<Item>,
-    //pub mobs : Vec<Mob>,
-    // pub props : Vec<Prop>
+    pub mobs : Vec<Mob>,
+    pub props : Vec<Prop>
 }
 
 pub fn load_raws() {
@@ -37,4 +37,3 @@ pub fn load_raws() {
 
     RAWS.lock().unwrap().load(decoder);
 }
-

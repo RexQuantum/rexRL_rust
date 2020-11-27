@@ -9,14 +9,18 @@ pub enum SpawnType {
 
 pub struct RawMaster {
     raws : Raws,
-    item_index : HashMap<String, usize>
+    item_index : HashMap<String, usize>,
+    mob_index : HashMap<String, usize>,
+    prop_index : HashMap<String, usize>
 }
 
 impl RawMaster {
     pub fn empty() -> RawMaster {
         RawMaster {
-            raws : Raws{ items: Vec::new() },
-            item_index : HashMap::new()
+            raws : Raws{ items: Vec::new(), mobs: Vec::new(), props: Vec::new() },
+            item_index : HashMap::new(),
+            mob_index : HashMap::new(),
+            prop_index : HashMap::new()
         }
     }
 
@@ -26,7 +30,10 @@ impl RawMaster {
         for (i,item) in self.raws.items.iter().enumerate() {
             self.item_index.insert(item.name.clone(), i);
         }
-    }    
+        for (i,mob) in self.raws.mobs.iter().enumerate() {
+            self.mob_index.insert(mob.name.clone(), i);
+        }
+    }
 }
 
 fn spawn_position(pos : SpawnType, new_entity : EntityBuilder) -> EntityBuilder {
@@ -101,5 +108,48 @@ pub fn spawn_named_item(raws: &RawMaster, new_entity : EntityBuilder, key : &str
 
         return Some(eb.build());
     }
+    None
+}
+
+pub fn spawn_named_mob(raws: &RawMaster, new_entity : EntityBuilder, key : &str, pos : SpawnType) -> Option<Entity> {
+    if raws.mob_index.contains_key(key) {
+        let mob_template = &raws.raws.mobs[raws.mob_index[key]];
+
+        let mut eb = new_entity;
+
+        // Spawn in the specified location
+        eb = spawn_position(pos, eb);
+
+        // Renderable
+        if let Some(renderable) = &mob_template.renderable {
+            eb = eb.with(get_renderable_component(renderable));
+        }
+
+        eb = eb.with(Name{ name : mob_template.name.clone() });
+
+        eb = eb.with(Monster{});
+        if mob_template.blocks_tile {
+            eb = eb.with(BlocksTile{});
+        }
+        eb = eb.with(CombatStats{
+            max_hp : mob_template.stats.max_hp,
+            hp : mob_template.stats.hp,
+            power : mob_template.stats.power,
+            defense : mob_template.stats.defense
+        });
+        eb = eb.with(Viewshed{ visible_tiles : Vec::new(), range: mob_template.vision_range, dirty: true });
+
+        return Some(eb.build());
+    }
+    None
+}
+
+pub fn spawn_named_entity(raws: &RawMaster, new_entity : EntityBuilder, key : &str, pos : SpawnType) -> Option<Entity> {
+    if raws.item_index.contains_key(key) {
+        return spawn_named_item(raws, new_entity, key, pos);
+    } else if raws.mob_index.contains_key(key) {
+        return spawn_named_mob(raws, new_entity, key, pos);
+    }
+
     None
 }

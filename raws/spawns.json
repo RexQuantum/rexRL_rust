@@ -1,4 +1,5 @@
 {
+
 "items" : [
     {
         "name" : "Repair pack",
@@ -92,6 +93,56 @@
                 "area_of_effect" : "4"
             }
         }
+    },
+
+    {
+        "name" : "Rusted knife",
+        "renderable": {
+            "glyph" : "/",
+            "fg" : "#00cffa",
+            "bg" : "#000000",
+            "order" : 2
+        },
+        "equippable" : {
+            "equipmentslot" : "melee",
+            "power_bonus" : "2"
+            }
+        },
+    {
+        "name" : "Shield",
+        "renderable": {
+            "glyph" : "/",
+            "fg" : "#00cffa",
+            "bg" : "#000000",
+            "order" : 2
+        },
+        "equippable" : {
+            "equipmentslot" : "shield",
+            "defense_bonus" : "1"
+            }
+        }
+],
+
+"mobs" : [
+    {
+        "name" : "Writhing Circuitry",
+        "renderable" : {
+            "glyph" : "c",
+            "fg" : "#FF0000",
+            "bg" : "#000000",
+            "order" : 1
+        },
+        "blocks_tile" : true,
+        "stats" : {
+            "max_hp" : 8,
+            "hp" : 8,
+            "defense" : 1,
+            "power" : 4
+        },
+        "vision_range" : 8
     }
-]
+],
+
+"props" : []
+
 }
