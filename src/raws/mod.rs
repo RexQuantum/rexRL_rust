@@ -24,6 +24,14 @@ pub struct Raws {
     pub props : Vec<Prop>
 }
 
+#[derive(Deserialize, Debug)]
+pub struct Renderable {
+    pub glyph: String,
+    pub fg : String,
+    pub bg : String,
+    pub order : i32
+}
+
 pub fn load_raws() {
     rltk::link_resource!(RAW_FILE, "../../raws/spawns.json");
 

@@ -1,9 +1,7 @@
 use rltk::{ RGB, RandomNumberGenerator };
 use specs::prelude::*;
-use super::{CombatStats, Player, Renderable, Name, Position, Viewshed, Monster, BlocksTile, Rect, Item,
-random_table::RandomTable, EquipmentSlot, Equippable, MeleePowerBonus, DefenseBonus, HungerClock,
- InflictsDamage, SerializeMe,
-HungerState, Hidden, EntryTrigger, SingleActivation, Map, TileType, Door, BlocksVisibility, raws::* };
+use super::{CombatStats, Player, Renderable, Name, Position, Viewshed, Rect,
+random_table::RandomTable, HungerClock, SerializeMe, HungerState, Map, TileType, raws::* };
 use specs::saveload::{MarkedBuilder, SimpleMarker};
 use std::collections::HashMap;
 
@@ -31,18 +29,15 @@ const MAX_MONSTERS : i32 = 4;
 
 fn room_table(map_depth: i32) -> RandomTable {
     RandomTable::new()
-        .add("Recyculon", 1)
-        .add("Mopbot", 1 + map_depth)  
-        .add("Scrambler Grenade", 1 + map_depth)
         .add("Repair Pack", 4)
-        .add("Incendiary Grenade", 2 + map_depth)
+        .add("Writhing Circuitry", 1) 
         .add("Beam Cell", 3 + map_depth)
-        .add("Long Blade", map_depth -1)
-        .add("Rusted Knife", map_depth)
-        .add("Weak Defense Field", map_depth)
-        .add("Malfunctioning Defense Field", map_depth - 1)
         .add("Nutrient Brick", 10)
         .add("Seismic Mapper", 2)
+        .add("Incendiary Grenade", 2 + map_depth)
+        .add("Scrambler Grenade", 1 + map_depth)
+        .add("Rusted Knife", map_depth)
+        .add("Shield", map_depth - 1)
         .add("Spike Trap", 5)
 }
 
@@ -83,7 +78,7 @@ pub fn spawn_region(_map: &Map, rng: &mut RandomNumberGenerator, area : &[usize]
         }
     }
 
-    // Actually spawn the monsters
+    // Actually spawn the entities
     for spawn in spawn_points.iter() {
         spawn_list.push((*spawn.0, spawn.1.to_string()));
     }
@@ -100,122 +95,7 @@ pub fn spawn_entity(ecs: &mut World, spawn : &(&usize, &String)) {
     let spawn_result = spawn_named_entity(&RAWS.lock().unwrap(), ecs.create_entity(), &spawn.1, SpawnType::AtPosition{ x, y});
     if spawn_result.is_some() {
         return;
-}
-
-    match spawn.1.as_ref() {
-
-        "Spike Trap" => spike_trap(ecs, x, y),
-        "Door" => door(ecs, x, y),
-        _ => {}
-    }
-}
-
-
-//fn mopbot(ecs: &mut World, x: i32, y: i32) { monster(ecs, x, y, rltk::to_cp437('M'), "Mopulon"); }
-//fn recyculon(ecs: &mut World, x: i32, y: i32) { monster(ecs, x, y, rltk::to_cp437('R'), "Recyclobot"); }
-
-/// BUILD A MONSTER! It's got the following components: Position, renderable, viewshed, Monster, Name, etc etc etc
-fn monster<S : ToString>(ecs: &mut World, x: i32, y: i32, glyph : rltk::FontCharType, name : S) {
-    ecs.create_entity()
-        .with(Position{ x, y })
-        .with(Renderable{
-            glyph,
-            fg: RGB::named(rltk::RED),
-            bg: RGB::named(rltk::BLACK),
-            render_order: 1
-        })
-        .with(Viewshed{ visible_tiles : Vec::new(), range: 9, dirty: true })
-        .with(Monster{})
-        .with(Name{ name: name.to_string() }) //
-        .with(BlocksTile{})
-        .with(CombatStats{ max_hp: 16, hp: 16, defense: 1, power: 4 })
-        .marked::<SimpleMarker<SerializeMe>>()
-        .build();
-}
-
-
-fn shield(ecs: &mut World, x: i32, y: i32) {
-    ecs.create_entity()
-        .with(Position{ x, y })
-        .with(Renderable{
-            glyph: rltk::to_cp437('('),
-            fg: RGB::named(rltk::CYAN),
-            bg: RGB::named(rltk::BLACK),
-            render_order: 2
-        })
-        .with(Name{ name : "Malfunctioning Defense Field".to_string() })
-        .with(Item{})
-        .with(Equippable{ slot: EquipmentSlot::Shield })
-        .with(DefenseBonus{ defense: 1 })
-        .marked::<SimpleMarker<SerializeMe>>()
-        .build();
-}
-
-fn long_blade(ecs: &mut World, x: i32, y: i32) {
-    ecs.create_entity()
-        .with(Position{ x, y })
-        .with(Renderable{
-            glyph: rltk::to_cp437('/'),
-            fg: RGB::named(rltk::YELLOW),
-            bg: RGB::named(rltk::BLACK),
-            render_order: 2
-        })
-        .with(Name{ name : "Long Blade".to_string() })
-        .with(Item{})
-        .with(Equippable{ slot: EquipmentSlot::Melee })
-        .with(MeleePowerBonus{ power: 8 })
-        .marked::<SimpleMarker<SerializeMe>>()
-        .build();
-}
-
-fn shield_lv2(ecs: &mut World, x: i32, y: i32) {
-    ecs.create_entity()
-        .with(Position{ x, y })
-        .with(Renderable{
-            glyph: rltk::to_cp437('('),
-            fg: RGB::named(rltk::YELLOW),
-            bg: RGB::named(rltk::BLACK),
-            render_order: 2
-        })
-        .with(Name{ name : "Weak Defense Field".to_string() })
-        .with(Item{})
-        .with(Equippable{ slot: EquipmentSlot::Shield })
-        .with(DefenseBonus{ defense: 3 })
-        .marked::<SimpleMarker<SerializeMe>>()
-        .build();
-}
-
-fn spike_trap(ecs: &mut World, x: i32, y: i32) {
-    ecs.create_entity()
-        .with(Position{ x, y })
-        .with(Renderable{
-            glyph: rltk::to_cp437('^'),
-            fg: RGB::named(rltk::RED),
-            bg: RGB::named(rltk::BLACK),
-            render_order: 2
-        })
-        .with(Name{ name : "Spike Trap".to_string() })
-        .with(Hidden{})
-        .with(EntryTrigger{})
-        .with(SingleActivation{})
-        .with(InflictsDamage{ damage : 10 })
-        .marked::<SimpleMarker<SerializeMe>>()
-        .build();
     }
 
-fn door(ecs: &mut World, x: i32, y: i32) {
-    ecs.create_entity()
-    .with(Position{ x, y })
-    .with(Renderable{
-        glyph: rltk::to_cp437('+'),
-        fg: RGB::named(rltk::CHOCOLATE),
-        bg: RGB::named(rltk::BLACK),
-        render_order: 2
-    })
-    .with(Name{ name : "Door".to_string() })
-    .with(BlocksTile{})
-    .with(BlocksVisibility{})
-    .with(Door{open: false})
-    .marked::<SimpleMarker<SerializeMe>>()
-    .build();
+    rltk::console::log(format!("WARNING: We don't know how to spawn [{}]!", spawn.1));
 }

@@ -1,18 +1,19 @@
 use serde::{Deserialize};
+use super::{Renderable};
 use std::collections::HashMap;
 
 #[derive(Deserialize, Debug)]
 pub struct Prop {
     pub name : String,
     pub renderable: Option<Renderable>,
-    pub blocks_tile : bool,
-    pub blocks_visibility : bool,
+    pub blocks_tile : Option<bool>,
+    pub blocks_visibility : Option<bool>,
+    pub hidden : Option<bool>,
+    pub door_open : Option<bool>,
+    pub entry_trigger : Option<EntryTrigger>
 }
 
 #[derive(Deserialize, Debug)]
-pub struct Renderable {
-    pub glyph: String,
-    pub fg : String,
-    pub bg : String,
-    pub order : i32
+pub struct EntryTrigger {
+    pub effects : HashMap<String, String>
 }
