@@ -1,6 +1,6 @@
 use serde::{Deserialize};
 use std::collections::HashMap;
-use super::{Renderable};
+//use super::{Renderable};
 
 #[derive(Deserialize, Debug)]
 pub struct Item {
@@ -13,6 +13,14 @@ pub struct Item {
     // pub headarmor : Option<HeadArmor>,
     // pub legarmor : Option<LegArmor>,
     // pub handarmor : Option<HandArmor>
+}
+
+#[derive(Deserialize, Debug)]
+pub struct Renderable {
+    pub glyph: String,
+    pub fg : String,
+    pub bg : String,
+    pub order : i32
 }
 
 #[derive(Deserialize, Debug)]

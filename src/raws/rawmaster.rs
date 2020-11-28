@@ -72,7 +72,7 @@ fn spawn_position(pos : SpawnType, new_entity : EntityBuilder) -> EntityBuilder 
     eb
 }
 
-fn get_renderable_component(renderable : &super::Renderable) -> crate::components::Renderable {
+fn get_renderable_component(renderable : &super::item_structs::Renderable) -> crate::components::Renderable {
     crate::components::Renderable{
         glyph: rltk::to_cp437(renderable.glyph.chars().next().unwrap()),
         fg : rltk::RGB::from_hex(&renderable.fg).expect("Invalid RGB"),

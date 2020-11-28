@@ -24,7 +24,7 @@ impl MazeBuilder {
     }
 }
 
-/* Maze code taken under MIT from https://github.com/cyucelen/mazeGenerator/ */
+/* Maze code taken under MIT liense from https://github.com/cyucelen/mazeGenerator/ */
 
 const TOP : usize = 0;
 const RIGHT : usize = 1;
@@ -155,7 +155,7 @@ impl<'a> Grid<'a> {
                     self.backtrace.push(self.current);
                     //   __lower_part__      __higher_part_
                     //   /            \      /            \
-                    // --------cell1------ | cell2-----------
+                    // --------cell1------ | cell2----------
                     let (lower_part, higher_part) =
                         self.cells.split_at_mut(std::cmp::max(self.current, next));
                     let cell1 = &mut lower_part[std::cmp::min(self.current, next)];

@@ -58,7 +58,7 @@ pub const CHECKERBOARD : PrefabRoom = PrefabRoom{
 const CHECKERBOARD_MAP : &str = "
       
  ^#   
- M#%# 
+ C#%# 
  #!#  
  ^# # 
       

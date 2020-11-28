@@ -1,19 +1,16 @@
 {
-
 "spawn_table" : [
     { "name" : "Writhing Circuitry", "weight" : 10, "min_depth" : 0, "max_depth" : 100 },
-    { "name" : "Repair Pack", "weight" : 10, "min_depth" : 0, "max_depth" : 100 },
+    { "name" : "Repair Pack", "weight" : 4, "min_depth" : 0, "max_depth" : 100 },
     { "name" : "Beam Cell", "weight" : 4, "min_depth" : 0, "max_depth" : 100 },
     { "name" : "Nutrient Brick", "weight" : 6, "min_depth" : 0, "max_depth" : 100 },
-    { "name" : "Seismic Mapper", "weight" : 2, "min_depth" : 0, "max_depth" : 100 },
-    { "name" : "Incendiary Grenade", "weight" : 2, "min_depth" : 0, "max_depth" : 100 },
+    { "name" : "Seismic Mapper", "weight" : 3, "min_depth" : 0, "max_depth" : 100 },
+    { "name" : "Incendiary Grenade", "weight" : 4, "min_depth" : 0, "max_depth" : 100 },
     { "name" : "Scrambler Grenade", "weight" : 2, "min_depth" : 0, "max_depth" : 100 },
-    { "name" : "Rusted Knife", "weight" : 1, "min_depth" : 1, "max_depth" : 100 },
-    { "name" : "Shield", "weight" : 1, "min_depth" : 1, "max_depth" : 100 },
-    { "name" : "Spike Trap", "weight" : 5, "min_depth" : 0, "max_depth" : 100 },
-    { "name" : "Door", "weight" : 6, "min_depth" : 0, "max_depth" : 100 }
+    { "name" : "Rusted Knife", "weight" : 10, "min_depth" : 0, "max_depth" : 100 },
+    { "name" : "Shield", "weight" : 10, "min_depth" : 0, "max_depth" : 100 },
+    { "name" : "Spike Trap", "weight" : 5, "min_depth" : 0, "max_depth" : 100 }
 ],
-
 "items" : [
     {
         "name" : "Repair Pack",
@@ -99,9 +96,9 @@
         },
         "consumable" : {
             "effects" : {
-                "ranged"    : "8",
+                "ranged"    : "12",
                 "confusion" : "4",
-                "area_of_effect" : "4"
+                "area_of_effect" : "3"
             }
         }
     },
@@ -109,28 +106,27 @@
         "name" : "Rusted Knife",
         "renderable": {
             "glyph" : "/",
-            "fg" : "#00cffa",
+            "fg" : "#00CFFA",
             "bg" : "#000000",
             "order" : 2
         },
-        "equippable" : {
-            "equipmentslot" : "melee",
-            "power_bonus" : "2"
+        "weapon" : {
+            "range" : "melee",
+            "power_bonus" : 2
             }
-        },
+    },
     {
         "name" : "Shield",
         "renderable": {
             "glyph" : "U",
-            "fg" : "#00cffa",
+            "fg" : "#00CFAA",
             "bg" : "#000000",
             "order" : 2
         },
-        "equippable" : {
-            "equipmentslot" : "shield",
-            "defense_bonus" : "1"
+        "shield" : {
+                "defense_bonus" : 1
             }
-        }
+    }
 ],
 "mobs" : [
     {

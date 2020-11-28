@@ -54,7 +54,7 @@ pub fn spawn_region(_map: &Map, rng: &mut RandomNumberGenerator, area : &[usize]
     let mut spawn_points : HashMap<usize, String> = HashMap::new();
     let mut areas : Vec<usize> = Vec::from(area);
 
-    // Scope to keep the borrow checker happy
+    // Borrow scope in order to keep access to the map separated while keeping the borrow checker happy
     {
         let num_spawns = i32::min(areas.len() as i32, rng.roll_dice(1, MAX_MONSTERS + 3) + (map_depth - 1) - 3);
         if num_spawns == 0 { return; }
@@ -86,6 +86,5 @@ pub fn spawn_entity(ecs: &mut World, spawn : &(&usize, &String)) {
     if spawn_result.is_some() {
         return;
     }
-
-    rltk::console::log(format!("WARNING: We don't know how to spawn [{}]!", spawn.1));
+    rltk::console::log(format!("WARNING: We don't know how to spawn [{}]!", spawn.1))
 }

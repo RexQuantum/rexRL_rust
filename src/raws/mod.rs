@@ -6,6 +6,7 @@ mod prop_structs;
 use prop_structs::*;
 mod spawn_table_structs;
 use spawn_table_structs::*;
+
 mod rawmaster;
 pub use rawmaster::*;
 use serde::{Deserialize};
@@ -27,13 +28,6 @@ pub struct Raws {
     pub spawn_table : Vec<SpawnTableEntry>
 }
 
-#[derive(Deserialize, Debug)]
-pub struct Renderable {
-    pub glyph: String,
-    pub fg : String,
-    pub bg : String,
-    pub order : i32
-}
 
 pub fn load_raws() {
     rltk::link_resource!(RAW_FILE, "../../raws/spawns.json");
