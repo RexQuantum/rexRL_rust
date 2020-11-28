@@ -1,4 +1,19 @@
 {
+
+"spawn_table" : [
+    { "name" : "Writhing Circuitry", "weight" : 10, "min_depth" : 0, "max_depth" : 100 },
+    { "name" : "Repair Pack", "weight" : 10, "min_depth" : 0, "max_depth" : 100 },
+    { "name" : "Beam Cell", "weight" : 4, "min_depth" : 0, "max_depth" : 100 },
+    { "name" : "Nutrient Brick", "weight" : 6, "min_depth" : 0, "max_depth" : 100 },
+    { "name" : "Seismic Mapper", "weight" : 2, "min_depth" : 0, "max_depth" : 100 },
+    { "name" : "Incendiary Grenade", "weight" : 2, "min_depth" : 0, "max_depth" : 100 },
+    { "name" : "Scrambler Grenade", "weight" : 2, "min_depth" : 0, "max_depth" : 100 },
+    { "name" : "Rusted Knife", "weight" : 1, "min_depth" : 1, "max_depth" : 100 },
+    { "name" : "Shield", "weight" : 1, "min_depth" : 1, "max_depth" : 100 },
+    { "name" : "Spike Trap", "weight" : 5, "min_depth" : 0, "max_depth" : 100 },
+    { "name" : "Door", "weight" : 6, "min_depth" : 0, "max_depth" : 100 }
+],
+
 "items" : [
     {
         "name" : "Repair Pack",
@@ -165,18 +180,6 @@
         "blocks_visibility" : true,
         "blocks_tile" : true,
         "door_open" : true
-    },
-    {
-        "name" : "Stairs",
-        "renderable" : {
-            "glyph" : ">",
-            "fg" : "#0000FF",
-            "bg" : "#000000",
-            "order" : 2
-        },
-        "hidden" : false,
-        "blocks_visibility" : false,
-        "blocks_tile" : false
     }
 ]
 }

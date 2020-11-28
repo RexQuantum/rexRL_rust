@@ -28,17 +28,7 @@ pub fn player(ecs : &mut World, player_x : i32, player_y : i32) -> Entity {
 const MAX_MONSTERS : i32 = 4;
 
 fn room_table(map_depth: i32) -> RandomTable {
-    RandomTable::new()
-        .add("Repair Pack", 4)
-        .add("Writhing Circuitry", 1) 
-        .add("Beam Cell", 3 + map_depth)
-        .add("Nutrient Brick", 10)
-        .add("Seismic Mapper", 2)
-        .add("Incendiary Grenade", 2 + map_depth)
-        .add("Scrambler Grenade", 1 + map_depth)
-        .add("Rusted Knife", map_depth)
-        .add("Shield", map_depth - 1)
-        .add("Spike Trap", 5)
+    get_spawn_table_for_depth(&RAWS.lock().unwrap(), map_depth)
 }
 
 /// Fills a room with stuff!

@@ -4,6 +4,8 @@ mod mob_structs;
 use mob_structs::*;
 mod prop_structs;
 use prop_structs::*;
+mod spawn_table_structs;
+use spawn_table_structs::*;
 mod rawmaster;
 pub use rawmaster::*;
 use serde::{Deserialize};
@@ -21,7 +23,8 @@ lazy_static! {
 pub struct Raws {
     pub items : Vec<Item>,
     pub mobs : Vec<Mob>,
-    pub props : Vec<Prop>
+    pub props : Vec<Prop>,
+    pub spawn_table : Vec<SpawnTableEntry>
 }
 
 #[derive(Deserialize, Debug)]
