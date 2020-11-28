@@ -89,13 +89,9 @@ impl PrefabBuilder {
                 build_data.starting_position = Some(Position{ x:x as i32, y:y as i32 });
             }
             '>' => build_data.map.tiles[idx] = TileType::DownStairs,
-            'M' => {
+            'C' => {
                 build_data.map.tiles[idx] = TileType::Floor;
-                build_data.spawn_list.push((idx, "Mopbot".to_string()));
-            }
-            'R' => {
-                build_data.map.tiles[idx] = TileType::Floor;
-                build_data.spawn_list.push((idx, "Recyculon".to_string()));
+                build_data.spawn_list.push((idx, "Writhing Circuitry".to_string()));
             }
             '^' => {
                 build_data.map.tiles[idx] = TileType::Floor;
@@ -103,7 +99,7 @@ impl PrefabBuilder {
             }
             '%' => {
                 build_data.map.tiles[idx] = TileType::Floor;
-                build_data.spawn_list.push((idx, "Rations".to_string()));
+                build_data.spawn_list.push((idx, "Nutrient Brick".to_string()));
             }
             '!' => {
                 build_data.map.tiles[idx] = TileType::Floor;
@@ -114,6 +110,7 @@ impl PrefabBuilder {
             }
         }
     }
+
     #[allow(dead_code)]
     fn load_rex_map(&mut self, path: &str, build_data : &mut BuilderMap) {
         let xp_file = rltk::rex::XpFile::from_resource(path).unwrap();
