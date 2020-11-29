@@ -1,7 +1,19 @@
 {
+"spawn_table" : [
+    { "name" : "Writhing Circuitry", "weight" : 10, "min_depth" : 0, "max_depth" : 100 },
+    { "name" : "Repair Pack", "weight" : 4, "min_depth" : 0, "max_depth" : 100 },
+    { "name" : "Beam Cell", "weight" : 4, "min_depth" : 0, "max_depth" : 100 },
+    { "name" : "Nutrient Brick", "weight" : 6, "min_depth" : 0, "max_depth" : 100 },
+    { "name" : "Seismic Mapper", "weight" : 3, "min_depth" : 0, "max_depth" : 100 },
+    { "name" : "Incendiary Grenade", "weight" : 4, "min_depth" : 0, "max_depth" : 100 },
+    { "name" : "Scrambler Grenade", "weight" : 2, "min_depth" : 0, "max_depth" : 100 },
+    { "name" : "Rusted Knife", "weight" : 10, "min_depth" : 0, "max_depth" : 100 },
+    { "name" : "Shield", "weight" : 10, "min_depth" : 0, "max_depth" : 100 },
+    { "name" : "Spike Trap", "weight" : 5, "min_depth" : 0, "max_depth" : 100 }
+],
 "items" : [
     {
-        "name" : "Repair pack",
+        "name" : "Repair Pack",
         "renderable": {
             "glyph" : "!",
             "fg" : "#FF00FF",
@@ -9,10 +21,11 @@
             "order" : 2
         },
         "consumable" : {
-            "effects" : { "provides_healing" : "12" }
+            "effects" : { 
+                "provides_healing" : "12" 
+            }
         }
     },
-
     {
         "name" : "Beam Cell",
         "renderable": {
@@ -29,7 +42,6 @@
             }
         }
     },
-
     {
         "name" : "Nutrient Brick",
         "renderable": { 
@@ -44,7 +56,6 @@
             }
         }
     },
-
     {
         "name" : "Seismic Mapper",
         "renderable": {
@@ -59,7 +70,6 @@
             }
         }
     },
-
     {
         "name" : "Incendiary Grenade",
         "renderable": {
@@ -76,7 +86,6 @@
             }
         }
     },
-
     {
         "name" : "Scrambler Grenade",
         "renderable": {
@@ -87,11 +96,86 @@
         },
         "consumable" : {
             "effects" : {
-                "ranged"    : "8",
+                "ranged"    : "12",
                 "confusion" : "4",
-                "area_of_effect" : "4"
+                "area_of_effect" : "3"
             }
         }
+    },
+    {
+        "name" : "Rusted Knife",
+        "renderable": {
+            "glyph" : "/",
+            "fg" : "#00CFFA",
+            "bg" : "#000000",
+            "order" : 2
+        },
+        "weapon" : {
+            "range" : "melee",
+            "power_bonus" : 2
+            }
+    },
+    {
+        "name" : "Shield",
+        "renderable": {
+            "glyph" : "U",
+            "fg" : "#00CFAA",
+            "bg" : "#000000",
+            "order" : 2
+        },
+        "shield" : {
+                "defense_bonus" : 1
+            }
+    }
+],
+"mobs" : [
+    {
+        "name" : "Writhing Circuitry",
+        "renderable" : {
+            "glyph" : "C",
+            "fg" : "#FF0000",
+            "bg" : "#000000",
+            "order" : 1
+        },
+        "blocks_tile" : true,
+        "stats" : {
+            "max_hp" : 8,
+            "hp" : 8,
+            "defense" : 1,
+            "power" : 4
+        },
+        "vision_range" : 8
+    }
+],
+"props" : [
+    {
+        "name" : "Spike Trap",
+        "renderable" : {
+            "glyph" : "^",
+            "fg" :"#FF0000",
+            "bg" :"#000000",
+            "order" : 2
+        },
+        "hidden" : true,
+        "entry_trigger" : {
+            "effects" : {
+                "damage" : "6",
+                "single_activation" : "1"
+            }
+        }
+    },
+    {
+        "name" : "Door",
+        "renderable" : {
+            "glyph" : "+",
+            "fg" : "#d2691e",
+            "bg" : "#000000",
+            "order" : 2
+        },
+        "hidden" : false,
+        "blocks_visibility" : true,
+        "blocks_tile" : true,
+        "door_open" : true
     }
 ]
 }

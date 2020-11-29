@@ -4,6 +4,9 @@ mod mob_structs;
 use mob_structs::*;
 mod prop_structs;
 use prop_structs::*;
+mod spawn_table_structs;
+use spawn_table_structs::*;
+
 mod rawmaster;
 pub use rawmaster::*;
 use serde::{Deserialize};
@@ -20,9 +23,11 @@ lazy_static! {
 #[derive(Deserialize, Debug)]
 pub struct Raws {
     pub items : Vec<Item>,
-    //pub mobs : Vec<Mob>,
-    // pub props : Vec<Prop>
+    pub mobs : Vec<Mob>,
+    pub props : Vec<Prop>,
+    pub spawn_table : Vec<SpawnTableEntry>
 }
+
 
 pub fn load_raws() {
     rltk::link_resource!(RAW_FILE, "../../raws/spawns.json");
@@ -37,4 +42,3 @@ pub fn load_raws() {
 
     RAWS.lock().unwrap().load(decoder);
 }
-

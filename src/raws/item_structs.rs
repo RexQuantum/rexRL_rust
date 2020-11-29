@@ -1,5 +1,6 @@
 use serde::{Deserialize};
 use std::collections::HashMap;
+//use super::{Renderable};
 
 #[derive(Deserialize, Debug)]
 pub struct Item {
@@ -8,11 +9,10 @@ pub struct Item {
     pub consumable : Option<Consumable>,
     pub weapon : Option<Weapon>,
     pub shield : Option<Shield>
-    // pub ranged : Option<Ranged>,
     // pub chestarmor : Option<ChestArmor>,
     // pub headarmor : Option<HeadArmor>,
     // pub legarmor : Option<LegArmor>,
-    // pub handarmor : Ootion<HandArmor>
+    // pub handarmor : Option<HandArmor>
 }
 
 #[derive(Deserialize, Debug)]

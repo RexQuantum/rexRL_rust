@@ -19,8 +19,7 @@ impl CorridorSpawner {
         if let Some(corridors) = &build_data.corridors {
             for c in corridors.iter() {
                 let depth = build_data.map.depth;
-                spawner::spawn_region(
-                    &build_data.map,
+                spawner::spawn_region(&build_data.map,
                     rng,
                     &c,
                     depth,
