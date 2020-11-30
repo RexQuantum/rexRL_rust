@@ -80,7 +80,7 @@
         },
         "consumable" : {
             "effects" : {
-                "ranged" : "6",
+                "ranged" : "12",
                 "damage" : "20",
                 "area_of_effect" : "3"
             }
@@ -97,8 +97,8 @@
         "consumable" : {
             "effects" : {
                 "ranged"    : "12",
-                "confusion" : "4",
-                "area_of_effect" : "3"
+                "confusion" : "6",
+                "area_of_effect" : "4"
             }
         }
     },
