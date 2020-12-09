@@ -1,0 +1,37 @@
+use serde::{Serialize, Deserialize};
+
+#[derive(PartialEq, Eq, Hash, Copy, Clone, Serialize, Deserialize)]
+pub enum TileType {
+    Wall,
+    Floor,
+    DownStairs,
+    Grass,
+    ShallowWater,
+    DeepWater,
+    ConcreteFloor,
+    MetalBridge
+}
+
+pub fn tile_walkable(tt : TileType) -> bool {
+    match tt {
+        TileType::Floor | TileType::DownStairs | TileType::Grass |
+        TileType::ShallowWater | TileType::ConcreteFloor | TileType::MetalBridge 
+            => true,
+        _ => false        
+    }
+}
+
+pub fn tile_opaque(tt : TileType) -> bool {
+    match tt {
+        TileType::Wall => true,
+        _ => false
+    }
+}
+
+pub fn tile_cost(tt : TileType) -> f32 {
+    match tt {
+        TileType::Grass => 1.1,
+        TileType::ShallowWater => 1.2,
+        _ => 1.0
+    }
+}

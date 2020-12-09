@@ -57,7 +57,7 @@ impl<'a> System<'a> for ItemUseSystem {
                         WriteStorage<'a, HungerClock>,
                         ReadStorage<'a, MagicMapper>,
                         WriteExpect<'a, RunState>,
-                                           
+
                       );
 
     #[allow(clippy::cognitive_complexity)]
