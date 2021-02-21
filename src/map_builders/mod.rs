@@ -56,6 +56,8 @@ use rooms_corridors_nearest::NearestCorridors;
 use rooms_corridors_lines::StraightLineCorridors;
 use room_corridor_spawner::CorridorSpawner;
 use door_placement::*;
+mod town;
+use town::town_builder;
 
 pub struct BuilderMap {
     pub spawn_list : Vec<(usize, String)>,
@@ -263,6 +265,10 @@ fn random_shape_builder(rng: &mut rltk::RandomNumberGenerator, builder : &mut Bu
     // Setup an exit and spawn mobs
     builder.with(VoronoiSpawning::new());
     builder.with(DistantExit::new());
+}
+
+pub fn level_builder(new_depth: i32, rng: &mut rltk::RandomNumberGenerator, width: i32, height: i32) -> BuilderChain{
+    random_builder(new_depth, rng, width, height)
 }
 
 pub fn random_builder(new_depth: i32, rng: &mut rltk::RandomNumberGenerator, width: i32, height: i32) -> BuilderChain {
