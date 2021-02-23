@@ -407,6 +407,7 @@ fn main() -> rltk::BError {
     use rltk::RltkBuilder;
     let mut context = RltkBuilder::simple80x50()
         .with_title("Rex is making a game")
+        .with_vsync(true)
         .build()?;
     context.with_post_scanlines(false);
     let mut gs = State {
