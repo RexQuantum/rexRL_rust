@@ -13,7 +13,7 @@ pub struct TownBuilder{}
 
 impl InitialMapBuilder for TownBuilder {
     #[allow(dead_code)]
-    fn build_map(&mut self, rng: &mut rltk::RandomNumberGenerator, build_data : &mut BuilderMap){
+    fn build_map(&mut self, rng: &mut rltk::RandomNumberGenerator, build_data : &mut BuilderMap) {
         self.build_rooms(rng, build_data);
     }
 }
@@ -23,7 +23,10 @@ impl TownBuilder {
         Box::new(TownBuilder{})
     }
 
-    pub fn build_rooms(&mut self, rng: &mut rltk::RandomNumberGenerator, build_data : &mut BuilderMap){
+    pub fn build_rooms(&mut self, rng: &mut rltk::RandomNumberGenerator, build_data : &mut BuilderMap) {
     }
 }
 
+pub fn build_rooms(&mut self, rng: &mut rltk::RandomNumberGenerator, build_data : &mut BuilderMap) {
+    
+}
