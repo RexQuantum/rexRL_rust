@@ -99,8 +99,7 @@ impl BuilderChain {
                 starting_position: None,
                 rooms: None,
                 corridors: None,
-                history : Vec::new()
-
+                history : Vec::new(),
             }
         }
     }
@@ -188,13 +187,6 @@ fn random_room_builder(rng: &mut rltk::RandomNumberGenerator, builder : &mut Bui
 
         builder.with(RoomDrawer::new());
 
-        let modifier_roll = rng.roll_dice(1, 5);
-        match modifier_roll {
-            1 => builder.with(RoomExploder::new()),
-            2 => builder.with(RoomCornerRounder::new()),
-            _ => {}
-        }
-
         let corridor_roll = rng.roll_dice(1, 4);
         match corridor_roll {
             1 => builder.with(DoglegCorridors::new()),
@@ -202,12 +194,17 @@ fn random_room_builder(rng: &mut rltk::RandomNumberGenerator, builder : &mut Bui
             3 => builder.with(StraightLineCorridors::new()),
             _ => builder.with(BspCorridors::new())
         };
+        
+        let cspawn_roll = rng.roll_dice(1, 2);
+        if cspawn_roll == 1 {
+            builder.with(CorridorSpawner::new());
+        }
 
-        if build_roll !=3{
-            let cspawn_roll = rng.roll_dice(1, 2);
-            if cspawn_roll == 1 {
-                builder.with(CorridorSpawner::new());
-            }
+        let modifier_roll = rng.roll_dice(1, 5);
+        match modifier_roll {
+            1 => builder.with(RoomExploder::new()),
+            2 => builder.with(RoomCornerRounder::new()),
+            _ => {}
         }
     }
 
