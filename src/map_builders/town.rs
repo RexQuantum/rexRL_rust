@@ -1,13 +1,9 @@
-use super::{BuilderChain, BuilderMap, InitialMapBuilder, TileType, Position};
-use std::collections::HashSet;
+use super::{BuilderChain, BuilderMap, InitialMapBuilder, TileType};
 
 
-pub fn level_builder(new_depth: i32, rng: &mut rltk::RandomNumberGenerator, width: i32, height: i32) -> BuilderChain {
+pub fn town_builder(new_depth: i32, _rng: &mut rltk::RandomNumberGenerator, width: i32, height: i32) -> BuilderChain {
     let mut chain = BuilderChain::new(new_depth, width, height);
     chain.start_with(TownBuilder::new());
-    let (start_x, start_y) = super::random_start_position(rng);
-    chain.with(AreaStartingPosition::new(start_x, start_y));
-    chain.with(DistantExit::new());
     chain
 }
 

@@ -28,6 +28,7 @@ mod rooms_corridors_nearest;
 mod rooms_corridors_lines;
 mod room_corridor_spawner;
 mod door_placement;
+mod town;
 use distant_exit::DistantExit;
 use simple_map::SimpleMapBuilder;
 use bsp_dungeon::BspDungeonBuilder;
@@ -56,7 +57,6 @@ use rooms_corridors_nearest::NearestCorridors;
 use rooms_corridors_lines::StraightLineCorridors;
 use room_corridor_spawner::CorridorSpawner;
 use door_placement::*;
-mod town;
 use town::town_builder;
 
 pub struct BuilderMap {
@@ -267,9 +267,6 @@ fn random_shape_builder(rng: &mut rltk::RandomNumberGenerator, builder : &mut Bu
     builder.with(DistantExit::new());
 }
 
-pub fn level_builder(new_depth: i32, rng: &mut rltk::RandomNumberGenerator, width: i32, height: i32) -> BuilderChain{
-    random_builder(new_depth, rng, width, height)
-}
 
 pub fn random_builder(new_depth: i32, rng: &mut rltk::RandomNumberGenerator, width: i32, height: i32) -> BuilderChain {
     let mut builder = BuilderChain::new(new_depth, width, height);
@@ -301,17 +298,11 @@ pub fn random_builder(new_depth: i32, rng: &mut rltk::RandomNumberGenerator, wid
     
     builder
 }
-    // test harness
-    /*
-    let mut builder = BuilderChain::new(new_depth);
-    builder.start_with(SimpleMapBuilder::new());
-    builder.with(RoomDrawer::new());
-    builder.with(RoomSorter::new(RoomSort::LEFTMOST));
-    builder.with(StraightLineCorridors::new());
-    builder.with(RoomBasedSpawner::new());
-    builder.with(CorridorSpawner::new());
-    builder.with(RoomBasedStairs::new());
-    builder.with(RoomBasedStartingPosition::new());
-    builder.with(DoorPlacement::new());
-    builder
-    */
+
+pub fn level_builder(new_depth: i32, rng: &mut rltk::RandomNumberGenerator, width: i32, height: i32) -> BuilderChain {
+    rltk::console::log(format!("Depth: {}", new_depth));
+    match new_depth {
+        1 => town_builder(new_depth, rng, width, height),
+        _ => random_builder(new_depth, rng, width, height)
+    }
+}
