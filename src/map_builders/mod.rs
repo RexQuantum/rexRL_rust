@@ -44,7 +44,7 @@ use room_based_stairs::RoomBasedStairs;
 use area_starting_points::{AreaStartingPosition, XStart, YStart};
 use cull_unreachable::CullUnreachable;
 use voronoi_spawning::VoronoiSpawning;
-// use maze::MazeBuilder;
+use maze::MazeBuilder;
 use dla::DLABuilder;
 use common::*;
 use room_exploder::RoomExploder;
@@ -236,7 +236,7 @@ fn random_room_builder(rng: &mut rltk::RandomNumberGenerator, builder : &mut Bui
 }
 
 fn random_shape_builder(rng: &mut rltk::RandomNumberGenerator, builder : &mut BuilderChain) {
-    let builder_roll = rng.roll_dice(1, 13);
+    let builder_roll = rng.roll_dice(1, 12);
     match builder_roll {
         1 => builder.start_with(CellularAutomataBuilder::new()),
         2 => builder.start_with(DrunkardsWalkBuilder::open_area()),
@@ -244,7 +244,7 @@ fn random_shape_builder(rng: &mut rltk::RandomNumberGenerator, builder : &mut Bu
         4 => builder.start_with(DrunkardsWalkBuilder::winding_passages()),
         5 => builder.start_with(DrunkardsWalkBuilder::fat_passages()),
         6 => builder.start_with(DrunkardsWalkBuilder::fearful_symmetry()),
-        //7 => builder.start_with(MazeBuilder::new()),
+        7 => builder.start_with(MazeBuilder::new()),
         8 => builder.start_with(DLABuilder::walk_inwards()),
         9 => builder.start_with(DLABuilder::walk_outwards()),
         10 => builder.start_with(DLABuilder::central_attractor()),
