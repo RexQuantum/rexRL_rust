@@ -370,7 +370,6 @@ impl State {
         let mut rng = self.ecs.write_resource::<rltk::RandomNumberGenerator>();
         let mut builder = map_builders::level_builder(new_depth, &mut rng, 80, 50);
         builder.build_map(&mut rng);
-        std::mem::drop(rng);
         self.mapgen_history = builder.build_data.history.clone();
         let player_start;
         {
@@ -378,8 +377,9 @@ impl State {
             *worldmap_resource = builder.build_data.map.clone();
             player_start = builder.build_data.starting_position.as_mut().unwrap().clone();
         }
-    
+        
         // Spawn bad guys
+        std::mem::drop(rng);
         builder.spawn_entities(&mut self.ecs);
     
         // Place the player and update resources
