@@ -44,45 +44,24 @@ impl TownBuilder {
         build_data.take_snapshot();
     }
 
-<<<<<<< HEAD
-    fn water_and_piers(&mut self, rng: &mut rltk::RandomNumberGenerator, build_data : &mut BuilderMap){
-=======
     fn water_and_piers(&mut self, rng: &mut rltk::RandomNumberGenerator, build_data : &mut BuilderMap) {
->>>>>>> cbbafa4536ac4cc34a245e60b47b959c27bc3765
         let mut n = (rng.roll_dice(1, 65535) as f32) / 65535f32;
         let mut water_width : Vec<i32> = Vec::new();
         for y in 0..build_data.height {
             let n_water = (f32::sin(n) * 10.0) as i32 + 14 + rng.roll_dice(1, 6);
             water_width.push(n_water);
             n += 0.1;
-<<<<<<< HEAD
-            for x in 0..n_water+3 {
-=======
             for x in 0..n_water {
                 let idx = build_data.map.xy_idx(x, y);
                 build_data.map.tiles[idx] = TileType::DeepWater;
             }
             for x in n_water .. n_water+3 {
->>>>>>> cbbafa4536ac4cc34a245e60b47b959c27bc3765
                 let idx = build_data.map.xy_idx(x, y);
                 build_data.map.tiles[idx] = TileType::ShallowWater;
             }
         }
         build_data.take_snapshot();
 
-<<<<<<< HEAD
-    // Add piers
-    for _i in 0..rng.roll_dice(1, 4)+6 {
-        let y = rng.roll_dice(1, build_data.height)-1;
-        for x in 2 + rng.roll_dice(1, 6) .. water_width[y as usize] + 4 {
-            let idx = build_data.map.xy_idx(x, y);
-            build_data.map.tiles[idx] = TileType::WoodFloor;
-            }
-        }
-    build_data.take_snapshot();
-    }
-}
-=======
         // Add piers
         for _i in 0..rng.roll_dice(1, 4)+6 {
             let y = rng.roll_dice(1, build_data.height)-1;
@@ -132,4 +111,3 @@ impl TownBuilder {
 
     (available_building_tiles, wall_gap_y)
 }}
->>>>>>> cbbafa4536ac4cc34a245e60b47b959c27bc3765

@@ -267,17 +267,6 @@ fn random_shape_builder(rng: &mut rltk::RandomNumberGenerator, builder : &mut Bu
     builder.with(DistantExit::new());
 }
 
-<<<<<<< HEAD
-pub fn level_builder(new_depth: i32, rng: &mut rltk::RandomNumberGenerator, width: i32, height: i32) -> BuilderChain {
-    rltk::console::log(format!("Depth: {}", new_depth));
-    match new_depth {
-        1 => town_builder(new_depth, rng, width, height),
-        _ => random_builder(new_depth, rng, width, height)
-    }
-}
-=======
->>>>>>> cbbafa4536ac4cc34a245e60b47b959c27bc3765
-
 pub fn random_builder(new_depth: i32, rng: &mut rltk::RandomNumberGenerator, width: i32, height: i32) -> BuilderChain {
     let mut builder = BuilderChain::new(new_depth, width, height);
     let type_roll = rng.roll_dice(1, 2);
