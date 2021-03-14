@@ -17,8 +17,8 @@ pub enum TileType {
 pub fn tile_walkable(tt : TileType) -> bool {
     match tt {
         TileType::Floor | TileType::DownStairs | TileType::Grass |
-        TileType::ShallowWater | TileType::WoodFloor | TileType::Bridge | TileType::Gravel
-            => true,
+        TileType::ShallowWater | TileType::WoodFloor | TileType::Bridge | TileType::Gravel | TileType::Road
+        => true,
         _ => false        
     }
 }
