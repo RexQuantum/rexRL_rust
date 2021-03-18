@@ -19,7 +19,7 @@ impl InitialMapBuilder for TownBuilder {
 impl TownBuilder {
     pub fn new() -> Box<TownBuilder> {
         Box::new(TownBuilder{})
-    }
+    } 
 
     pub fn build_rooms(&mut self, rng: &mut rltk::RandomNumberGenerator, build_data : &mut BuilderMap) {
         self.grass_layer(build_data);
