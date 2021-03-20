@@ -1,4 +1,4 @@
-use super::{ InitialMapBuilder, BuilderMap, Rect, TileType };
+use super::{ InitialMapBuilder, BuilderMap, Rect, TileType, draw_corridor };
 use rltk::RandomNumberGenerator;
 
 pub struct BspDungeonBuilder {
@@ -43,10 +43,10 @@ impl BspDungeonBuilder {
             n_rooms += 1;
         }
 
-        /*
         // Now we sort the rooms
-        rooms.sort_by(|a,b| a.x1.cmp(&b.x1) );
+        //rooms.sort_by(|a,b| a.x1.cmp(&b.x1) );
         // Now we want corridors
+        
         for i in 0..rooms.len()-1 {
             let room = rooms[i];
             let next_room = rooms[i+1];
@@ -56,7 +56,7 @@ impl BspDungeonBuilder {
             let end_y = next_room.y1 + (rng.roll_dice(1, i32::abs(next_room.y1 - next_room.y2))-1);
             draw_corridor(&mut build_data.map, start_x, start_y, end_x, end_y);
             build_data.take_snapshot();
-        }*/
+        }
         build_data.rooms = Some(rooms);
     }
 

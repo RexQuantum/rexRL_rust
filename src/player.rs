@@ -169,13 +169,14 @@ pub fn player_input(gs: &mut State, ctx: &mut Rltk) -> RunState {
             VirtualKeyCode::Space => return skip_turn(&mut gs.ecs),
 
             // Level changes
-            //#[cfg(target="debug")]
             VirtualKeyCode::Period => {
-                // if try_next_level(&mut gs.ecs) {  
-                // commented out for debugging. Basically, you can dig deeper with ">" while standing on any tile
-                    return RunState::NextLevel;
-                //}
+                 if try_next_level(&mut gs.ecs) {  
+                    return RunState::NextLevel
+                }
             }
+            VirtualKeyCode::Backslash => return RunState::NextLevel,
+        
+
 
             // Picking up items
             VirtualKeyCode::G => get_item(&mut gs.ecs),
@@ -187,7 +188,7 @@ pub fn player_input(gs: &mut State, ctx: &mut Rltk) -> RunState {
             VirtualKeyCode::Escape => return RunState::SaveGame,
 
             _ => { return RunState::AwaitingInput }
-        },
+        }
     }
     RunState::PlayerTurn
 }

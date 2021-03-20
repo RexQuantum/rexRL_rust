@@ -55,7 +55,7 @@ fn get_tile_glyph(idx: usize, map : &Map) -> (rltk::FontCharType, RGB, RGB) {
 
     match map.tiles[idx] {
         TileType::Floor => { glyph = rltk::to_cp437('.'); fg = RGB::from_f32(0.0, 0.5, 0.5); }
-        TileType::WoodFloor => { glyph = rltk::to_cp437('.'); fg = RGB::from_f32(1.0,1.0,1.0); }
+        TileType::WoodFloor => { glyph = rltk::to_cp437('='); fg = RGB::named(rltk::ROSY_BROWN); }
         TileType::Wall => {
             let x = idx as i32 % map.width;
             let y = idx as i32 / map.width;
@@ -63,12 +63,12 @@ fn get_tile_glyph(idx: usize, map : &Map) -> (rltk::FontCharType, RGB, RGB) {
             fg = RGB::from_f32(0.2, 1.0, 1.0);
         }
         TileType::DownStairs => { glyph = rltk::to_cp437('>'); fg = RGB::from_f32(0., 1.0, 1.0); }
-        TileType::Bridge => { glyph = rltk::to_cp437('.'); fg = RGB::named(rltk::CHOCOLATE); }
-        TileType::Road => { glyph = rltk::to_cp437('~'); fg = RGB::named(rltk::GRAY); }
+        TileType::Bridge => { glyph = rltk::to_cp437(':'); fg = RGB::named(rltk::CHOCOLATE); }
+        TileType::Road => { glyph = rltk::to_cp437('~'); fg = RGB::named(rltk::SANDY_BROWN); }
         TileType::Grass => { glyph = rltk::to_cp437('"'); fg = RGB::named(rltk::GREEN); }
         TileType::ShallowWater => { glyph = rltk::to_cp437('≈'); fg = RGB::named(rltk::CYAN); }
         TileType::DeepWater => { glyph = rltk::to_cp437('≈'); fg = RGB::named(rltk::NAVY_BLUE); }
-        TileType::Gravel => { glyph = rltk::to_cp437(';'); fg = RGB::named(rltk::GRAY);}
+        TileType::Gravel => { glyph = rltk::to_cp437(';'); fg = RGB::named(rltk::GREEN_YELLOW);}
     }
     if map.bloodstains.contains(&idx) { bg = RGB::from_f32(0.75, 0., 0.); }
     if !map.visible_tiles[idx] { 

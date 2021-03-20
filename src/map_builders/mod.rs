@@ -44,7 +44,7 @@ use room_based_stairs::RoomBasedStairs;
 use area_starting_points::{AreaStartingPosition, XStart, YStart};
 use cull_unreachable::CullUnreachable;
 use voronoi_spawning::VoronoiSpawning;
-use maze::MazeBuilder;
+// use maze::MazeBuilder;
 use dla::DLABuilder;
 use common::*;
 use room_exploder::RoomExploder;
@@ -102,7 +102,6 @@ impl BuilderChain {
                 rooms: None,
                 corridors: None,
                 history : Vec::new()
-
             }
         }
     }
@@ -206,7 +205,7 @@ fn random_room_builder(rng: &mut rltk::RandomNumberGenerator, builder : &mut Bui
         };
 
         if build_roll !=3{
-            let cspawn_roll = rng.roll_dice(1, 2);
+            let cspawn_roll = rng.roll_dice(1, 1);
             if cspawn_roll == 1 {
                 builder.with(CorridorSpawner::new());
             }
@@ -244,14 +243,14 @@ fn random_shape_builder(rng: &mut rltk::RandomNumberGenerator, builder : &mut Bu
         4 => builder.start_with(DrunkardsWalkBuilder::winding_passages()),
         5 => builder.start_with(DrunkardsWalkBuilder::fat_passages()),
         6 => builder.start_with(DrunkardsWalkBuilder::fearful_symmetry()),
-        7 => builder.start_with(MazeBuilder::new()),
-        8 => builder.start_with(DLABuilder::walk_inwards()),
-        9 => builder.start_with(DLABuilder::walk_outwards()),
-        10 => builder.start_with(DLABuilder::central_attractor()),
-        11 => builder.start_with(DLABuilder::insectoid()),
-        12 => builder.start_with(VoronoiCellBuilder::pythagoras()),
+        7 => builder.start_with(DLABuilder::walk_inwards()),
+        8 => builder.start_with(DLABuilder::walk_outwards()),
+        9 => builder.start_with(DLABuilder::central_attractor()),
+        10 => builder.start_with(DLABuilder::insectoid()),
+        11 => builder.start_with(VoronoiCellBuilder::pythagoras()),
         _ => builder.start_with(VoronoiCellBuilder::manhattan()),
         //_ => builder.start_with(PrefabBuilder::constant(prefab_builder::prefab_levels::WFC_POPULATED)),
+        //7 => builder.start_with(MazeBuilder::new()),
     }
 
     // Set the start to the center and cull

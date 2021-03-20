@@ -24,7 +24,6 @@ pub fn draw_ui(ecs: &World, ctx : &mut Rltk) {
         }
     }
 
-
     let map = ecs.fetch::<Map>();
     let depth = format!("Depth: {}", map.depth);
     ctx.print_color(2, 43, RGB::named(rltk::YELLOW), RGB::named(rltk::BLACK), &depth);
@@ -192,6 +191,7 @@ pub fn drop_item_menu(gs : &mut State, ctx : &mut Rltk) -> (ItemMenuResult, Opti
         }
     }
 }
+
 pub fn remove_item_menu(gs : &mut State, ctx : &mut Rltk) -> (ItemMenuResult, Option<Entity>) {
     let player_entity = gs.ecs.fetch::<Entity>();
     let names = gs.ecs.read_storage::<Name>();
@@ -313,7 +313,7 @@ pub fn main_menu(gs : &mut State, ctx : &mut Rltk) -> MainMenuResult {
     ctx.draw_box_double(24, 18, 31, 10, RGB::named(rltk::WHEAT), RGB::named(rltk::BLACK));
 
     ctx.print_color_centered(19, RGB::named(rltk::YELLOW), RGB::named(rltk::BLACK), "Untitled:");
-    ctx.print_color_centered(21, RGB::named(rltk::YELLOW), RGB::named(rltk::BLACK), "A game by Alexander Diogenes");
+    ctx.print_color_centered(21, RGB::named(rltk::YELLOW), RGB::named(rltk::BLACK), "A game by Rex Baker");
     
     let mut y = 24;
     if let RunState::MainMenu{ menu_selection : selection } = *runstate {
