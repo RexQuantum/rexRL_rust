@@ -1,6 +1,7 @@
 use rltk::{VirtualKeyCode, Rltk, Point};
 use specs::prelude::*;
 use std::cmp::{max, min};
+
 use super::{Position, Player, Viewshed, State, Map, RunState, CombatStats, WantsToMelee, Item,
     gamelog::GameLog, WantsToPickupItem, TileType, Monster, HungerClock, HungerState,
     EntityMoved, Door, BlocksTile, BlocksVisibility, Renderable};
@@ -168,10 +169,12 @@ pub fn player_input(gs: &mut State, ctx: &mut Rltk) -> RunState {
             VirtualKeyCode::Space => return skip_turn(&mut gs.ecs),
 
             // Level changes
+            //#[cfg(target="debug")]
             VirtualKeyCode::Period => {
-                if try_next_level(&mut gs.ecs) {
+                // if try_next_level(&mut gs.ecs) {  
+                // commented out for debugging. Basically, you can dig deeper with ">" while standing on any tile
                     return RunState::NextLevel;
-                }
+                //}
             }
 
             // Picking up items
