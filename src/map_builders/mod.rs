@@ -44,7 +44,7 @@ use room_based_stairs::RoomBasedStairs;
 use area_starting_points::{AreaStartingPosition, XStart, YStart};
 use cull_unreachable::CullUnreachable;
 use voronoi_spawning::VoronoiSpawning;
-// use maze::MazeBuilder;
+use maze::MazeBuilder;
 use dla::DLABuilder;
 use common::*;
 use room_exploder::RoomExploder;
@@ -235,7 +235,7 @@ fn random_room_builder(rng: &mut rltk::RandomNumberGenerator, builder : &mut Bui
 }
 
 fn random_shape_builder(rng: &mut rltk::RandomNumberGenerator, builder : &mut BuilderChain) {
-    let builder_roll = rng.roll_dice(1, 9);
+    let builder_roll = rng.roll_dice(1, 13);
     rltk::console::log(format!("random_shape_builder = [{}]", builder_roll ));
     match builder_roll {
         1 => builder.start_with(CellularAutomataBuilder::new()),
@@ -244,14 +244,14 @@ fn random_shape_builder(rng: &mut rltk::RandomNumberGenerator, builder : &mut Bu
         4 => builder.start_with(DrunkardsWalkBuilder::winding_passages()),
         5 => builder.start_with(DrunkardsWalkBuilder::fat_passages()),
         6 => builder.start_with(DrunkardsWalkBuilder::fearful_symmetry()),
-        //7 => builder.start_with(DLABuilder::walk_inwards()),
-        //8 => builder.start_with(DLABuilder::walk_outwards()),
-        //9 => builder.start_with(DLABuilder::central_attractor()),
-        7 => builder.start_with(DLABuilder::insectoid()),
-        8 => builder.start_with(VoronoiCellBuilder::pythagoras()),
+        7 => builder.start_with(DLABuilder::walk_inwards()),
+        8 => builder.start_with(DLABuilder::walk_outwards()),
+        9 => builder.start_with(DLABuilder::central_attractor()),
+        10 => builder.start_with(DLABuilder::insectoid()),
+        11 => builder.start_with(VoronoiCellBuilder::pythagoras()),
+        12 => builder.start_with(MazeBuilder::new()),
         _ => builder.start_with(VoronoiCellBuilder::manhattan()),
         //_ => builder.start_with(PrefabBuilder::constant(prefab_builder::prefab_levels::WFC_POPULATED)),
-        //7 => builder.start_with(MazeBuilder::new()),
     }
 
     // Set the start to the center and cull
@@ -288,9 +288,9 @@ pub fn random_builder(new_depth: i32, rng: &mut rltk::RandomNumberGenerator, wid
         builder.with(DistantExit::new());
     
 
-    // if rng.roll_dice(1, 10)==1 {
-    //    builder.with(PrefabBuilder::sectional(prefab_builder::prefab_sections::UNDERGROUND_FORT));
-    // }
+     if rng.roll_dice(1, 10)==1 {
+        builder.with(PrefabBuilder::sectional(prefab_builder::prefab_sections::UNDERGROUND_FORT));
+     }
 
     builder.with(DoorPlacement::new());
     builder.with(PrefabBuilder::vaults());
