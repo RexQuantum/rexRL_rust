@@ -169,12 +169,12 @@ fn random_start_position(rng: &mut rltk::RandomNumberGenerator) -> (XStart, YSta
 
 fn random_room_builder(rng: &mut rltk::RandomNumberGenerator, builder : &mut BuilderChain) {
     let build_roll = rng.roll_dice(1, 3);
+    rltk::console::log(format!("random_room_builder = [{}]", build_roll ));
     match build_roll {
         1 => builder.start_with(SimpleMapBuilder::new()),
         2 => builder.start_with(BspDungeonBuilder::new()),
         _ => builder.start_with(BspInteriorBuilder::new())
     }
-
     // BSP Interior still makes holes in the walls
     if build_roll != 3 {
         // Sort by one of the 5 available algorithms
@@ -189,26 +189,26 @@ fn random_room_builder(rng: &mut rltk::RandomNumberGenerator, builder : &mut Bui
 
         builder.with(RoomDrawer::new());
 
-        let modifier_roll = rng.roll_dice(1, 5);
-        match modifier_roll {
-            1 => builder.with(RoomExploder::new()),
-            2 => builder.with(RoomCornerRounder::new()),
-            _ => {}
-        }
-
         let corridor_roll = rng.roll_dice(1, 4);
+        rltk::console::log(format!("corridor_roll = [{}]", corridor_roll ));
         match corridor_roll {
             1 => builder.with(DoglegCorridors::new()),
             2 => builder.with(NearestCorridors::new()),
             3 => builder.with(StraightLineCorridors::new()),
             _ => builder.with(BspCorridors::new())
         };
-
-        if build_roll !=3{
-            let cspawn_roll = rng.roll_dice(1, 1);
+        if build_roll !=3 {
+            let cspawn_roll = rng.roll_dice(1, 2);
             if cspawn_roll == 1 {
                 builder.with(CorridorSpawner::new());
             }
+        }
+
+        let modifier_roll = rng.roll_dice(1, 6);
+        match modifier_roll {
+            1 => builder.with(RoomExploder::new()),
+            2 => builder.with(RoomCornerRounder::new()),
+            _ => {}
         }
     }
 
@@ -224,18 +224,19 @@ fn random_room_builder(rng: &mut rltk::RandomNumberGenerator, builder : &mut Bui
     let exit_roll = rng.roll_dice(1, 2);
     match exit_roll {
         1 => builder.with(RoomBasedStairs::new()),
-        _ => builder.with(DistantExit::new())
+        _ => builder.with(DistantExit::new()),
     }
 
     let spawn_roll = rng.roll_dice(1, 2);
     match spawn_roll {
         1 => builder.with(RoomBasedSpawner::new()),
-        _ => builder.with(VoronoiSpawning::new())
+        _ => builder.with(VoronoiSpawning::new()),
     }
 }
 
 fn random_shape_builder(rng: &mut rltk::RandomNumberGenerator, builder : &mut BuilderChain) {
-    let builder_roll = rng.roll_dice(1, 12);
+    let builder_roll = rng.roll_dice(1, 9);
+    rltk::console::log(format!("random_shape_builder = [{}]", builder_roll ));
     match builder_roll {
         1 => builder.start_with(CellularAutomataBuilder::new()),
         2 => builder.start_with(DrunkardsWalkBuilder::open_area()),
@@ -243,11 +244,11 @@ fn random_shape_builder(rng: &mut rltk::RandomNumberGenerator, builder : &mut Bu
         4 => builder.start_with(DrunkardsWalkBuilder::winding_passages()),
         5 => builder.start_with(DrunkardsWalkBuilder::fat_passages()),
         6 => builder.start_with(DrunkardsWalkBuilder::fearful_symmetry()),
-        7 => builder.start_with(DLABuilder::walk_inwards()),
-        8 => builder.start_with(DLABuilder::walk_outwards()),
-        9 => builder.start_with(DLABuilder::central_attractor()),
-        10 => builder.start_with(DLABuilder::insectoid()),
-        11 => builder.start_with(VoronoiCellBuilder::pythagoras()),
+        //7 => builder.start_with(DLABuilder::walk_inwards()),
+        //8 => builder.start_with(DLABuilder::walk_outwards()),
+        //9 => builder.start_with(DLABuilder::central_attractor()),
+        7 => builder.start_with(DLABuilder::insectoid()),
+        8 => builder.start_with(VoronoiCellBuilder::pythagoras()),
         _ => builder.start_with(VoronoiCellBuilder::manhattan()),
         //_ => builder.start_with(PrefabBuilder::constant(prefab_builder::prefab_levels::WFC_POPULATED)),
         //7 => builder.start_with(MazeBuilder::new()),
@@ -269,9 +270,10 @@ fn random_shape_builder(rng: &mut rltk::RandomNumberGenerator, builder : &mut Bu
 pub fn random_builder(new_depth: i32, rng: &mut rltk::RandomNumberGenerator, width: i32, height: i32) -> BuilderChain {
     let mut builder = BuilderChain::new(new_depth, width, height);
     let type_roll = rng.roll_dice(1, 2);
+    rltk::console::log(format!("type_roll = [{}]", type_roll ));
     match type_roll {
         1 => random_room_builder(rng, &mut builder),
-        _ => random_shape_builder(rng, &mut builder)
+        _ => random_shape_builder(rng, &mut builder),
     }
 
     if rng.roll_dice(1, 3)==1 {
@@ -286,9 +288,9 @@ pub fn random_builder(new_depth: i32, rng: &mut rltk::RandomNumberGenerator, wid
         builder.with(DistantExit::new());
     
 
-    if rng.roll_dice(1, 10)==1 {
-        builder.with(PrefabBuilder::sectional(prefab_builder::prefab_sections::UNDERGROUND_FORT));
-    }
+    // if rng.roll_dice(1, 10)==1 {
+    //    builder.with(PrefabBuilder::sectional(prefab_builder::prefab_sections::UNDERGROUND_FORT));
+    // }
 
     builder.with(DoorPlacement::new());
     builder.with(PrefabBuilder::vaults());
@@ -301,6 +303,6 @@ pub fn level_builder(new_depth: i32, rng: &mut rltk::RandomNumberGenerator, widt
     rltk::console::log(format!("Depth: {}", new_depth));
     match new_depth {
         1 => town_builder(new_depth, rng, width, height),
-        _ => random_builder(new_depth, rng, width, height)
+        _ => random_builder(new_depth, rng, width, height),
     }
 }
