@@ -94,14 +94,14 @@ impl BuilderChain {
             starter: None,
             builders: Vec::new(),
             build_data : BuilderMap {
-                width,
-                height,
                 spawn_list: Vec::new(),
                 map: Map::new(new_depth, width, height),
                 starting_position: None,
                 rooms: None,
                 corridors: None,
-                history : Vec::new()
+                history : Vec::new(),
+                width,
+                height
             }
         }
     }
@@ -169,7 +169,7 @@ fn random_start_position(rng: &mut rltk::RandomNumberGenerator) -> (XStart, YSta
 
 fn random_room_builder(rng: &mut rltk::RandomNumberGenerator, builder : &mut BuilderChain) {
     let build_roll = rng.roll_dice(1, 3);
-    rltk::console::log(format!("random_room_builder = [{}]", build_roll ));
+    //rltk::console::log(format!("random_room_builder = [{}]", build_roll ));
     match build_roll {
         1 => builder.start_with(SimpleMapBuilder::new()),
         2 => builder.start_with(BspDungeonBuilder::new()),
@@ -190,7 +190,7 @@ fn random_room_builder(rng: &mut rltk::RandomNumberGenerator, builder : &mut Bui
         builder.with(RoomDrawer::new());
 
         let corridor_roll = rng.roll_dice(1, 4);
-        rltk::console::log(format!("corridor_roll = [{}]", corridor_roll ));
+        //rltk::console::log(format!("corridor_roll = [{}]", corridor_roll ));
         match corridor_roll {
             1 => builder.with(DoglegCorridors::new()),
             2 => builder.with(NearestCorridors::new()),
@@ -236,7 +236,7 @@ fn random_room_builder(rng: &mut rltk::RandomNumberGenerator, builder : &mut Bui
 
 fn random_shape_builder(rng: &mut rltk::RandomNumberGenerator, builder : &mut BuilderChain) {
     let builder_roll = rng.roll_dice(1, 13);
-    rltk::console::log(format!("random_shape_builder = [{}]", builder_roll ));
+    //rltk::console::log(format!("random_shape_builder = [{}]", builder_roll ));
     match builder_roll {
         1 => builder.start_with(CellularAutomataBuilder::new()),
         2 => builder.start_with(DrunkardsWalkBuilder::open_area()),
@@ -270,7 +270,7 @@ fn random_shape_builder(rng: &mut rltk::RandomNumberGenerator, builder : &mut Bu
 pub fn random_builder(new_depth: i32, rng: &mut rltk::RandomNumberGenerator, width: i32, height: i32) -> BuilderChain {
     let mut builder = BuilderChain::new(new_depth, width, height);
     let type_roll = rng.roll_dice(1, 2);
-    rltk::console::log(format!("type_roll = [{}]", type_roll ));
+    //rltk::console::log(format!("type_roll = [{}]", type_roll ));
     match type_roll {
         1 => random_room_builder(rng, &mut builder),
         _ => random_shape_builder(rng, &mut builder),
@@ -300,7 +300,7 @@ pub fn random_builder(new_depth: i32, rng: &mut rltk::RandomNumberGenerator, wid
 }
 
 pub fn level_builder(new_depth: i32, rng: &mut rltk::RandomNumberGenerator, width: i32, height: i32) -> BuilderChain {
-    rltk::console::log(format!("Depth: {}", new_depth));
+    //rltk::console::log(format!("Depth: {}", new_depth));
     match new_depth {
         1 => town_builder(new_depth, rng, width, height),
         _ => random_builder(new_depth, rng, width, height),
