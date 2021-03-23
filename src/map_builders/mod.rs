@@ -276,7 +276,7 @@ pub fn random_builder(new_depth: i32, rng: &mut rltk::RandomNumberGenerator, wid
         _ => random_shape_builder(rng, &mut builder),
     }
 
-    if rng.roll_dice(1, 3)==1 {
+    if rng.roll_dice(1, 20)==1 {
         builder.with(WaveformCollapseBuilder::new());
 
         // Now set the start to a random starting area
@@ -288,7 +288,7 @@ pub fn random_builder(new_depth: i32, rng: &mut rltk::RandomNumberGenerator, wid
         builder.with(DistantExit::new());
     
 
-     if rng.roll_dice(1, 10)==1 {
+     if rng.roll_dice(1, 20)==1 {
         builder.with(PrefabBuilder::sectional(prefab_builder::prefab_sections::UNDERGROUND_FORT));
      }
 
