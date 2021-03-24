@@ -273,7 +273,7 @@ pub fn random_builder(new_depth: i32, rng: &mut rltk::RandomNumberGenerator, wid
     //rltk::console::log(format!("type_roll = [{}]", type_roll ));
     match type_roll {
         1 => random_room_builder(rng, &mut builder),
-        _ => random_shape_builder(rng, &mut builder),
+        _ => random_shape_builder(rng, &mut builder)
     }
 
     if rng.roll_dice(1, 20)==1 {
@@ -300,9 +300,9 @@ pub fn random_builder(new_depth: i32, rng: &mut rltk::RandomNumberGenerator, wid
 }
 
 pub fn level_builder(new_depth: i32, rng: &mut rltk::RandomNumberGenerator, width: i32, height: i32) -> BuilderChain {
-    //rltk::console::log(format!("Depth: {}", new_depth));
+    rltk::console::log(format!("Depth: {}", new_depth));
     match new_depth {
         1 => town_builder(new_depth, rng, width, height),
-        _ => random_builder(new_depth, rng, width, height),
+        _ => random_builder(new_depth, rng, width, height)
     }
 }
