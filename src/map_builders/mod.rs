@@ -169,12 +169,13 @@ fn random_start_position(rng: &mut rltk::RandomNumberGenerator) -> (XStart, YSta
 
 fn random_room_builder(rng: &mut rltk::RandomNumberGenerator, builder : &mut BuilderChain) {
     let build_roll = rng.roll_dice(1, 3);
-    //rltk::console::log(format!("random_room_builder = [{}]", build_roll ));
     match build_roll {
         1 => builder.start_with(SimpleMapBuilder::new()),
         2 => builder.start_with(BspDungeonBuilder::new()),
         _ => builder.start_with(BspInteriorBuilder::new())
     }
+        
+        rltk::console::log(format!("random_room_builder = [{}]", build_roll ));
     // BSP Interior still makes holes in the walls
     if build_roll != 3 {
         // Sort by one of the 5 available algorithms
