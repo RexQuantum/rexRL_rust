@@ -122,21 +122,20 @@ impl GameState for State {
                 if !SHOW_MAPGEN_VISUALIZER {
                     newrunstate = self.mapgen_next_state.unwrap();
                 } else {
-                ctx.cls();
+                    ctx.cls();
+                    if self.mapgen_index < self.mapgen_history.len() { camera::render_debug_map(&self.mapgen_history[self.mapgen_index], ctx); }
 
-                if self.mapgen_index < self.mapgen_history.len() { camera::render_debug_map(&self.mapgen_history[self.mapgen_index], ctx); }
-
-                self.mapgen_timer += ctx.frame_time_ms;
-                if self.mapgen_timer > 3.2 {
-                    self.mapgen_timer = 0.0;
-                    self.mapgen_index += 1;
-                    if self.mapgen_index >= self.mapgen_history.len() {
-                        //self.mapgen_index -= 1;
-                    newrunstate = self.mapgen_next_state.unwrap(); 
-                   }
+                    self.mapgen_timer += ctx.frame_time_ms;
+                    if self.mapgen_timer > 3.2 {
+                        self.mapgen_timer = 0.0;
+                        self.mapgen_index += 1;
+                        if self.mapgen_index >= self.mapgen_history.len() {
+                            //self.mapgen_index -= 1;
+                            newrunstate = self.mapgen_next_state.unwrap(); 
+                        }
+                    }
                 }
             }
-        }
             RunState::PreRun => {
                 self.run_systems();
                 self.ecs.maintain();
@@ -216,18 +215,18 @@ impl GameState for State {
                 }
             }
             RunState::MainMenu{ .. } => {
-            let result = gui::main_menu(self, ctx);
-            match result {
-                gui::MainMenuResult::NoSelection{ selected } => newrunstate = RunState::MainMenu{ menu_selection: selected },
-                gui::MainMenuResult::Selected{ selected } => {
-                    match selected {
-                        gui::MainMenuSelection::NewGame => newrunstate = RunState::PreRun,
-                        gui::MainMenuSelection::LoadGame => {
-                            saveload_system::load_game(&mut self.ecs);
-                            newrunstate = RunState::AwaitingInput;
-                            saveload_system::delete_save();
-                        }
-                        gui::MainMenuSelection::Quit => { ::std::process::exit(0); }
+                let result = gui::main_menu(self, ctx);
+                match result {
+                    gui::MainMenuResult::NoSelection{ selected } => newrunstate = RunState::MainMenu{ menu_selection: selected },
+                    gui::MainMenuResult::Selected{ selected } => {
+                        match selected {
+                            gui::MainMenuSelection::NewGame => newrunstate = RunState::PreRun,
+                            gui::MainMenuSelection::LoadGame => {
+                                saveload_system::load_game(&mut self.ecs);
+                                newrunstate = RunState::AwaitingInput;
+                                saveload_system::delete_save();
+                            }
+                            gui::MainMenuSelection::Quit => { ::std::process::exit(0); }
                         }
                     }
                 }
@@ -405,7 +404,8 @@ impl State {
 
 fn main() -> rltk::BError {
     use rltk::RltkBuilder;
-    let mut context = RltkBuilder::simple80x50()
+    let mut context = RltkBuilder::simple(80, 60)
+        .unwrap()
         .with_title("Rex is making a game")
         .build()?;
     context.with_post_scanlines(false);
@@ -416,7 +416,7 @@ fn main() -> rltk::BError {
         mapgen_history : Vec::new(),
         mapgen_timer : 0.0
     };
-    // THE REGISTER - Tell the ECS about the components we've created, right after we create the world
+    // THE COMPONENTS REGISTER - Tell the ECS about the components we've created, right after we create the world
     gs.ecs.register::<Position>();
     gs.ecs.register::<Renderable>();
     gs.ecs.register::<Player>();
@@ -470,7 +470,7 @@ fn main() -> rltk::BError {
     gs.ecs.insert(particle_system::ParticleBuilder::new());
     gs.ecs.insert(rex_assets::RexAssets::new());
 
-    
+
     gs.generate_world_map(1);
 
     rltk::main_loop(context, gs)
