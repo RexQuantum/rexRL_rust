@@ -23,11 +23,11 @@ macro_rules! serialize_individually {
 // the #cfg in the next line skips save/load if we compile it for web assmebly.
 // i wanna publish this for web assembly but saving and handling files is screwy and options are limited.
 // one thing at a time; I just don't want to wonder why it doesn't work for wasm when I implement it later.
-#[cfg(target_arch = "wasm32")]
+#[cfg(target_arch = "wasm32-unknown-unknown")]
 pub fn save_game(_ecs : &mut World) {
 }
 
-#[cfg(not(target_arch = "wasm32"))]
+#[cfg(not(target_arch = "wasm32-unknown-unknown"))]
 pub fn save_game(ecs : &mut World) {
     // Create helper
     let mapcopy = ecs.get_mut::<super::map::Map>().unwrap().clone();
