@@ -404,7 +404,7 @@ impl State {
 
 fn main() -> rltk::BError {
     use rltk::RltkBuilder;
-    let mut context = RltkBuilder::simple(80, 60)
+    let mut context = RltkBuilder::simple(80, 50)
         .unwrap()
         .with_title("Rex is making a game")
         .build()?;
