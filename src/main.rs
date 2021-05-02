@@ -466,7 +466,7 @@ fn main() -> rltk::BError {
     let player_entity = spawner::player(&mut gs.ecs, 0, 0);
     gs.ecs.insert(player_entity);
     gs.ecs.insert(RunState::MapGeneration{} );
-    gs.ecs.insert(gamelog::GameLog{ entries : vec!["You wake to unfamiliar surroundings. How long were you out?".to_string() ]});
+    gs.ecs.insert(gamelog::GameLog{ entries : vec!["You awaken under unfamiliar skies".to_string()]});
     gs.ecs.insert(particle_system::ParticleBuilder::new());
     gs.ecs.insert(rex_assets::RexAssets::new());
 
