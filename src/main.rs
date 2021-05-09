@@ -367,7 +367,7 @@ impl State {
         self.mapgen_timer = 0.0;
         self.mapgen_history.clear();
         let mut rng = self.ecs.write_resource::<rltk::RandomNumberGenerator>();
-        let mut builder = map_builders::level_builder(new_depth, &mut rng, 80, 50);
+        let mut builder = map_builders::level_builder(new_depth, &mut rng, 64, 50);
         builder.build_map(&mut rng);
         self.mapgen_history = builder.build_data.history.clone();
         let player_start;
@@ -404,7 +404,7 @@ impl State {
 
 fn main() -> rltk::BError {
     use rltk::RltkBuilder;
-    let mut context = RltkBuilder::simple(80, 60)
+    let mut context = RltkBuilder::simple(80, 50)
         .unwrap()
         .with_title("Rex is making a game")
         .build()?;
@@ -466,7 +466,7 @@ fn main() -> rltk::BError {
     let player_entity = spawner::player(&mut gs.ecs, 0, 0);
     gs.ecs.insert(player_entity);
     gs.ecs.insert(RunState::MapGeneration{} );
-    gs.ecs.insert(gamelog::GameLog{ entries : vec!["You wake to unfamiliar surroundings. How long were you out?".to_string() ]});
+    gs.ecs.insert(gamelog::GameLog{ entries : vec!["You awaken under unfamiliar skies".to_string()]});
     gs.ecs.insert(particle_system::ParticleBuilder::new());
     gs.ecs.insert(rex_assets::RexAssets::new());
 
