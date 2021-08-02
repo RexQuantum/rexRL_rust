@@ -1,9 +1,10 @@
 use rltk::{VirtualKeyCode, Rltk, Point};
 use specs::prelude::*;
-use std::cmp::{max, min};
-use super::{Position, Player, Viewshed, State, Map, RunState, CombatStats, WantsToMelee, Item,
+use std::{cmp::{max, min}, mem::swap};
+
+use super::{Position, Player, Name, Viewshed, State, Map, RunState, CombatStats, WantsToMelee, Item,
     gamelog::GameLog, WantsToPickupItem, TileType, Monster, HungerClock, HungerState,
-    EntityMoved, Door, BlocksTile, BlocksVisibility, Renderable};
+    EntityMoved, Door, BlocksTile, BlocksVisibility, Renderable, Bystander, Vendor};
 
 pub fn try_move_player(delta_x: i32, delta_y: i32, ecs: &mut World) {
     let mut positions = ecs.write_storage::<Position>();
@@ -18,16 +19,44 @@ pub fn try_move_player(delta_x: i32, delta_y: i32, ecs: &mut World) {
     let mut blocks_visibility = ecs.write_storage::<BlocksVisibility>();
     let mut blocks_movement = ecs.write_storage::<BlocksTile>();
     let mut renderables = ecs.write_storage::<Renderable>();
+    let bystanders = ecs.read_storage::<Bystander>();
+    let mut swap_entities : Vec<(Entity, i32, i32)> = Vec::new();
+    let mut log = ecs.write_resource::<GameLog>();
+    let name = ecs.read_storage::<Name>();
+    let vendors = ecs.read_storage::<Vendor>();
 
     for (entity, _player, pos, viewshed) in (&entities, &players, &mut positions, &mut viewsheds).join() {
         if pos.x + delta_x < 1 || pos.x + delta_x > map.width-1 || pos.y + delta_y < 1 || pos.y + delta_y > map.height-1 { return; }
         let destination_idx = map.xy_idx(pos.x + delta_x, pos.y + delta_y);
 
         for potential_target in map.tile_content[destination_idx].iter() {
-            let target = combat_stats.get(*potential_target);
-            if let Some(_target) = target {
-                wants_to_melee.insert(entity, WantsToMelee{ target: *potential_target }).expect("Add target failed");
-                return;
+            let bystander = bystanders.get(*potential_target);
+            let vendor = vendors.get(*potential_target);
+            let swapped_name = name.get(*potential_target);
+
+            if bystander.is_some() || vendor.is_some() {
+                // Let's move the bystander instead of assaulting them
+                swap_entities.push((*potential_target, pos.x, pos.y));
+
+                //Move the player
+                pos.x = min(map.width-1 , max(0, pos.x + delta_x));
+                pos.y = min(map.height-1 , max(0, pos.y + delta_y));
+                entity_moved.insert(entity, EntityMoved{}).expect("Unable to insert marker");
+                if let Some(swapped_name) = swapped_name {
+                    log.entries.push(format!("You quietly nudge {} out of the way", &swapped_name.name));
+                }
+
+                viewshed.dirty = true;
+                let mut ppos = ecs.write_resource::<Point>();
+                ppos.x = pos.x;
+                ppos.y = pos.y;
+
+        } else {
+                let target = combat_stats.get(*potential_target);
+                if let Some(_target) = target {
+                    wants_to_melee.insert(entity, WantsToMelee{ target: *potential_target }).expect("Add target failed");
+                    return;
+                }
             }
             let door = doors.get_mut(*potential_target);
             if let Some(door) = door {
@@ -49,6 +78,14 @@ pub fn try_move_player(delta_x: i32, delta_y: i32, ecs: &mut World) {
             let mut ppos = ecs.write_resource::<Point>();
             ppos.x = pos.x;
             ppos.y = pos.y;
+        }
+    }
+
+    for m in swap_entities.iter() {
+        let their_pos = positions.get_mut(m.0);
+        if let Some(their_pos) = their_pos {
+            their_pos.x = m.1;
+            their_pos.y = m.2;
         }
     }
 }
@@ -169,12 +206,18 @@ pub fn player_input(gs: &mut State, ctx: &mut Rltk) -> RunState {
 
             // Level changes
             VirtualKeyCode::Period => {
-                if try_next_level(&mut gs.ecs) {
-                    return RunState::NextLevel;
+                 if try_next_level(&mut gs.ecs) {  
+                    return RunState::NextLevel
                 }
             }
 
-            // Picking up items
+            // Debug hotkeys
+            VirtualKeyCode::Backslash => return RunState::NextLevel,
+            VirtualKeyCode::M => return RunState::MagicMapReveal{ row : 0},
+
+
+
+            // Inventory controls
             VirtualKeyCode::G => get_item(&mut gs.ecs),
             VirtualKeyCode::I => return RunState::ShowInventory,
             VirtualKeyCode::D => return RunState::ShowDropItem,
@@ -184,7 +227,7 @@ pub fn player_input(gs: &mut State, ctx: &mut Rltk) -> RunState {
             VirtualKeyCode::Escape => return RunState::SaveGame,
 
             _ => { return RunState::AwaitingInput }
-        },
+        }
     }
     RunState::PlayerTurn
 }

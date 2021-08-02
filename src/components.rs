@@ -30,6 +30,9 @@ pub struct Viewshed {
 }
 
 #[derive(Component, Debug, Serialize, Deserialize, Clone)]
+pub struct Vendor {}
+
+#[derive(Component, Debug, Serialize, Deserialize, Clone)]
 pub struct Monster {}
 
 #[derive(Component, Debug, ConvertSaveload, Clone)]
@@ -39,7 +42,7 @@ pub struct Name {
 
 #[derive(Component, Debug, ConvertSaveload, Clone)]
 pub struct FlavorText {
-    pub flavortext : String
+    pub flavor_text : String
 }
 
 #[derive(Component, Debug, Serialize, Deserialize, Clone)]
@@ -199,13 +202,16 @@ pub struct SingleActivation {}
 pub struct BlocksVisibility {}
 
 #[derive(Component, Debug, Serialize, Deserialize, Clone)]
-pub struct Door { 
-    pub open: bool 
+pub struct Door {
+    pub open: bool
 }
+
+#[derive(Component, Debug, Serialize, Deserialize, Clone)]
+pub struct Bystander{}
 
 // Serialization helper code. We need to implement ConvertSaveload for each type that contains an
 // Entity.
-pub struct SerializeMe;
+pub struct SerializeMe{}
 
 // Special component that exists to help serialize the game data
 #[derive(Component, Serialize, Deserialize, Clone)]

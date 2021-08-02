@@ -5,7 +5,7 @@ use super::{CombatStats, Player, gamelog::GameLog, Map, Name, Position, State, I
     Hidden, camera };
 
 pub fn draw_ui(ecs: &World, ctx : &mut Rltk) {
-    ctx.draw_box(0, 43, 79, 16, RGB::named(rltk::WHITE), RGB::named(rltk::BLACK));
+    ctx.draw_box(0, 43, 79, 6, RGB::named(rltk::WHITE), RGB::named(rltk::BLACK));
 
     let combat_stats = ecs.read_storage::<CombatStats>();
     let players = ecs.read_storage::<Player>();
@@ -23,7 +23,6 @@ pub fn draw_ui(ecs: &World, ctx : &mut Rltk) {
             HungerState::Starving => ctx.print_color(71, 42, RGB::named(rltk::RED), RGB::named(rltk::BLACK), "Starving"),
         }
     }
-
 
     let map = ecs.fetch::<Map>();
     let depth = format!("Depth: {}", map.depth);
@@ -192,6 +191,7 @@ pub fn drop_item_menu(gs : &mut State, ctx : &mut Rltk) -> (ItemMenuResult, Opti
         }
     }
 }
+
 pub fn remove_item_menu(gs : &mut State, ctx : &mut Rltk) -> (ItemMenuResult, Option<Entity>) {
     let player_entity = gs.ecs.fetch::<Entity>();
     let names = gs.ecs.read_storage::<Name>();
@@ -283,7 +283,19 @@ pub fn ranged_target(gs : &mut State, ctx : &mut Rltk, range : i32) -> (ItemMenu
         }
     }
 
-    (ItemMenuResult::NoResponse, None)
+
+    match ctx.key {
+        None => (ItemMenuResult::NoResponse, None),
+        Some(key) => {
+            match key {
+                VirtualKeyCode::Escape => { (ItemMenuResult::Cancel, None) }
+                _ => {
+
+                    (ItemMenuResult::NoResponse, None)
+                }
+            }
+        }
+    }
 }
 
 #[derive(PartialEq, Copy, Clone)]
@@ -301,7 +313,7 @@ pub fn main_menu(gs : &mut State, ctx : &mut Rltk) -> MainMenuResult {
     ctx.draw_box_double(24, 18, 31, 10, RGB::named(rltk::WHEAT), RGB::named(rltk::BLACK));
 
     ctx.print_color_centered(19, RGB::named(rltk::YELLOW), RGB::named(rltk::BLACK), "Untitled:");
-    ctx.print_color_centered(21, RGB::named(rltk::YELLOW), RGB::named(rltk::BLACK), "A game by Alexander Diogenes");
+    ctx.print_color_centered(21, RGB::named(rltk::YELLOW), RGB::named(rltk::BLACK), "A game by Rex Diogenes");
     
     let mut y = 24;
     if let RunState::MainMenu{ menu_selection : selection } = *runstate {

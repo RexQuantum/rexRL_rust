@@ -144,7 +144,116 @@
             "defense" : 1,
             "power" : 4
         },
-        "vision_range" : 8
+        "vision_range" : 8,
+        "ai" : "melee"
+    },
+    {
+        "name" : "Sparking Crawler",
+        "renderable" : {
+            "glyph" : "c",
+            "fg" : "#FF0000",
+            "bg" : "#000000",
+            "order" : 1
+        },
+        "blocks_tile" : true,
+        "stats" : {
+            "max_hp" : 1,
+            "hp" : 1,
+            "defense" : 1,
+            "power" : 1
+        },
+        "vision_range" : 8,
+        "ai" : "melee"
+    },
+    {
+        "name" : "Barkeep",
+        "renderable": {
+            "glyph" : "☺",
+            "fg" : "#EE82EE",
+            "bg" : "#000000",
+            "order" : 1
+        },
+        "blocks_tile" : true,
+        "stats" : {
+            "max_hp" : 16,
+            "hp" : 16,
+            "defense" : 1,
+            "power" : 4
+        },
+        "vision_range" : 4,
+        "ai" : "vendor"
+    },
+    {
+        "name" : "Shady Fence",
+        "renderable": {
+            "glyph" : "h",
+            "fg" : "#EE82EE",
+            "bg" : "#000000",
+            "order" : 1
+        },
+        "blocks_tile" : true,
+        "stats" : {
+            "max_hp" : 16,
+            "hp" : 16,
+            "defense" : 1,
+            "power" : 4
+        },
+        "vision_range" : 4,
+        "ai" : "vendor"
+    },
+    {
+        "name" : "Priest Of The Black Stone",
+        "renderable": {
+            "glyph" : "P",
+            "fg" : "#C382B1",
+            "bg" : "#000000",
+            "order" : 1
+        },
+        "blocks_tile" : true,
+        "stats" : {
+            "max_hp" : 16,
+            "hp" : 16,
+            "defense" : 1,
+            "power" : 4
+        },
+        "vision_range" : 4,
+        "ai" : "bystander"
+    },
+    {
+        "name" : "Parishoner Of The Black Stone",
+        "renderable": {
+            "glyph" : "p",
+            "fg" : "#A382B6",
+            "bg" : "#000000",
+            "order" : 1
+        },
+        "blocks_tile" : true,
+        "stats" : {
+            "max_hp" : 16,
+            "hp" : 16,
+            "defense" : 1,
+            "power" : 4
+        },
+        "vision_range" : 4,
+        "ai" : "bystander"
+    },
+    {
+        "name" : "Patron",
+        "renderable": {
+            "glyph" : "☺",
+            "fg" : "#AAAAAA",
+            "bg" : "#000000",
+            "order" : 1
+        },
+        "blocks_tile" : true,
+        "stats" : {
+            "max_hp" : 16,
+            "hp" : 16,
+            "defense" : 1,
+            "power" : 4
+        },
+        "vision_range" : 4,
+        "ai" : "bystander"
     }
 ],
 "props" : [
@@ -176,6 +285,146 @@
         "blocks_visibility" : true,
         "blocks_tile" : true,
         "door_open" : true
+    },
+    {
+        "name" : "Keg",
+        "renderable": {
+            "glyph" : "φ",
+            "fg" : "#AAAAAA",
+            "bg" : "#000000",
+            "order" : 2
+        },
+        "hidden" : false
+    },
+    {
+        "name" : "Table",
+        "renderable": {
+            "glyph" : "╦",
+            "fg" : "#AAAAAA",
+            "bg" : "#000000",
+            "order" : 2
+        },
+        "hidden" : false
+    },
+    {
+        "name" : "Chair",
+        "renderable": {
+            "glyph" : "└",
+            "fg" : "#AAAAAA",
+            "bg" : "#000000",
+            "order" : 2
+        },
+        "hidden" : false
+    },
+    {
+        "name" : "Candle",
+        "renderable": {
+            "glyph" : "Ä",
+            "fg" : "#FFA500",
+            "bg" : "#000000",
+            "order" : 2
+        },
+        "hidden" : false
+    },
+    {
+        "name" : "Anvil",
+        "renderable": {
+            "glyph" : "╔",
+            "fg" : "#AAAAAA",
+            "bg" : "#000000",
+            "order" : 2
+        },
+        "hidden" : false
+    },
+    {
+        "name" : "Water Trough",
+        "renderable": {
+            "glyph" : "•",
+            "fg" : "#5555FF",
+            "bg" : "#000000",
+            "order" : 2
+        },
+        "hidden" : false
+    },
+    {
+        "name" : "Weapon Rack",
+        "renderable": {
+            "glyph" : "π",
+            "fg" : "#FFD700",
+            "bg" : "#000000",
+            "order" : 2
+        },
+        "hidden" : false
+    },
+    {
+        "name" : "Armor Stand",
+        "renderable": {
+            "glyph" : "⌠",
+            "fg" : "#FFFFFF",
+            "bg" : "#000000",
+            "order" : 2
+        },
+        "hidden" : false
+    },
+    {
+        "name" : "Chemistry Set",
+        "renderable": {
+            "glyph" : "δ",
+            "fg" : "#00FFFF",
+            "bg" : "#000000",
+            "order" : 2
+        },
+        "hidden" : false
+    },
+    {
+        "name" : "Dead Thing",
+        "renderable": {
+            "glyph" : "☻",
+            "fg" : "#AA0000",
+            "bg" : "#000000",
+            "order" : 2
+        },
+        "hidden" : false
+    },
+    {
+        "name" : "Cabinet",
+        "renderable": {
+            "glyph" : "∩",
+            "fg" : "#805A46",
+            "bg" : "#000000",
+            "order" : 2
+        },
+        "hidden" : false
+    },
+    {
+        "name" : "Bed",
+        "renderable": {
+            "glyph" : "8",
+            "fg" : "#805A46",
+            "bg" : "#000000",
+            "order" : 2
+        },
+        "hidden" : false
+    },
+    {
+        "name" : "Loom",
+        "renderable": {
+            "glyph" : "≡",
+            "fg" : "#805A46",
+            "bg" : "#000000",
+            "order" : 2
+        },
+        "hidden" : false
+    },
+    {
+        "name" : "Hide Rack",
+        "renderable": {
+            "glyph" : "π",
+            "fg" : "#805A46",
+            "bg" : "#000000",
+            "order" : 2
+        },
+        "hidden" : false
     }
 ]
 }

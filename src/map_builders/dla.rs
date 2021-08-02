@@ -31,7 +31,7 @@ impl DLABuilder {
     pub fn new() -> Box<DLABuilder> {
         Box::new(DLABuilder{
             algorithm: DLAAlgorithm::WalkInwards,
-            brush_size: 2,
+            brush_size: 3,
             symmetry: Symmetry::None,
             floor_percent: 0.25,
         })
@@ -41,7 +41,7 @@ impl DLABuilder {
     pub fn walk_inwards() -> Box<DLABuilder> {
         Box::new(DLABuilder{
             algorithm: DLAAlgorithm::WalkInwards,
-            brush_size: 1,
+            brush_size: 4,
             symmetry: Symmetry::None,
             floor_percent: 0.25,
         })
@@ -51,7 +51,7 @@ impl DLABuilder {
     pub fn walk_outwards() -> Box<DLABuilder> {
         Box::new(DLABuilder{
             algorithm: DLAAlgorithm::WalkOutwards,
-            brush_size: 2,
+            brush_size: 4,
             symmetry: Symmetry::None,
             floor_percent: 0.25,
         })
@@ -61,7 +61,7 @@ impl DLABuilder {
     pub fn central_attractor() -> Box<DLABuilder> {
         Box::new(DLABuilder{
             algorithm: DLAAlgorithm::CentralAttractor,
-            brush_size: 2,
+            brush_size: 4,
             symmetry: Symmetry::None,
             floor_percent: 0.25,
         })
@@ -71,7 +71,7 @@ impl DLABuilder {
     pub fn insectoid() -> Box<DLABuilder> {
         Box::new(DLABuilder{
             algorithm: DLAAlgorithm::CentralAttractor,
-            brush_size: 2,
+            brush_size: 4,
             symmetry: Symmetry::Horizontal,
             floor_percent: 0.25,
         })

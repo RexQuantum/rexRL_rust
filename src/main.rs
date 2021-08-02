@@ -42,7 +42,8 @@ extern crate lazy_static;
 const SHOW_MAPGEN_VISUALIZER : bool = true;
 
 #[derive(PartialEq, Copy, Clone)]
-pub enum RunState { AwaitingInput,
+pub enum RunState { 
+    AwaitingInput,
     PreRun,
     PlayerTurn,
     MonsterTurn,
@@ -113,7 +114,7 @@ impl GameState for State {
             RunState::GameOver{..} => {}
             _ => {
                 camera::render_camera(&self.ecs, ctx);
-                gui::draw_ui(&self.ecs, ctx);                
+                gui::draw_ui(&self.ecs, ctx);
             }
         }
 
@@ -122,21 +123,20 @@ impl GameState for State {
                 if !SHOW_MAPGEN_VISUALIZER {
                     newrunstate = self.mapgen_next_state.unwrap();
                 } else {
-                ctx.cls();
+                    ctx.cls();
+                    if self.mapgen_index < self.mapgen_history.len() { camera::render_debug_map(&self.mapgen_history[self.mapgen_index], ctx); }
 
-                if self.mapgen_index < self.mapgen_history.len() { camera::render_debug_map(&self.mapgen_history[self.mapgen_index], ctx); }
-
-                self.mapgen_timer += ctx.frame_time_ms;
-                if self.mapgen_timer > 33.7 {
-                    self.mapgen_timer = 0.0;
-                    self.mapgen_index += 1;
-                    if self.mapgen_index >= self.mapgen_history.len() {
-                    //self.mapgen_index -= 1;
-                    newrunstate = self.mapgen_next_state.unwrap(); 
-                   }
+                    self.mapgen_timer += ctx.frame_time_ms;
+                    if self.mapgen_timer > 3.2 {
+                        self.mapgen_timer = 0.0;
+                        self.mapgen_index += 1;
+                        if self.mapgen_index >= self.mapgen_history.len() {
+                            //self.mapgen_index -= 1;
+                            newrunstate = self.mapgen_next_state.unwrap(); 
+                        }
+                    }
                 }
             }
-        }
             RunState::PreRun => {
                 self.run_systems();
                 self.ecs.maintain();
@@ -216,18 +216,20 @@ impl GameState for State {
                 }
             }
             RunState::MainMenu{ .. } => {
-            let result = gui::main_menu(self, ctx);
-            match result {
-                gui::MainMenuResult::NoSelection{ selected } => newrunstate = RunState::MainMenu{ menu_selection: selected },
-                gui::MainMenuResult::Selected{ selected } => {
-                    match selected {
-                        gui::MainMenuSelection::NewGame => newrunstate = RunState::PreRun,
-                        gui::MainMenuSelection::LoadGame => {
-                            saveload_system::load_game(&mut self.ecs);
-                            newrunstate = RunState::AwaitingInput;
-                            saveload_system::delete_save();
+                let result = gui::main_menu(self, ctx);
+                match result {
+                    gui::MainMenuResult::NoSelection{ selected } => newrunstate = RunState::MainMenu{ menu_selection: selected },
+                    gui::MainMenuResult::Selected{ selected } => {
+                        match selected {
+                            gui::MainMenuSelection::NewGame => {
+                                newrunstate = RunState::PreRun;
                         }
-                        gui::MainMenuSelection::Quit => { ::std::process::exit(0); }
+                            gui::MainMenuSelection::LoadGame => {
+                                saveload_system::load_game(&mut self.ecs);
+                                newrunstate = RunState::AwaitingInput;
+                                saveload_system::delete_save();
+                            }
+                            gui::MainMenuSelection::Quit => { ::std::process::exit(0); }
                         }
                     }
                 }
@@ -265,7 +267,6 @@ impl GameState for State {
                 }
             }
         }
-
         {
         let mut runwriter = self.ecs.write_resource::<RunState>();
         *runwriter = newrunstate;
@@ -321,7 +322,6 @@ impl State {
         for target in to_delete {
             self.ecs.delete_entity(target).expect("Unable to delete entity");
         }
-    
         // Build a new map and place the player
         let current_depth;
         {
@@ -329,7 +329,6 @@ impl State {
             current_depth = worldmap_resource.depth;
         }
         self.generate_world_map(current_depth + 1);
-    
         // Notify the player and give them some health
         let player_entity = self.ecs.fetch::<Entity>();
         let mut gamelog = self.ecs.fetch_mut::<gamelog::GameLog>();
@@ -337,7 +336,7 @@ impl State {
         let mut player_health_store = self.ecs.write_storage::<CombatStats>();
         let player_health = player_health_store.get_mut(*player_entity);
         if let Some(player_health) = player_health {
-            player_health.hp = i32::max(player_health.hp, player_health.max_hp / 2);
+            player_health.hp = i32::max(player_health.hp, player_health.max_hp);
         }
     }
 
@@ -351,14 +350,12 @@ impl State {
         for del in to_delete.iter() {
             self.ecs.delete_entity(*del).expect("Deletion failed");
         }
-    
         // Spawn a new player
         {
             let player_entity = spawner::player(&mut self.ecs, 0, 0);
             let mut player_entity_writer = self.ecs.write_resource::<Entity>();
             *player_entity_writer = player_entity;
         }
-    
         // Build a new map and place the player
         self.generate_world_map(1);
     }
@@ -368,9 +365,8 @@ impl State {
         self.mapgen_timer = 0.0;
         self.mapgen_history.clear();
         let mut rng = self.ecs.write_resource::<rltk::RandomNumberGenerator>();
-        let mut builder = map_builders::random_builder(new_depth, &mut rng, 64, 50);
+        let mut builder = map_builders::level_builder(new_depth, &mut rng, 80, 50);
         builder.build_map(&mut rng);
-        std::mem::drop(rng);
         self.mapgen_history = builder.build_data.history.clone();
         let player_start;
         {
@@ -378,10 +374,11 @@ impl State {
             *worldmap_resource = builder.build_data.map.clone();
             player_start = builder.build_data.starting_position.as_mut().unwrap().clone();
         }
-    
+
         // Spawn bad guys
+        std::mem::drop(rng);
         builder.spawn_entities(&mut self.ecs);
-    
+
         // Place the player and update resources
         let (player_x, player_y) = (player_start.x, player_start.y);
         let mut player_position = self.ecs.write_resource::<Point>();
@@ -393,19 +390,20 @@ impl State {
             player_pos_comp.x = player_x;
             player_pos_comp.y = player_y;
         }
-    
+
         // Mark the player's visibility as dirty
         let mut viewshed_components = self.ecs.write_storage::<Viewshed>();
         let vs = viewshed_components.get_mut(*player_entity);
         if let Some(vs) = vs {
             vs.dirty = true;
-        } 
+        }
     }
 }
 
 fn main() -> rltk::BError {
     use rltk::RltkBuilder;
-    let mut context = RltkBuilder::simple80x50()
+    let mut context = RltkBuilder::simple(80, 50)
+        .unwrap()
         .with_title("Rex is making a game")
         .build()?;
     context.with_post_scanlines(false);
@@ -416,7 +414,7 @@ fn main() -> rltk::BError {
         mapgen_history : Vec::new(),
         mapgen_timer : 0.0
     };
-    // THE REGISTER - Tell the ECS about the components we've created, right after we create the world
+    // THE COMPONENTS REGISTER - Tell the ECS about the components we've created, right after we create the world
     gs.ecs.register::<Position>();
     gs.ecs.register::<Renderable>();
     gs.ecs.register::<Player>();
@@ -455,6 +453,8 @@ fn main() -> rltk::BError {
     gs.ecs.register::<SingleActivation>();
     gs.ecs.register::<BlocksVisibility>();
     gs.ecs.register::<Door>();
+    gs.ecs.register::<Bystander>();
+    gs.ecs.register::<Vendor>();
 
     gs.ecs.insert(SimpleMarkerAllocator::<SerializeMe>::new());
 
@@ -466,11 +466,11 @@ fn main() -> rltk::BError {
     let player_entity = spawner::player(&mut gs.ecs, 0, 0);
     gs.ecs.insert(player_entity);
     gs.ecs.insert(RunState::MapGeneration{} );
-    gs.ecs.insert(gamelog::GameLog{ entries : vec!["You wake to unfamiliar surroundings. How long were you out?".to_string() ]});
+    gs.ecs.insert(gamelog::GameLog{ entries : vec!["You recognize neither the walls nor sounds to which you awaken.".to_string()]});
     gs.ecs.insert(particle_system::ParticleBuilder::new());
     gs.ecs.insert(rex_assets::RexAssets::new());
 
-    
+
     gs.generate_world_map(1);
 
     rltk::main_loop(context, gs)

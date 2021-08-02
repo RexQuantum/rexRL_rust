@@ -23,7 +23,8 @@ macro_rules! serialize_individually {
 // the #cfg in the next line skips save/load if we compile it for web assmebly.
 // i wanna publish this for web assembly but saving and handling files is screwy and options are limited.
 // one thing at a time; I just don't want to wonder why it doesn't work for wasm when I implement it later.
-#[cfg(target_arch = "wasm32-unknown-unknown")]
+
+#[cfg(target_arch = "wasm32")]
 pub fn save_game(_ecs : &mut World) {
 }
 
@@ -43,46 +44,12 @@ pub fn save_game(ecs : &mut World) {
 
         let writer = File::create("./savegame.json").unwrap();
         let mut serializer = serde_json::Serializer::new(writer);
-        serialize_individually!(ecs,
-                                serializer,
-                                data,
-                                Position,
-                                Renderable,
-                                Player,
-                                Viewshed,
-                                Monster,
-                                Name,
-                                BlocksTile,
-                                CombatStats,
-                                SufferDamage,
-                                WantsToMelee,
-                                Item,
-                                Consumable,
-                                Ranged,
-                                InflictsDamage,
-                                AreaOfEffect,
-                                Confusion,
-                                ProvidesHealing,
-                                InBackpack,
-                                WantsToPickupItem,
-                                WantsToUseItem,
-                                WantsToDropItem,
-                                SerializationHelper,
-                                Equippable,
-                                Equipped,
-                                MeleePowerBonus,
-                                DefenseBonus,
-                                WantsToRemoveItem,
-                                ParticleLifetime,
-                                HungerClock,
-                                ProvidesFood,
-                                MagicMapper,
-                                Hidden,
-                                EntryTrigger,
-                                EntityMoved,
-                                SingleActivation,
-                                Door,
-                                BlocksVisibility
+        serialize_individually!(ecs, serializer, data, Position, Renderable, Player, Viewshed, Monster,
+            Name, BlocksTile, CombatStats, SufferDamage, WantsToMelee, Item, Consumable, Ranged, InflictsDamage,
+            AreaOfEffect, Confusion, ProvidesHealing, InBackpack, WantsToPickupItem, WantsToUseItem,
+            WantsToDropItem, SerializationHelper, Equippable, Equipped, MeleePowerBonus, DefenseBonus,
+            WantsToRemoveItem, ParticleLifetime, HungerClock, ProvidesFood, MagicMapper, Hidden,
+            EntryTrigger, EntityMoved, SingleActivation, Door, BlocksVisibility, Bystander, Vendor
         );
     }
     // Clean up
@@ -131,7 +98,7 @@ pub fn load_game(ecs: &mut World) {
             AreaOfEffect, Confusion, ProvidesHealing, InBackpack, WantsToPickupItem, WantsToUseItem,
             WantsToDropItem, SerializationHelper, Equippable, Equipped, MeleePowerBonus, DefenseBonus, 
             WantsToRemoveItem, ParticleLifetime, HungerClock, ProvidesFood, MagicMapper, Hidden,
-            EntryTrigger, EntityMoved, SingleActivation, Door, BlocksVisibility
+            EntryTrigger, EntityMoved, SingleActivation, Door, BlocksVisibility, Bystander, Vendor
         );
     }
 

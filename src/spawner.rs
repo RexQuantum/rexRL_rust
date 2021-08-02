@@ -5,7 +5,7 @@ random_table::RandomTable, HungerClock, SerializeMe, HungerState, Map, TileType,
 use specs::saveload::{MarkedBuilder, SimpleMarker};
 use std::collections::HashMap;
 
-/// Spawns the player and returns his/her entity object.
+/// Spawns the player and returns their entity object.
 pub fn player(ecs : &mut World, player_x : i32, player_y : i32) -> Entity {
     ecs
         .create_entity()
@@ -82,7 +82,7 @@ pub fn spawn_entity(ecs: &mut World, spawn : &(&usize, &String)) {
     let y = (*spawn.0 / width) as i32;
     std::mem::drop(map);
 
-    let spawn_result = spawn_named_entity(&RAWS.lock().unwrap(), ecs.create_entity(), &spawn.1, SpawnType::AtPosition{ x, y});
+    let spawn_result = spawn_named_entity(&RAWS.lock().unwrap(), ecs.create_entity(), &spawn.1, SpawnType::AtPosition{ x, y });
     if spawn_result.is_some() {
         return;
     }
