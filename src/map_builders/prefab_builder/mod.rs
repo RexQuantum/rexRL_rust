@@ -89,7 +89,7 @@ impl PrefabBuilder {
                 build_data.starting_position = Some(Position{ x:x as i32, y:y as i32 });
             }
             '>' => build_data.map.tiles[idx] = TileType::DownStairs,
-            'C' => {
+            'c' => {
                 build_data.map.tiles[idx] = TileType::Floor;
                 build_data.spawn_list.push((idx, "Writhing Circuitry".to_string()));
             }
@@ -204,7 +204,7 @@ impl PrefabBuilder {
 
     fn apply_room_vaults(&mut self, rng : &mut RandomNumberGenerator, build_data : &mut BuilderMap) {
         use prefab_rooms::*;
-
+ 
         // Apply the previous builder, and keep all entities it spawns (for now)
         self.apply_previous_iteration(|_x,_y| true, rng, build_data);
 
@@ -213,7 +213,7 @@ impl PrefabBuilder {
         if vault_roll < 4 { return; }
 
         // Note that this is a place-holder and will be moved out of this function
-        let master_vault_list = vec![TOTALLY_NOT_A_TRAP, CHECKERBOARD, SILLY_SMILE];
+        let master_vault_list = vec![TOTALLY_NOT_A_TRAP, CHECKERBOARD];
 
         // Filter the vault list down to ones that are applicable to the current depth
         let mut possible_vaults : Vec<&PrefabRoom> = master_vault_list

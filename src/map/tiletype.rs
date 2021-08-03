@@ -19,7 +19,7 @@ pub fn tile_walkable(tt : TileType) -> bool {
         TileType::Floor | TileType::DownStairs | TileType::Grass |
         TileType::ShallowWater | TileType::WoodFloor | TileType::Bridge | TileType::Gravel | TileType::Road
         => true,
-        _ => false        
+        _ => false
     }
 }
 

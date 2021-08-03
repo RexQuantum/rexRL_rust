@@ -24,7 +24,7 @@ impl WaveformCollapseBuilder {
     }
 
     fn build(&mut self, rng : &mut RandomNumberGenerator, build_data : &mut BuilderMap) {
-        const CHUNK_SIZE :i32 = 4;
+        const CHUNK_SIZE :i32 = 8;
         build_data.take_snapshot();
 
         let patterns = build_patterns(&build_data.map, CHUNK_SIZE, true, true);
