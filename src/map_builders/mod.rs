@@ -59,6 +59,9 @@ use room_corridor_spawner::CorridorSpawner;
 use door_placement::*;
 use town::town_builder;
 
+// This is our shared map state. BuilderMap is used when we want to pass
+// data between different map builders, rather than each map builder defining
+// its own copies of shared data
 pub struct BuilderMap {
     pub spawn_list : Vec<(usize, String)>,
     pub map : Map,
@@ -82,7 +85,7 @@ impl BuilderMap {
     }
 }
 
-//  Previously, we've passed MapBuilder classes around, each capable of building previous maps. 
+//  Previously, we've passed MapBuilder classes around, each capable of building previous maps.
 //  Since we've concluded that this is a poor idea, and defined the syntax we want, we'll make a replacement.
 //  The BuilderChain is a master builder - it controls the whole build process. To this end, we'll add the BuilderChain type:
 pub struct BuilderChain {
@@ -118,7 +121,7 @@ impl BuilderChain {
 
 // Simply add the meta-builder to the builder vector. Since vectors remain
 // in the order in which you add to them,
-// the operations willremain sorted appropriately.
+// the operations will remain sorted appropriately.
     pub fn with(&mut self, metabuilder : Box<dyn MetaMapBuilder>) {
         self.builders.push(metabuilder);
     }

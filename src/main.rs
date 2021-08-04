@@ -402,7 +402,7 @@ impl State {
 
 fn main() -> rltk::BError {
     use rltk::RltkBuilder;
-    let mut context = RltkBuilder::simple(80, 50)
+    let mut context = RltkBuilder::simple(80, 60)
         .unwrap()
         .with_title("Rex is making a game")
         .build()?;
@@ -460,13 +460,13 @@ fn main() -> rltk::BError {
 
     raws::load_raws();
 
-    gs.ecs.insert(Map::new(1, 64, 64));
+    gs.ecs.insert(Map::new(1, 80, 60));
     gs.ecs.insert(Point::new(0, 0));
     gs.ecs.insert(rltk::RandomNumberGenerator::new());
     let player_entity = spawner::player(&mut gs.ecs, 0, 0);
     gs.ecs.insert(player_entity);
     gs.ecs.insert(RunState::MapGeneration{} );
-    gs.ecs.insert(gamelog::GameLog{ entries : vec!["You recognize neither the walls nor sounds to which you awaken.".to_string()]});
+    gs.ecs.insert(gamelog::GameLog{ entries : vec!["You recognize neither the sights nor sounds to which you awaken.".to_string()]});
     gs.ecs.insert(particle_system::ParticleBuilder::new());
     gs.ecs.insert(rex_assets::RexAssets::new());
 
