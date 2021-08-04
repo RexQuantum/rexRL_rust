@@ -1,6 +1,6 @@
 use rltk::{VirtualKeyCode, Rltk, Point};
 use specs::prelude::*;
-use std::{cmp::{max, min}, mem::swap};
+use std::{cmp::{max, min}};
 
 use super::{Position, Player, Name, Viewshed, State, Map, RunState, CombatStats, WantsToMelee, Item,
     gamelog::GameLog, WantsToPickupItem, TileType, Monster, HungerClock, HungerState,
