@@ -4,11 +4,11 @@
     { "name" : "Repair Pack", "weight" : 4, "min_depth" : 0, "max_depth" : 100 },
     { "name" : "Beam Cell", "weight" : 4, "min_depth" : 0, "max_depth" : 100 },
     { "name" : "Nutrient Brick", "weight" : 6, "min_depth" : 0, "max_depth" : 100 },
-    { "name" : "Seismic Mapper", "weight" : 3, "min_depth" : 0, "max_depth" : 100 },
+    { "name" : "Seismic Mapper", "weight" : 2, "min_depth" : 0, "max_depth" : 100 },
     { "name" : "Incendiary Grenade", "weight" : 4, "min_depth" : 0, "max_depth" : 100 },
-    { "name" : "Scrambler Grenade", "weight" : 2, "min_depth" : 0, "max_depth" : 100 },
-    { "name" : "Rusted Knife", "weight" : 10, "min_depth" : 0, "max_depth" : 100 },
-    { "name" : "Shield", "weight" : 10, "min_depth" : 0, "max_depth" : 100 },
+    { "name" : "Scrambler Grenade", "weight" : 4, "min_depth" : 0, "max_depth" : 100 },
+    { "name" : "Rusted Knife", "weight" : 5, "min_depth" : 0, "max_depth" : 100 },
+    { "name" : "Shield", "weight" : 5, "min_depth" : 0, "max_depth" : 100 },
     { "name" : "Spike Trap", "weight" : 5, "min_depth" : 0, "max_depth" : 100 }
 ],
 "items" : [

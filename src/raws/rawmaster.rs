@@ -5,7 +5,9 @@ use super::{Raws};
 use crate::random_table::{RandomTable};
 
 pub enum SpawnType {
-    AtPosition { x: i32, y: i32 }
+    AtPosition { x: i32, y: i32 },
+    //Equipped { by: Entity},
+    //Carried { by : Entity}
 }
 
 pub struct RawMaster {
