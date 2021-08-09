@@ -21,7 +21,7 @@ impl <'a> System<'a> for BystanderAI {
         if *runstate != RunState::MonsterTurn { return; }
 
         for (entity, mut viewshed, _bystander, mut pos) in (&entities, &mut viewshed, &bystander, &mut position).join() {
-            //Attempt to move any bystanders in the entity list randomly
+            //Attempt to move any bystanders in the entity list randomly, if they're within the viewshed of the player
             let mut x = pos.x;
             let mut y = pos.y;
             let move_roll = rng.roll_dice(1, 5);
