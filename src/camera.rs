@@ -116,7 +116,7 @@ fn is_revealed_and_wall(map: &Map, x: i32, y: i32) -> bool {
 pub fn get_screen_bounds(ecs: &World, _ctx : &mut Rltk) -> (i32, i32, i32, i32) {
     let player_pos = ecs.fetch::<Point>();
     // let (x_chars, y_chars) = ctx.get_char_size();
-    let (x_chars, y_chars) = (50, 48);
+    let (x_chars, y_chars) = (78, 48);
 
     let center_x = (x_chars / 2) as i32;
     let center_y = (y_chars / 2) as i32;
@@ -131,7 +131,7 @@ pub fn get_screen_bounds(ecs: &World, _ctx : &mut Rltk) -> (i32, i32, i32, i32) 
 
 pub fn render_debug_map(map : &Map, ctx : &mut Rltk) {
     let player_pos = Point::new(map.width / 2, map.height / 2);
-    let (x_chars, y_chars) = (50,60);
+    let (x_chars, y_chars) = (78,60);
 
     let center_x = (x_chars / 2) as i32;
     let center_y = (y_chars / 2) as i32;
