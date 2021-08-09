@@ -5,7 +5,7 @@ use super::{CombatStats, Player, gamelog::GameLog, Map, Name, Position, State, I
     Hidden, camera };
 
 pub fn draw_ui(ecs: &World, ctx : &mut Rltk) {
-    ctx.draw_box(0, 43, 79, 36, RGB::named(rltk::WHITE), RGB::named(rltk::BLACK));
+    ctx.draw_box(0, 43, 79, 35, RGB::named(rltk::WHITE), RGB::named(rltk::BLACK));
 
     let combat_stats = ecs.read_storage::<CombatStats>();
     let players = ecs.read_storage::<Player>();
