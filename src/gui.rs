@@ -4,6 +4,8 @@ use super::{CombatStats, Player, gamelog::GameLog, Map, Name, Position, State, I
     Viewshed, RunState, Equipped, HungerClock, HungerState, rex_assets::RexAssets,
     Hidden, camera };
 
+
+/* This is the main UI; that is, the boxes, the game log, and the level/depth/health info */
 pub fn draw_ui(ecs: &World, ctx : &mut Rltk) {
     ctx.draw_box(0, 43, 79, 34, RGB::named(rltk::WHITE), RGB::named(rltk::BLACK));
 
@@ -24,11 +26,16 @@ pub fn draw_ui(ecs: &World, ctx : &mut Rltk) {
         }
     }
 
-    let map = ecs.fetch::<Map>();
+    let map = ecs.fetch::<Map>(); // we got the map lol
     let depth = format!("Depth: {}", map.depth);
-    ctx.print_color(2, 43, RGB::named(rltk::YELLOW), RGB::named(rltk::BLACK), &depth);
+    ctx.print_color(2, 43, RGB::named(rltk::YELLOW), RGB::named(rltk::BLACK), &depth); // print the level depth
 
-
+    // This is the UI for the combat log. The variable y represents how many 
+    // lines down the window that the combat log has scrolled, to a maximum of a (currently hardcoded)
+    // value of 56. If it's full, it scrolls the log.
+    // if not, it just writes the new line below the most recent line.
+    // The way it functions is pretty simple: it fetches the GameLog struct, and then iterates
+    // down the GameLog in reverse, printing the most recent addition to the GameLog struct
     let log = ecs.fetch::<GameLog>();
     let mut y = 44;
     for s in log.entries.iter().rev() {
