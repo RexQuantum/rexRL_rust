@@ -403,7 +403,7 @@ impl TownBuilder {
     {   for y in building.1 .. building.1 + building.3 {
             for x in building.0 .. building.0 + building.2 {
                 let idx = build_data.map.xy_idx(x, y);
-                if build_data.map.tiles[idx] == TileType::WoodFloor && rng.roll_dice(1, 2)==1 {
+                if build_data.map.tiles[idx] == TileType::WoodFloor && rng.roll_dice(1, 5)==1 {
                     build_data.spawn_list.push((idx, "Sparking Crawler".to_string()));
                 }
             }
