@@ -62,7 +62,7 @@ fn draw_tooltips(ecs: &World, ctx : &mut Rltk) {
     mouse_map_pos.1 += min_y;
     if mouse_map_pos.0 >= map.width-1 || mouse_map_pos.1 >= map.height-1 || mouse_map_pos.0 < 1 || mouse_map_pos.1 < 1 
     { 
-        return; 
+        return;
     }
     if !map.visible_tiles[map.xy_idx(mouse_map_pos.0, mouse_map_pos.1)] { return; }
     let mut tooltip : Vec<String> = Vec::new();
