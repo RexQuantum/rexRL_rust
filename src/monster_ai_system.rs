@@ -1,6 +1,7 @@
 use specs::prelude::*;
-use super::{Viewshed, Monster, Map, Position, WantsToMelee, RunState, Confusion, particle_system::ParticleBuilder, EntityMoved };
-use rltk::{Point};
+use super::{Viewshed, Monster, Map, Position, WantsToMelee, RunState, Confusion, particle_system::ParticleBuilder, 
+            EntityMoved, gamelog::GameLog, Quips, Name};
+use rltk::{ Point };
 
 
 pub struct MonsterAI {}
@@ -19,17 +20,34 @@ impl<'a> System<'a> for MonsterAI {
                         WriteStorage<'a, WantsToMelee>,
                         WriteStorage<'a, Confusion>,
                         WriteExpect<'a, ParticleBuilder>,
-                        WriteStorage<'a, EntityMoved>);
+                        WriteStorage<'a, EntityMoved>,
+                        WriteExpect<'a, rltk::RandomNumberGenerator>,
+                        WriteExpect<'a, GameLog>,
+                        WriteStorage<'a, Quips>,
+                        ReadStorage<'a, Name>);
 
 
     fn run(&mut self, data : Self::SystemData) {
-        let (mut map, player_pos, player_entity, runstate, entities, mut viewshed, monster, mut position, mut wants_to_melee, mut confused, mut particle_builder, mut entity_moved) = data;
+        let (mut map, player_pos, player_entity, runstate, entities, mut viewshed, monster, mut position,
+             mut wants_to_melee, mut confused, mut particle_builder, mut entity_moved, mut rng, mut gamelog, mut quips, names) = data;
 
 
         if *runstate != RunState::MonsterTurn { return; }
 
-
         for (entity, mut viewshed,_monster,mut pos) in (&entities, &mut viewshed, &monster, &mut position).join() {
+            // Possibly quip
+            let quip = quips.get_mut(entity);
+            if let Some(quip) = quip {
+                if !quip.available.is_empty() && viewshed.visible_tiles.contains(&player_pos) && rng.roll_dice(1,6)==1 {
+                    let name = names.get(entity);
+                    let quip_index = if quip.available.len() == 1 { 0 } else { (rng.roll_dice(1, quip.available.len() as i32)-1) as usize };
+                    gamelog.entries.push(
+                        format!("{} says \"{}\"", name.unwrap().name, quip.available[quip_index])
+                    );
+                    quip.available.remove(quip_index);
+                }
+            }
+
             let mut can_act = true;
 
             let is_confused = confused.get_mut(entity);

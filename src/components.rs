@@ -56,6 +56,11 @@ pub struct CombatStats {
     pub power : i32
 }
 
+#[derive(Component, Debug, Serialize, Deserialize, Clone)]
+pub struct Quips {
+    pub available : Vec<String>
+}
+
 #[derive(Component, Debug, ConvertSaveload, Clone)]
 pub struct WantsToMelee {
     pub target : Entity

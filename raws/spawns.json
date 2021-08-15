@@ -146,7 +146,8 @@
             "power" : 4
         },
         "vision_range" : 8,
-        "ai" : "melee"
+        "ai" : "melee",
+        "quips" : [ "::ominous drone::", "WHIRRrrvv", "::SNAP::"]
     },
     {
         "name" : "Sparking Crawler",
@@ -164,7 +165,8 @@
             "power" : 1
         },
         "vision_range" : 8,
-        "ai" : "melee"
+        "ai" : "melee",
+        "quips" : [ "Bzzzt!!!", "Bzzt... POP!"]
     },
     {
         "name" : "Barkeep",
@@ -236,7 +238,8 @@
             "power" : 4
         },
         "vision_range" : 4,
-        "ai" : "bystander"
+        "ai" : "bystander",
+        "quips" : [ "I'm not a robot", "Why am I dizzy all the time?", "We eat the earth because it brings us closer to the black stone" ]
     },
     {
         "name" : "Patron",
