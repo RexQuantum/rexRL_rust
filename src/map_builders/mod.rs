@@ -44,7 +44,7 @@ use room_based_stairs::RoomBasedStairs;
 use area_starting_points::{AreaStartingPosition, XStart, YStart};
 use cull_unreachable::CullUnreachable;
 use voronoi_spawning::VoronoiSpawning;
-use maze::MazeBuilder;
+//use maze::MazeBuilder;
 use dla::DLABuilder;
 use common::*;
 use room_exploder::RoomExploder;
@@ -254,12 +254,12 @@ fn random_room_builder(rng: &mut rltk::RandomNumberGenerator, builder : &mut Bui
 }
 
 fn random_shape_builder(rng: &mut rltk::RandomNumberGenerator, builder : &mut BuilderChain) {
-    let builder_roll = rng.roll_dice(1, 14);
+    let builder_roll = rng.roll_dice(1, 7);
     match builder_roll {
         1 => { builder.start_with(CellularAutomataBuilder::new());
             rltk::console::log(format!("Builder: Cellular Automata"))},
         2 => { builder.start_with(DrunkardsWalkBuilder::open_area());
-            rltk::console::log(format!("Builder: Drunkards Walk — open area variant"))},
+   /*          rltk::console::log(format!("Builder: Drunkards Walk — open area variant"))},
         3 => { builder.start_with(DrunkardsWalkBuilder::open_halls());
             rltk::console::log(format!("Builder: Drunkards Walk — open halls variant"))},
         4 => { builder.start_with(DrunkardsWalkBuilder::winding_passages());
@@ -271,16 +271,16 @@ fn random_shape_builder(rng: &mut rltk::RandomNumberGenerator, builder : &mut Bu
         7 => { builder.start_with(DLABuilder::walk_inwards());
             rltk::console::log(format!("Builder: Diffusion-Limited Aggregation — walk inwards"))}
         8 => { builder.start_with(DLABuilder::walk_outwards());
-            rltk::console::log(format!("Builder: Diffusion-Limited Aggregation — walk outwards"))}
-        9 => { builder.start_with(DLABuilder::central_attractor());
+    */         rltk::console::log(format!("Builder: Diffusion-Limited Aggregation — walk outwards"))}
+        3 => { builder.start_with(DLABuilder::central_attractor());
             rltk::console::log(format!("Builder: Diffusion-Limited Aggregation — central attractor"))}
-        10 =>{ builder.start_with(DLABuilder::insectoid());
+        4 =>{ builder.start_with(DLABuilder::insectoid());
             rltk::console::log(format!("Builder: Diffusion-Limited Aggregation — insectoid"))}
-        11 =>{ builder.start_with(VoronoiCellBuilder::pythagoras());
+        5 =>{ builder.start_with(VoronoiCellBuilder::pythagoras());
             rltk::console::log(format!("Builder: Voronoi Cell —Pythagoras algorithm"))}
-        12 =>{ builder.start_with(MazeBuilder::new());
-            rltk::console::log(format!("Builder: It's a MAAAAAZE!"))}
-        13 => { builder.start_with(VoronoiCellBuilder::manhattan());
+/*         12 =>{ builder.start_with(MazeBuilder::new());
+            rltk::console::log(format!("Builder: It's a MAAAAAZE!"))} */
+        6 => { builder.start_with(VoronoiCellBuilder::manhattan());
             rltk::console::log(format!("Builder: Voronoi Cell - Manhattan algorithm"))}
         _ => builder.start_with(PrefabBuilder::constant(prefab_builder::prefab_levels::WFC_POPULATED)),
     }
