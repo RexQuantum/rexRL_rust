@@ -214,6 +214,20 @@ pub struct Door {
 #[derive(Component, Debug, Serialize, Deserialize, Clone)]
 pub struct Bystander{}
 
+#[derive(Debug, Serialize, Deserialize, Clone)]
+pub struct Attribute {
+    pub base : i32,
+    pub modifiers : i32,
+    pub bonus : i32
+}
+
+#[derive(Component, Debug, Serialize, Deserialize, Clone)]
+pub struct Attributes {
+    pub strength : Attribute,
+    pub integrity : Attribute,
+    pub alacrity : Attribute
+}
+
 // Serialization helper code. We need to implement ConvertSaveload for each type that contains an
 // Entity.
 pub struct SerializeMe{}

@@ -19,3 +19,11 @@ pub struct MobStats {
     pub power : i32,
     pub defense : i32
 }
+
+#[derive(Deserialize, Debug)]
+pub struct MobAttributes {
+    pub strength : Option<i32>,
+    pub alacrity : Option<i32>,
+    pub integrity : Option<i32>,
+    pub compute : Option<i32>
+}

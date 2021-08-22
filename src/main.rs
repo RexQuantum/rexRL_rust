@@ -335,7 +335,7 @@ impl State {
         // Notify the player and give them some health
         let player_entity = self.ecs.fetch::<Entity>();
         let mut gamelog = self.ecs.fetch_mut::<gamelog::GameLog>();
-        gamelog.entries.push("You descend to the next level, and take a moment to heal.".to_string());
+        gamelog.entries.push("You descend to the next level.".to_string());
         let mut player_health_store = self.ecs.write_storage::<CombatStats>();
         let player_health = player_health_store.get_mut(*player_entity);
         if let Some(player_health) = player_health {
@@ -459,6 +459,7 @@ fn main() -> rltk::BError {
     gs.ecs.register::<Bystander>();
     gs.ecs.register::<Vendor>();
     gs.ecs.register::<Quips>();
+    gs.ecs.register::<Attributes>();
     
     gs.ecs.insert(SimpleMarkerAllocator::<SerializeMe>::new());
 
