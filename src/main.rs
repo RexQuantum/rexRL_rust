@@ -417,7 +417,9 @@ fn main() -> rltk::BError {
         mapgen_history : Vec::new(),
         mapgen_timer : 0.0
     };
-    // THE COMPONENTS REGISTER - Tell the ECS about the components we've created, right after we create the world
+    // THE COMPONENTS REGISTER -  right after we create the world:
+    // Tell the ECS about the components we've wrought;
+    // There are dozens of tiny, models, and the ECS must know all of them by heart
     gs.ecs.register::<Position>();
     gs.ecs.register::<Renderable>();
     gs.ecs.register::<Player>();
