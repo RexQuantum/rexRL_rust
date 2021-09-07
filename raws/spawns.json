@@ -220,6 +220,7 @@
             "power" : 4
         },
         "vision_range" : 4,
+        "quips" : [ "The Black Stone!", "It hums to our exultations!", "Praise its cerulean glow" ],
         "ai" : "bystander"
     },
     {
@@ -239,7 +240,7 @@
         },
         "vision_range" : 4,
         "ai" : "bystander",
-        "quips" : [ "I'm not a robot", "Why am I dizzy all the time?", "We eat the earth because it brings us closer to the black stone" ]
+        "quips" : [ "The black stone...", "Glory to the black stone!", "It's glow brings us closer to the Makers" ]
     },
     {
         "name" : "Patron",
