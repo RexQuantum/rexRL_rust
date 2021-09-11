@@ -225,7 +225,7 @@ pub struct Attribute {
 pub struct Attributes {
     pub strength : Attribute,
     pub integrity : Attribute,
-    pub alacrity : Attribute
+    pub quickness : Attribute
 }
 
 // Serialization helper code. We need to implement ConvertSaveload for each type that contains an

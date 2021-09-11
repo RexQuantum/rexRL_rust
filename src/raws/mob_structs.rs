@@ -23,7 +23,7 @@ pub struct MobStats {
 #[derive(Deserialize, Debug)]
 pub struct MobAttributes {
     pub strength : Option<i32>,
-    pub alacrity : Option<i32>,
+    pub quickness : Option<i32>,
     pub integrity : Option<i32>,
     pub compute : Option<i32>
 }
