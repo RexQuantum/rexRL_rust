@@ -147,7 +147,8 @@
         },
         "vision_range" : 8,
         "ai" : "melee",
-        "quips" : [ "::ominous drone::", "WHIRRrrvv", "::SNAP::"]
+        "quips" : [ "::ominous drone::", "WHIRRrrvv", "::SNAP::"],
+        "attributes" : {}
     },
     {
         "name" : "Sparking Crawler",
@@ -166,7 +167,8 @@
         },
         "vision_range" : 8,
         "ai" : "melee",
-        "quips" : [ "Bzzzt!!!", "Bzzt... POP!"]
+        "quips" : [ "Bzzzt!!!", "Bzzt... POP!"],
+        "attributes" : {}
     },
     {
         "name" : "Barkeep",
@@ -184,7 +186,10 @@
             "power" : 4
         },
         "vision_range" : 4,
-        "ai" : "vendor"
+        "ai" : "vendor",
+        "attributes" : {
+            "compute" : 14
+        }
     },
     {
         "name" : "Shady Fence",
@@ -202,7 +207,8 @@
             "power" : 4
         },
         "vision_range" : 4,
-        "ai" : "vendor"
+        "ai" : "vendor",
+        "attributes" : {}
     },
     {
         "name" : "Priest Of The Black Stone",
@@ -221,7 +227,8 @@
         },
         "vision_range" : 4,
         "quips" : [ "The Black Stone!", "It hums to our exultations!", "Praise its cerulean glow" ],
-        "ai" : "bystander"
+        "ai" : "bystander",
+        "attributes" : {}
     },
     {
         "name" : "Parishoner Of The Black Stone",
@@ -240,7 +247,8 @@
         },
         "vision_range" : 4,
         "ai" : "bystander",
-        "quips" : [ "The black stone...", "Glory to the black stone!", "It's glow brings us closer to the Makers" ]
+        "quips" : [ "The black stone...", "Glory to the black stone!", "It's glow brings us closer to the Makers" ],
+        "attributes" : {}
     },
     {
         "name" : "Patron",
@@ -258,7 +266,8 @@
             "power" : 4
         },
         "vision_range" : 4,
-        "ai" : "bystander"
+        "ai" : "bystander",
+        "attributes" : {}
     }
 ],
 "props" : [

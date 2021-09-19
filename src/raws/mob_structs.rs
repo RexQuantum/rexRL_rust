@@ -1,4 +1,5 @@
 use serde::{Deserialize};
+
 use super::{Renderable};
 
 #[derive(Deserialize, Debug)]
@@ -9,7 +10,8 @@ pub struct Mob {
     pub stats : MobStats,
     pub vision_range : i32,
     pub ai : String,
-    pub quips : Option<Vec<String>>
+    pub quips : Option<Vec<String>>,
+    pub attributes : MobAttributes
 }
 
 #[derive(Deserialize, Debug)]

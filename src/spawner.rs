@@ -25,6 +25,7 @@ pub fn player(ecs : &mut World, player_x : i32, player_y : i32) -> Entity {
             strength: Attribute{ base: 11, modifiers: 0, bonus: 0 },
             integrity: Attribute{  base: 11, modifiers: 0, bonus: 0  },
             quickness: Attribute{  base: 11, modifiers: 0, bonus: 0 },
+            compute: Attribute{ base: 11, modifiers: 0, bonus: 0 },
         })
         .marked::<SimpleMarker<SerializeMe>>()
         .build()

@@ -63,4 +63,3 @@ const CHECKERBOARD_MAP : &str = "
  ^# # 
       
 ";
-
