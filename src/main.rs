@@ -25,6 +25,8 @@ mod gui;
 mod gamelog;
 mod spawner;
 mod inventory_system;
+mod gamesystem;
+pub use gamesystem::*;
 use inventory_system::{ ItemCollectionSystem, ItemUseSystem, ItemDropSystem, ItemRemoveSystem };
 pub mod saveload_system;
 pub mod random_table;

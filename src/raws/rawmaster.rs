@@ -3,6 +3,7 @@ use specs::prelude::*;
 use crate::components::*;
 use super::{Raws};
 use crate::random_table::{RandomTable};
+use crate::attr_bonus;
 
 pub enum SpawnType {
     AtPosition { x: i32, y: i32 },
@@ -179,16 +180,16 @@ pub fn spawn_named_mob(raws: &RawMaster, new_entity : EntityBuilder, key : &str,
             compute: Attribute{ base: 11, modifiers: 0, bonus: 0},
         };
         if let Some(strength) = mob_template.attributes.strength {
-            attr.strength = Attribute{ base: strength, modifiers: 0, bonus: 0 };
+            attr.strength = Attribute{ base: strength, modifiers: 0, bonus: attr_bonus(strength) };
         }
         if let Some(integrity) = mob_template.attributes.integrity {
-            attr.integrity = Attribute{ base: integrity, modifiers: 0, bonus: 0 };
+            attr.integrity = Attribute{ base: integrity, modifiers: 0, bonus: attr_bonus(integrity) };
         }
         if let Some(quickness) = mob_template.attributes.quickness {
-            attr.quickness = Attribute{ base: quickness, modifiers: 0, bonus: 0 };
+            attr.quickness = Attribute{ base: quickness, modifiers: 0, bonus: attr_bonus(quickness) };
         }
         if let Some(compute) = mob_template.attributes.compute {
-            attr.compute = Attribute{ base: compute, modifiers: 0, bonus: 0 };
+            attr.compute = Attribute{ base: compute, modifiers: 0, bonus: attr_bonus(compute) };
         }
         eb = eb.with(attr);
 
