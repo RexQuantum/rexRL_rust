@@ -1,6 +1,5 @@
 use serde::{Deserialize};
 use std::collections::HashMap;
-//use super::{Renderable};
 
 #[derive(Deserialize, Debug)]
 pub struct Item {
