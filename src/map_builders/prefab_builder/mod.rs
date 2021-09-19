@@ -213,7 +213,7 @@ impl PrefabBuilder {
         if vault_roll < 4 { return; }
 
         // Note that this is a place-holder and will be moved out of this function
-        let master_vault_list = vec![TOTALLY_NOT_A_TRAP, CHECKERBOARD];
+        let master_vault_list = vec![SPIKE_TRAP, CHECKERBOARD];
 
         // Filter the vault list down to ones that are applicable to the current depth
         let mut possible_vaults : Vec<&PrefabRoom> = master_vault_list
