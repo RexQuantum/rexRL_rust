@@ -9,8 +9,8 @@ pub struct PrefabRoom {
 }
 
 #[allow(dead_code)]
-pub const TOTALLY_NOT_A_TRAP : PrefabRoom = PrefabRoom{
-    template : TOTALLY_NOT_A_TRAP_MAP,
+pub const SPIKE_TRAP : PrefabRoom = PrefabRoom{
+    template : SPIKE_TRAP_MAP,
     width: 5,
     height: 5,
     first_depth: 0,
@@ -18,7 +18,7 @@ pub const TOTALLY_NOT_A_TRAP : PrefabRoom = PrefabRoom{
 };
 
 #[allow(dead_code)]
-const TOTALLY_NOT_A_TRAP_MAP : &str = "
+const SPIKE_TRAP_MAP : &str = "
      
  ^^^ 
  ^!^ 
@@ -26,7 +26,7 @@ const TOTALLY_NOT_A_TRAP_MAP : &str = "
      
 ";
 
-#[allow(dead_code)]
+/* #[allow(dead_code)]
 pub const SILLY_SMILE : PrefabRoom = PrefabRoom{
     template : SILLY_SMILE_MAP,
     width: 6,
@@ -44,7 +44,7 @@ const SILLY_SMILE_MAP : &str = "
  ^^^  
       
 ";
-
+ */
 #[allow(dead_code)]
 pub const CHECKERBOARD : PrefabRoom = PrefabRoom{
     template : CHECKERBOARD_MAP,
@@ -63,4 +63,3 @@ const CHECKERBOARD_MAP : &str = "
  ^# # 
       
 ";
-

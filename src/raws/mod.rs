@@ -25,7 +25,7 @@ pub struct Raws {
     pub items : Vec<Item>,
     pub mobs : Vec<Mob>,
     pub props : Vec<Prop>,
-    pub spawn_table : Vec<SpawnTableEntry>
+    pub spawn_table : Vec<SpawnTableEntry>,
 }
 
 

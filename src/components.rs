@@ -219,14 +219,15 @@ pub struct Bystander{}
 pub struct Attribute {
     pub base : i32,
     pub modifiers : i32,
-    pub bonus : i32
+    pub bonus : i32,
 }
 
 #[derive(Component, Debug, Serialize, Deserialize, Clone)]
 pub struct Attributes {
     pub strength : Attribute,
     pub integrity : Attribute,
-    pub quickness : Attribute
+    pub quickness : Attribute,
+    pub compute : Attribute,
 }
 
 #[derive(Debug, Serialize, Deserialize, Clone, Eq, PartialEq, Hash)]

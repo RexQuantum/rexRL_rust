@@ -3,6 +3,7 @@ use specs::prelude::*;
 use crate::components::*;
 use super::{Raws};
 use crate::random_table::{RandomTable};
+use crate::attr_bonus;
 
 pub enum SpawnType {
     AtPosition { x: i32, y: i32 },
@@ -169,6 +170,29 @@ pub fn spawn_named_mob(raws: &RawMaster, new_entity : EntityBuilder, key : &str,
         if mob_template.blocks_tile {
             eb = eb.with(BlocksTile{});
         }
+
+        /* let mut mob_integrity = 11;
+        let mut mob_int = 11; */
+        let mut attr = Attributes{
+            strength: Attribute{ base: 11, modifiers: 0, bonus: 0},
+            integrity: Attribute{ base: 11, modifiers: 0, bonus: 0},
+            quickness: Attribute{ base: 11, modifiers: 0, bonus: 0},
+            compute: Attribute{ base: 11, modifiers: 0, bonus: 0},
+        };
+        if let Some(strength) = mob_template.attributes.strength {
+            attr.strength = Attribute{ base: strength, modifiers: 0, bonus: attr_bonus(strength) };
+        }
+        if let Some(integrity) = mob_template.attributes.integrity {
+            attr.integrity = Attribute{ base: integrity, modifiers: 0, bonus: attr_bonus(integrity) };
+        }
+        if let Some(quickness) = mob_template.attributes.quickness {
+            attr.quickness = Attribute{ base: quickness, modifiers: 0, bonus: attr_bonus(quickness) };
+        }
+        if let Some(compute) = mob_template.attributes.compute {
+            attr.compute = Attribute{ base: compute, modifiers: 0, bonus: attr_bonus(compute) };
+        }
+        eb = eb.with(attr);
+
         eb = eb.with(CombatStats{
             max_hp : mob_template.stats.max_hp,
             hp : mob_template.stats.hp,
