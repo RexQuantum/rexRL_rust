@@ -4,6 +4,7 @@ use rltk::{RGB};
 use serde::{Serialize, Deserialize};
 use specs::saveload::{Marker, ConvertSaveload};
 use specs::error::NoError;
+use std::collections::HashMap;
 
 #[derive(Component, ConvertSaveload, Clone)]
 pub struct Position {
@@ -226,6 +227,14 @@ pub struct Attributes {
     pub strength : Attribute,
     pub integrity : Attribute,
     pub quickness : Attribute
+}
+
+#[derive(Debug, Serialize, Deserialize, Clone, Eq, PartialEq, Hash)]
+pub enum Skill { Melee, Defense, Magic }
+
+#[derive(Component, Debug, Serialize, Deserialize, Clone)]
+pub struct Skills {
+    pub skills : HashMap<Skill, i32>
 }
 
 // Serialization helper code. We need to implement ConvertSaveload for each type that contains an
