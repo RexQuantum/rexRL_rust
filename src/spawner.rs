@@ -1,14 +1,18 @@
 use rltk::{ RGB, RandomNumberGenerator };
 use specs::prelude::*;
 use crate::attr_bonus;
-
 use super::{CombatStats, Player, Renderable, Name, Position, Viewshed, Rect,
-random_table::RandomTable, HungerClock, SerializeMe, HungerState, Map, TileType, Attributes, Attribute, raws::* };
+random_table::RandomTable, HungerClock, SerializeMe, HungerState, Map, TileType, Attributes, Attribute, Skills, Skill, raws::* };
 use specs::saveload::{MarkedBuilder, SimpleMarker};
 use std::collections::HashMap;
 
 /// Spawns the player and returns their entity object.
 pub fn player(ecs : &mut World, player_x : i32, player_y : i32) -> Entity {
+    let mut skills = Skills{ skills: HashMap::new() };
+    skills.skills.insert(Skill::Melee, 1);
+    skills.skills.insert(Skill::Defense, 1);
+    skills.skills.insert(Skill::Fields, 1);
+
     ecs
         .create_entity()
         .with(Position { x: player_x, y: player_y })
@@ -29,6 +33,7 @@ pub fn player(ecs : &mut World, player_x : i32, player_y : i32) -> Entity {
             quickness: Attribute{ base: 11, modifiers: 0, bonus: attr_bonus(11) },
             compute:   Attribute{ base: 11, modifiers: 0, bonus: attr_bonus(11) },
         })
+        .with(skills)
         .marked::<SimpleMarker<SerializeMe>>()
         .build()
 }
