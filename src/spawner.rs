@@ -11,7 +11,7 @@ pub fn player(ecs : &mut World, player_x : i32, player_y : i32) -> Entity {
     let mut skills = Skills{ skills: HashMap::new() };
     skills.skills.insert(Skill::Melee, 1);
     skills.skills.insert(Skill::Defense, 1);
-    skills.skills.insert(Skill::Fields, 1);
+    skills.skills.insert(Skill::Energy, 1);
 
     ecs
         .create_entity()

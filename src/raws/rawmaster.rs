@@ -171,8 +171,6 @@ pub fn spawn_named_mob(raws: &RawMaster, new_entity : EntityBuilder, key : &str,
             eb = eb.with(BlocksTile{});
         }
 
-        /* let mut mob_integrity = 11;
-        let mut mob_int = 11; */
         let mut attr = Attributes{
             strength: Attribute{ base: 11, modifiers: 0, bonus: 0},
             integrity: Attribute{ base: 11, modifiers: 0, bonus: 0},
@@ -196,13 +194,13 @@ pub fn spawn_named_mob(raws: &RawMaster, new_entity : EntityBuilder, key : &str,
         let mut skills = Skills{ skills: HashMap::new() };
         skills.skills.insert(Skill::Melee, 1);
         skills.skills.insert(Skill::Defense, 1);
-        skills.skills.insert(Skill::Fields, 1);
+        skills.skills.insert(Skill::Energy, 1);
         if let Some(mobskills) = &mob_template.skills {
             for sk in mobskills.iter() {
                 match sk.0.as_str() {
                     "Melee" => { skills.skills.insert(Skill::Melee, *sk.1); }
                     "Defense" => { skills.skills.insert(Skill::Defense, *sk.1); }
-                    "Fields" => { skills.skills.insert(Skill::Fields, *sk.1); }
+                    "Energy" => { skills.skills.insert(Skill::Energy, *sk.1); }
                 }
             }
         }
