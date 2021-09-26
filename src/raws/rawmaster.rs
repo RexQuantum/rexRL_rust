@@ -171,11 +171,12 @@ pub fn spawn_named_mob(raws: &RawMaster, new_entity : EntityBuilder, key : &str,
             eb = eb.with(BlocksTile{});
         }
 
+        //let mut mob_integrity = 11; 
         let mut attr = Attributes{
-            strength: Attribute{ base: 11, modifiers: 0, bonus: 0},
-            integrity: Attribute{ base: 11, modifiers: 0, bonus: 0},
-            quickness: Attribute{ base: 11, modifiers: 0, bonus: 0},
-            compute: Attribute{ base: 11, modifiers: 0, bonus: 0},
+            strength:   Attribute{ base: 11, modifiers: 0, bonus: 0},
+            integrity:  Attribute{ base: 11, modifiers: 0, bonus: 0},
+            quickness:  Attribute{ base: 11, modifiers: 0, bonus: 0},
+            compute:    Attribute{ base: 11, modifiers: 0, bonus: 0},
         };
         if let Some(strength) = mob_template.attributes.strength {
             attr.strength = Attribute{ base: strength, modifiers: 0, bonus: attr_bonus(strength) };
@@ -204,7 +205,7 @@ pub fn spawn_named_mob(raws: &RawMaster, new_entity : EntityBuilder, key : &str,
                 }
             }
         }
-        
+
         }
 
         eb = eb.with(CombatStats{
