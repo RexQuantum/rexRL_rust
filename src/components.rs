@@ -41,10 +41,10 @@ pub struct Name {
     pub name : String
 }
 
-#[derive(Component, Debug, ConvertSaveload, Clone)]
+/* #[derive(Component, Debug, ConvertSaveload, Clone)]
 pub struct FlavorText {
     pub flavor_text : String
-}
+} */
 
 #[derive(Component, Debug, Serialize, Deserialize, Clone)]
 pub struct BlocksTile {}
