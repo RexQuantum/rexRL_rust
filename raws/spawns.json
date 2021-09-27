@@ -189,6 +189,9 @@
         "ai" : "vendor",
         "attributes" : {
             "compute" : 14
+        },
+        "skills" : {
+            "Melee" : 2
         }
     },
     {

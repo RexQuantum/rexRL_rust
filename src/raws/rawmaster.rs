@@ -202,11 +202,12 @@ pub fn spawn_named_mob(raws: &RawMaster, new_entity : EntityBuilder, key : &str,
                     "Melee" => { skills.skills.insert(Skill::Melee, *sk.1); }
                     "Defense" => { skills.skills.insert(Skill::Defense, *sk.1); }
                     "Energy" => { skills.skills.insert(Skill::Energy, *sk.1); }
+                    _ => { rltk::console::log(format!("Unknown skill referenced: [{}]", sk.0)); }
+
                 }
             }
         }
-
-        }
+        eb = eb.with(skills);
 
         eb = eb.with(CombatStats{
             max_hp : mob_template.stats.max_hp,
