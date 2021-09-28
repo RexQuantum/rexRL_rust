@@ -465,6 +465,7 @@ fn main() -> rltk::BError {
     gs.ecs.register::<Quips>();
     gs.ecs.register::<Attributes>();
     gs.ecs.register::<Skills>();
+    gs.ecs.register::<Pools>();
 
     gs.ecs.insert(SimpleMarkerAllocator::<SerializeMe>::new());
 

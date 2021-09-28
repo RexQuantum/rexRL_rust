@@ -3,12 +3,10 @@ use specs::prelude::*;
 use crate::components::*;
 use super::{Raws};
 use crate::random_table::{RandomTable};
-use crate::attr_bonus;
+use crate::{attr_bonus, npc_hp, energy_at_level};
 
 pub enum SpawnType {
-    AtPosition { x: i32, y: i32 },
-    //Equipped { by: Entity},
-    //Carried { by : Entity}
+    AtPosition { x: i32, y: i32 }
 }
 
 pub struct RawMaster {
@@ -171,12 +169,13 @@ pub fn spawn_named_mob(raws: &RawMaster, new_entity : EntityBuilder, key : &str,
             eb = eb.with(BlocksTile{});
         }
 
-        //let mut mob_integrity = 11; 
+        let mut mob_integrity = 11; 
+        let mut mob_compute = 11;
         let mut attr = Attributes{
-            strength:   Attribute{ base: 11, modifiers: 0, bonus: 0},
-            integrity:  Attribute{ base: 11, modifiers: 0, bonus: 0},
-            quickness:  Attribute{ base: 11, modifiers: 0, bonus: 0},
-            compute:    Attribute{ base: 11, modifiers: 0, bonus: 0},
+            strength:   Attribute{ base: 11, modifiers: 0, bonus: attr_bonus(11) },
+            integrity:  Attribute{ base: 11, modifiers: 0, bonus: attr_bonus(11) },
+            quickness:  Attribute{ base: 11, modifiers: 0, bonus: attr_bonus(11) },
+            compute:    Attribute{ base: 11, modifiers: 0, bonus: attr_bonus(11) },
         };
         if let Some(strength) = mob_template.attributes.strength {
             attr.strength = Attribute{ base: strength, modifiers: 0, bonus: attr_bonus(strength) };
@@ -191,6 +190,18 @@ pub fn spawn_named_mob(raws: &RawMaster, new_entity : EntityBuilder, key : &str,
             attr.compute = Attribute{ base: compute, modifiers: 0, bonus: attr_bonus(compute) };
         }
         eb = eb.with(attr);
+
+        let mob_level = if mob_template.level.is_some() { mob_template.level.unwrap() } else { 1 };
+        let mob_hp = npc_hp(mob_integrity, mob_level);
+        let mob_energy = energy_at_level(mob_compute, mob_level);
+
+        let pools = Pools{
+            level: mob_level,
+            xp: 0,
+            hit_points : Pool{ current: mob_hp, max: mob_hp },
+            energy : Pool{ current: mob_energy, max: mob_energy}
+        };
+        eb = eb.with(pools);
 
         let mut skills = Skills{ skills: HashMap::new() };
         skills.skills.insert(Skill::Melee, 1);

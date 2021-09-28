@@ -238,6 +238,20 @@ pub struct Skills {
     pub skills : HashMap<Skill, i32>
 }
 
+#[derive(Debug, Serialize, Deserialize, Clone)]
+pub struct Pool {
+    pub max : i32,
+    pub current : i32
+}
+
+#[derive(Component, Debug, Serialize, Deserialize, Clone)]
+pub struct Pools {
+    pub hit_points : Pool,
+    pub energy : Pool,
+    pub xp : i32,
+    pub level : i32
+}
+
 // Serialization helper code. We need to implement ConvertSaveload for each type that contains an
 // Entity.
 pub struct SerializeMe{}
