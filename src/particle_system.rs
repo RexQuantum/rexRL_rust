@@ -65,7 +65,7 @@ pub fn cull_dead_particles(ecs : &mut World, ctx : &Rltk) {
             if particle.lifetime_ms < 0.0 {
                 dead_particles.push(entity);
             }
-        }                    
+        }
     }
     for dead in dead_particles.iter() {
         ecs.delete_entity(*dead).expect("Particle will not die");
