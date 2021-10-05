@@ -1,7 +1,7 @@
 use rltk::{ RGB, RandomNumberGenerator };
 use specs::prelude::*;
 use crate::{attr_bonus, energy_at_level, player_hp_at_level};
-use super::{Pools, Pool, CombatStats, Player, Renderable, Name, Position, Viewshed, Rect,
+use super::{Pools, Pool, Player, Renderable, Name, Position, Viewshed, Rect,
 random_table::RandomTable, HungerClock, SerializeMe, HungerState, Map, TileType, Attributes, Attribute, Skills, Skill, raws::* };
 use specs::saveload::{MarkedBuilder, SimpleMarker};
 use std::collections::HashMap;
@@ -26,7 +26,18 @@ pub fn player(ecs : &mut World, player_x : i32, player_y : i32) -> Entity {
         .with(Player{})
         .with(Viewshed{ visible_tiles : Vec::new(), range: 20, dirty: true })
         .with(Name{name: "Player".to_string() })
-        .with(CombatStats{ max_hp: 30, hp: 30, defense: 2, power: 5 })
+        .with(Pools{
+            hit_points : Pool{ 
+                current: player_hp_at_level(11, 1), 
+                max: player_hp_at_level(11, 1) 
+            },
+            energy: Pool{
+                current: energy_at_level(11, 1),
+                max: energy_at_level(11, 1)
+            },
+            xp: 0,
+            level: 1
+        })
         .with(HungerClock{ state: HungerState::WellFed, duration: 30 })
         .with(Attributes{
             strength:  Attribute{ base: 11, modifiers: 0, bonus: attr_bonus(11) },

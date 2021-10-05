@@ -199,7 +199,7 @@ pub fn spawn_named_mob(raws: &RawMaster, new_entity : EntityBuilder, key : &str,
             level: mob_level,
             xp: 0,
             hit_points : Pool{ current: mob_hp, max: mob_hp },
-            energy : Pool{ current: mob_energy, max: mob_energy}
+            energy : Pool{ current: mob_energy, max: mob_energy }
         };
         eb = eb.with(pools);
 
@@ -220,12 +220,6 @@ pub fn spawn_named_mob(raws: &RawMaster, new_entity : EntityBuilder, key : &str,
         }
         eb = eb.with(skills);
 
-        eb = eb.with(CombatStats{
-            max_hp : mob_template.stats.max_hp,
-            hp : mob_template.stats.hp,
-            power : mob_template.stats.power,
-            defense : mob_template.stats.defense
-        });
         eb = eb.with(Viewshed{ visible_tiles : Vec::new(), range: mob_template.vision_range, dirty: true });
 
         return Some(eb.build());
