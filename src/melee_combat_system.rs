@@ -1,6 +1,7 @@
 use specs::prelude::*;
 use super::{Attributes, Skills, WantsToMelee, Name, SufferDamage, gamelog::GameLog,
-    particle_system::ParticleBuilder, Position, HungerClock, HungerState, Pools, skill_bonus, Skill};
+    particle_system::ParticleBuilder, Position, HungerClock, HungerState, Pools, skill_bonus, Skill, Equipped, MeleeWeapon,
+    EquipmentSlot, WeaponAttribute, Wearable, NaturalAttackDefense};
 
 pub struct MeleeCombatSystem {}
 
@@ -17,12 +18,14 @@ impl<'a> System<'a> for MeleeCombatSystem {
                         ReadStorage<'a, Position>,
                         ReadStorage<'a, HungerClock>,
                         ReadStorage<'a, Pools>,
-                        WriteExpect<'a, rltk::RandomNumberGenerator>
+                        WriteExpect<'a, rltk::RandomNumberGenerator>,
+                        ReadStorage<'a, Equipped>,
+                        ReadStorage<'a, MeleeWeapon>
                       );
 
     fn run(&mut self, data : Self::SystemData) {
         let (entities, mut log, mut wants_melee, names, attributes, skills, mut inflict_damage, 
-            mut particle_builder, positions, hunger_clock, pools, mut rng) = data;
+            mut particle_builder, positions, hunger_clock, pools, mut rng, equipped_items, meleeweapons) = data;
             
         for (entity, wants_melee, name, attacker_attributes, attacker_skills, attacker_pools) in (&entities, &wants_melee, &names, &attributes, &skills, &pools).join() {
             // Are the attacker and defender alive? Only attack if yes
@@ -31,6 +34,20 @@ impl<'a> System<'a> for MeleeCombatSystem {
             let target_skills = skills.get(wants_melee.target).unwrap();
             if attacker_pools.hit_points.current > 0 && target_pools.hit_points.current > 0 {
                 let target_name = names.get(wants_melee.target).unwrap();
+
+                let mut weapon_info = MeleeWeapon{
+                    attribute : Weap::Strength,
+                    hit_bonus : 0,
+                    damage_n_dice : 1,
+                    damage_die_type : 4,
+                    damage_bonus : 0
+                };
+
+                for (wielded,melee) in (&equipped_items, &meleeweapons).join() {
+                    if wielded.owner == entity && wielded.slot == EquipmentSlot::Melee {
+                        weapon_info = melee.clone();
+                    }
+                }
 
                 let natural_roll = rng.roll_dice(1, 20);
                 let attribute_hit_bonus = attacker_attributes.strength.bonus;

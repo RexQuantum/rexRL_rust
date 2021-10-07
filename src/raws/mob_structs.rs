@@ -14,7 +14,9 @@ pub struct Mob {
     pub skills : Option<HashMap<String, i32>>,
     pub level : Option<i32>,
     pub hp : Option<i32>,
-    pub energy : Option<i32>
+    pub energy : Option<i32>,
+    pub equipped : Option<Vec<String>>,
+    pub natural : Option<MobNatural>
 }
 
 #[derive(Deserialize, Debug)]
@@ -23,4 +25,16 @@ pub struct MobAttributes {
     pub quickness : Option<i32>,
     pub integrity : Option<i32>,
     pub compute : Option<i32>
+}
+#[derive(Deserialize, Debug)]
+pub struct MobNatural {
+    pub armor_class : Option<i32>,
+    pub attacks: Option<Vec<NaturalAttack>>
+}
+
+#[derive(Deserialize, Debug)]
+pub struct NaturalAttack {
+    pub name : String,
+    pub hit_bonus : i32,
+    pub damage : String
 }
