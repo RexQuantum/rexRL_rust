@@ -8,7 +8,8 @@
     { "name" : "Seismic Mapper", "weight" : 2, "min_depth" : 0, "max_depth" : 100 },
     { "name" : "Incendiary Grenade", "weight" : 4, "min_depth" : 0, "max_depth"  : 100 },
     { "name" : "Scrambler Grenade", "weight" : 4, "min_depth" : 0, "max_depth" : 100 },
-    { "name" : "Rusted Knife", "weight" : 5, "min_depth" : 0, "max_depth" : 100 },
+    { "name" : "Sharp Thing", "weight" : 5, "min_depth" : 0, "max_depth" : 100 },
+    { "name" : "Makeshift Spear", "weight" : 5, "min_depth" : 3, "max_depth" : 100 },
     { "name" : "Shield", "weight" : 5, "min_depth" : 0, "max_depth" : 100 },
     { "name" : "Spike Trap", "weight" : 5, "min_depth" : 0, "max_depth" : 100 }
 ],
@@ -104,7 +105,7 @@
         }
     },
     {
-        "name" : "Rusted Knife",
+        "name" : "Sharp Thing",
         "renderable": {
             "glyph" : "/",
             "fg" : "#00CFFA",
@@ -114,7 +115,22 @@
         "weapon" : {
             "range" : "melee",
             "attribute" : "Quickness",
-            "base_damage" : "1d4",
+            "base_damage" : "1d5-1",
+            "hit_bonus" : -1
+            }
+    },
+    {
+        "name" : "Makeshift Spear",
+        "renderable": {
+            "glyph" : "|",
+            "fg" : "#AACFFA",
+            "bg" : "#000000",
+            "order" : 2
+        },
+        "weapon" : {
+            "range" : "melee",
+            "attribute" : "Strength",
+            "base_damage" : "1d6-1",
             "hit_bonus" : 0
             }
     },

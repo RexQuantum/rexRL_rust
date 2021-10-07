@@ -132,12 +132,7 @@ pub struct WantsToRemoveItem {
 #[derive(PartialEq, Copy, Clone, Serialize, Deserialize)]
 pub enum EquipmentSlot { Melee,
                          Shield
-                         //Ranged,
-                         //ChestArmor,
-                         //HeadArmor,
-                         //LegArmor,
-                         //HandArmor
-                        }
+}
 
 #[derive(Component, Serialize, Deserialize, Clone)]
 pub struct Equippable {
@@ -150,14 +145,22 @@ pub struct Equipped {
     pub slot : EquipmentSlot
 }
 
-#[derive(Component, ConvertSaveload, Clone)]
-pub struct MeleePowerBonus {
-    pub power : i32
+#[derive(Serialize, Deserialize, Copy, Clone, PartialEq)]
+pub enum WeaponAttribute { Strength, Quickness }
+
+#[derive(Component, Serialize, Deserialize, Clone)]
+pub struct MeleeWeapon {
+    pub attribute : WeaponAttribute,
+    pub damage_n_dice : i32,
+    pub damage_die_type : i32,
+    pub damage_bonus : i32,
+    pub hit_bonus : i32
 }
 
 #[derive(Component, ConvertSaveload, Clone)]
-pub struct DefenseBonus {
-    pub defense : i32
+pub struct Wearable {
+    pub armor_class : i32,
+    pub slot : EquipmentSlot
 }
 #[derive(Component, Serialize, Deserialize, Clone)]
 pub struct ParticleLifetime {
