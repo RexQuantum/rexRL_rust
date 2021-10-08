@@ -36,7 +36,7 @@ impl<'a> System<'a> for MeleeCombatSystem {
                 let target_name = names.get(wants_melee.target).unwrap();
 
                 let mut weapon_info = MeleeWeapon{
-                    attribute : Weap::Strength,
+                    attribute : WeaponAttribute::Strength,
                     hit_bonus : 0,
                     damage_n_dice : 1,
                     damage_die_type : 4,
