@@ -19,6 +19,7 @@ pub struct Mob {
     pub natural : Option<MobNatural>
 }
 
+/// Enemies have the sasme stats at the player, minux XP (for now)
 #[derive(Deserialize, Debug)]
 pub struct MobAttributes {
     pub strength : Option<i32>,

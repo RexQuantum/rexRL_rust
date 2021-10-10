@@ -14,6 +14,8 @@ pub enum TileType {
     Gravel
 }
 
+
+/// Determines whether or not a tile is walkable and then returns a bool
 pub fn tile_walkable(tt : TileType) -> bool {
     match tt {
         TileType::Floor | TileType::DownStairs | TileType::Grass |
@@ -23,6 +25,8 @@ pub fn tile_walkable(tt : TileType) -> bool {
     }
 }
 
+/// Determines whether or not a tile is opaque and then returns a bool
+
 pub fn tile_opaque(tt : TileType) -> bool {
     match tt {
         TileType::Wall => true,
@@ -30,6 +34,7 @@ pub fn tile_opaque(tt : TileType) -> bool {
     }
 }
 
+/// Matches TileType to its cost and returns an f32
 pub fn tile_cost(tt : TileType) -> f32 {
     match tt {
         TileType::Road => 0.8,

@@ -1,6 +1,7 @@
 use serde::{Deserialize};
 use std::collections::HashMap;
 
+/// Template for building any item in the game
 #[derive(Deserialize, Debug)]
 pub struct Item {
     pub name : String,

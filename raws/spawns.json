@@ -116,7 +116,7 @@
             "range" : "melee",
             "attribute" : "Quickness",
             "base_damage" : "1d5-1",
-            "hit_bonus" : -1
+            "hit_bonus" : 0
             }
     },
     {
@@ -130,8 +130,8 @@
         "weapon" : {
             "range" : "melee",
             "attribute" : "Strength",
-            "base_damage" : "1d6-1",
-            "hit_bonus" : 0
+            "base_damage" : "1d8+1",
+            "hit_bonus" : 1
             }
     },
     {

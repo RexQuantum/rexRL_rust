@@ -20,6 +20,7 @@ lazy_static! {
     pub static ref RAWS : Mutex<RawMaster> = Mutex::new(RawMaster::empty());
 }
 
+///  This is the struct which we use as a template for reading from spawns.json
 #[derive(Deserialize, Debug)]
 pub struct Raws {
     pub items : Vec<Item>,
@@ -29,10 +30,10 @@ pub struct Raws {
 }
 
 
+/// Retrieve the data from raw files as an array of u8 (8-bit unsigned chars)
 pub fn load_raws() {
     rltk::link_resource!(RAW_FILE, "../../raws/spawns.json");
 
-    // Retrieve the raw data as an array of u8 (8-bit unsigned chars)
     let raw_data = rltk::embedding::EMBED
         .lock()
         .get_resource("../../raws/spawns.json".to_string())
