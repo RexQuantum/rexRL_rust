@@ -416,7 +416,7 @@ fn main() -> rltk::BError {
     };
     // THE COMPONENTS REGISTER -  right after we create the world:
     // Tell the ECS about the components we've wrought;
-    // There are dozens of tiny, models, and the ECS must know all of them by heart
+    // There are dozens of tiny models, and the ECS must know all of them by heart
     gs.ecs.register::<Position>();
     gs.ecs.register::<Renderable>();
     gs.ecs.register::<Player>();

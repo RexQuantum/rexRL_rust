@@ -100,7 +100,7 @@ fn find_slot_for_equippable_item(tag : &str, raws: &RawMaster) -> EquipmentSlot 
 }
 
 fn spawn_position<'a>(pos : SpawnType, new_entity : EntityBuilder<'a>, tag : &str, raws: &RawMaster) -> EntityBuilder<'a> {
-    let mut eb = new_entity;
+    let mut eb = new_entity; // I don't remember why I made this mutable. Rust keeps throwing up warnings that it doesn't need to be.
 
     // Spawn in the specified location
     match pos {
