@@ -84,10 +84,10 @@ impl BuilderMap {
         }
     }
 }
-
-//  Previously, we've passed MapBuilder classes around, each capable of building previous maps.
-//  Since we've concluded that this is a poor idea, and defined the syntax we want, we'll make a replacement.
-//  The BuilderChain is a master builder - it controls the whole build process. To this end, we'll add the BuilderChain type:
+ 
+///  Previously, we've passed MapBuilder classes around, each capable of building previous maps.
+///  Since we've concluded that this is a poor idea, and defined the syntax we want, we'll make a replacement.
+///  The BuilderChain is a master builder - it controls the whole build process. To this end, we add the BuilderChain type:
 pub struct BuilderChain {
     starter: Option<Box<dyn InitialMapBuilder>>,
     builders: Vec<Box<dyn MetaMapBuilder>>,
